@@ -1,0 +1,68 @@
+import admin from "firebase-admin";
+import fs from "fs";
+import path from "path";
+
+console.log("🔥 FIREBASE ADMIN INITIALIZING");
+
+function loadServiceAccount(): admin.ServiceAccount {
+
+  // 1️⃣ Production (Cloud Run) — load from ENV
+  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+    console.log("🔥 Loading service account from ENV");
+
+    try {
+      return JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+    } catch (err) {
+      throw new Error("Invalid FIREBASE_SERVICE_ACCOUNT JSON in environment variable.");
+    }
+  }
+
+  // 2️⃣ Local development — load from file
+  const serviceAccountPath = path.resolve(
+    process.cwd(),
+    "secrets/firebase-service-account.json"
+  );
+
+  if (!fs.existsSync(serviceAccountPath)) {
+    throw new Error(
+      `Firebase service account not found at: ${serviceAccountPath}`
+    );
+  }
+
+  console.log("🔥 Loading service account from file");
+
+  return JSON.parse(fs.readFileSync(serviceAccountPath, "utf8"));
+}
+
+const serviceAccount = loadServiceAccount();
+
+const projectId =
+  (serviceAccount as any).project_id ||
+  (serviceAccount as any).projectId;
+
+if (!projectId) {
+  throw new Error("Firebase service account missing project_id.");
+}
+
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    projectId
+  });
+}
+
+console.log("🔥 ADMIN PROJECT:", projectId);
+
+export const auth = admin.auth();
+export const db = admin.firestore();
+
+
+
+
+
+
+
+
+
+
+

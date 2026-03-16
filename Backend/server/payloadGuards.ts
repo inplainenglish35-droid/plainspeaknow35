@@ -1,4 +1,4 @@
-export const ABSOLUTE_MAX_CHARS = 12_000;
+export const ABSOLUTE_MAX_CHARS = 120_000;
 
 export function enforcePayloadSize(text: string) {
   if (!text || typeof text !== "string") {

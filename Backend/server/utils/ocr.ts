@@ -5,17 +5,13 @@ import { v4 as uuidv4 } from "uuid";
 import { exec } from "child_process";
 import { promisify } from "util";
 
-
-import pdfParse from "pdf-parse";
+const pdfParse = require("pdf-parse");
 
 const execAsync = promisify(exec);
 
-
 /* ---------------- GOOGLE VISION ---------------- */
 
-const client = new vision.ImageAnnotatorClient({
-  keyFilename: "secrets/firebase-service-account.json",
-});
+const client = new vision.ImageAnnotatorClient();
 
 /* ---------------- IMAGE OCR ---------------- */
 
@@ -31,23 +27,19 @@ export async function extractTextFromImage(buffer: Buffer) {
 /* ---------------- PDF OCR ---------------- */
 
 export async function extractTextFromPDF(buffer: Buffer) {
-  // 1️⃣ Try direct text extraction first
   const parsed = await pdfParse(buffer);
-
 
   if (parsed.text && parsed.text.trim().length > 20) {
     return parsed.text;
   }
 
-  // 2️⃣ If scanned PDF, convert to images
   const tempDir = path.join(process.cwd(), "temp");
 
-  if (!fs.existsSync(tempDir)) {
-    fs.mkdirSync(tempDir);
-  }
+  fs.mkdirSync(tempDir, { recursive: true });
 
   const fileId = uuidv4();
   const pdfPath = path.join(tempDir, `${fileId}.pdf`);
+
   fs.writeFileSync(pdfPath, buffer);
 
   const outputPrefix = path.join(tempDir, fileId);
@@ -66,8 +58,8 @@ export async function extractTextFromPDF(buffer: Buffer) {
     fullText += pageText + "\n\n";
   }
 
-  // Cleanup
   fs.unlinkSync(pdfPath);
+
   files.forEach((file) =>
     fs.unlinkSync(path.join(tempDir, file))
   );

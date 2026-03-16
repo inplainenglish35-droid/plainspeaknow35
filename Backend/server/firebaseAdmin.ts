@@ -2,6 +2,7 @@ import admin from "firebase-admin";
 import fs from "fs";
 import path from "path";
 
+console.log("🔥 NODE ENV:", process.env.NODE_ENV || "development");
 console.log("🔥 FIREBASE ADMIN INITIALIZING");
 
 function loadServiceAccount(): admin.ServiceAccount {
@@ -12,8 +13,10 @@ function loadServiceAccount(): admin.ServiceAccount {
 
     try {
       return JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-    } catch (err) {
-      throw new Error("Invalid FIREBASE_SERVICE_ACCOUNT JSON in environment variable.");
+    } catch {
+      throw new Error(
+        "Invalid FIREBASE_SERVICE_ACCOUNT JSON in environment variable."
+      );
     }
   }
 
@@ -31,7 +34,8 @@ function loadServiceAccount(): admin.ServiceAccount {
 
   console.log("🔥 Loading service account from file");
 
-  return JSON.parse(fs.readFileSync(serviceAccountPath, "utf8"));
+  const file = fs.readFileSync(serviceAccountPath, "utf8");
+  return JSON.parse(file);
 }
 
 const serviceAccount = loadServiceAccount();
@@ -47,7 +51,7 @@ if (!projectId) {
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    projectId
+    projectId,
   });
 }
 
@@ -55,14 +59,4 @@ console.log("🔥 ADMIN PROJECT:", projectId);
 
 export const auth = admin.auth();
 export const db = admin.firestore();
-
-
-
-
-
-
-
-
-
-
 

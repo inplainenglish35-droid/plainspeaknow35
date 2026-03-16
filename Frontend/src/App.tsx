@@ -14,19 +14,23 @@ export default function App() {
       const response = await fetch(`${API_URL}/api/simplify`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer test", // temporary for testing
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           text,
-          mode: "understand",
+          mode: "understand"
         }),
       });
 
       const data = await response.json();
 
-      setOutput(data.output || JSON.stringify(data));
-    } catch (err) {
+      if (!response.ok) {
+        setOutput(JSON.stringify(data, null, 2));
+      } else {
+        setOutput(data.output || "No output returned.");
+      }
+
+    } catch {
       setOutput("Request failed");
     }
 

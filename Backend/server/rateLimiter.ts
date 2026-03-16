@@ -4,8 +4,8 @@ type RateBucket = {
 };
 
 const RATE_LIMITS = {
-  minute: { max: 10, windowMs: 60_000 },
-  hour: { max: 100, windowMs: 60 * 60_000 },
+  minute: { max: 3, windowMs: 60_000 },
+  hour: { max: 30, windowMs: 60 * 60_000 },
 };
 
 const MAX_BUCKETS = 10_000;
@@ -83,7 +83,16 @@ export function enforceRateLimits(uid: string, ip?: string) {
       RATE_LIMITS.minute.max * 2,
       RATE_LIMITS.minute.windowMs
     );
+const ipHour = checkLimit(
+  ipBuckets,
+  `${ip}:hour`,
+  RATE_LIMITS.hour.max * 2,
+  RATE_LIMITS.hour.windowMs
+);
 
+if (!ipHour) {
+  return { ok: false, code: "RATE_LIMIT_HOUR" as const };
+}
     if (!ipMinute) {
       return { ok: false, code: "RATE_LIMIT_MINUTE" as const };
     }

@@ -2,13 +2,10 @@ import { useState, useEffect, useCallback } from "react";
 import { Header } from "./plainspeak/Header";
 import { InputMethods } from "./plainspeak/InputMethods";
 import { AudioPlayer } from "./plainspeak/AudioPlayer";
-// Attempt to load a local AuthContext at runtime; fall back to a minimal stub
-// so the app can compile/run even if the real context module isn't present.
 import { useAuth } from "./plainspeak/contexts/AuthContext";
-
 import { translations } from "../i18n";
 
-const API_URL = import.meta.env.VITE_API_URL || "";
+const API_URL = import.meta.env.VITE_API_URL ?? "";
 const MAX_AUDIO_GENERATIONS = 3;
 
 type Mode = "understand" | "organize" | "respond";
@@ -28,7 +25,6 @@ export default function AppLayout() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const [keyBalance, setKeyBalance] = useState<number | null>(null);
-  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
 
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
@@ -50,10 +46,11 @@ export default function AppLayout() {
   ================================= */
 
   const fetchKeyBalance = useCallback(async () => {
-    if (!user) return;
+    if (!user || !API_URL) return;
 
     try {
       const token = await user.getIdToken();
+
       const res = await fetch(`${API_URL}/api/key-balance`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -76,7 +73,7 @@ export default function AppLayout() {
   ================================= */
 
   const handleFileUpload = async (file: File) => {
-    if (!file || !user) return;
+    if (!file || !user || !API_URL) return;
 
     try {
       const token = await user.getIdToken();
@@ -107,8 +104,7 @@ export default function AppLayout() {
   ================================= */
 
   const handleProcess = async () => {
-    if (isProcessing) return;
-    if (!inputText.trim()) return;
+    if (isProcessing || !inputText.trim()) return;
 
     setErrorMessage(null);
 
@@ -120,7 +116,7 @@ export default function AppLayout() {
     const requiredKeys = getRequiredKeys(mode);
 
     if (keyBalance !== null && keyBalance < requiredKeys) {
-      setShowPurchaseModal(true);
+      setErrorMessage("Not enough Keys.");
       return;
     }
 
@@ -148,10 +144,7 @@ export default function AppLayout() {
         throw new Error(data?.error || "Processing failed.");
       }
 
-      const rawOutput = data?.output || "";
-
-      
-      /* ===== Extract SUMMARY ===== */
+      const rawOutput = data?.output ?? "";
 
       const summaryMatch = rawOutput.match(
         /DOCUMENT SUMMARY[:\n]+([\s\S]*?)(\n\n|\n[A-Z])/i
@@ -177,23 +170,6 @@ export default function AppLayout() {
       setIsProcessing(false);
     }
   };
-
-  const handleSharePlainSpeak = async () => {
-  if (!outputText) return;
-
-  const shareText = `PlainSpeak Summary
-
-${outputText}
-
-Simplified with PlainSpeak
-https://plainspeaknow.net`;
-
-  try {
-    await navigator.clipboard.writeText(shareText);
-  } catch {
-    console.error("Share copy failed");
-  }
-};
 
   /* ================================
      AUDIO
@@ -243,35 +219,37 @@ https://plainspeaknow.net`;
   }, [outputText]);
 
   const handleCopySummary = async () => {
-  if (!summary) return;
+    if (!summary) return;
 
-  try {
-    await navigator.clipboard.writeText(summary);
-
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-
-  } catch {
-    console.error("Failed to copy summary");
-  }
-};
+    try {
+      await navigator.clipboard.writeText(summary);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      console.error("Failed to copy summary");
+    }
+  };
 
   /* ================================
      UI
   ================================= */
 
   return (
-    <div className="min-h-screen text-slate-900 bg-[linear-gradient(135deg,rgba(226,241,255,0.4),rgba(228,243,236,0.4),rgba(230,232,255,0.4),rgba(221,242,242,0.4))]">
+    <div className="min-h-screen text-slate-900 bg-slate-50">
 
       <Header language={language} setLanguage={setLanguage} />
 
       <main className="max-w-6xl mx-auto px-6 py-12">
-        <div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-sm p-8 space-y-8">
+
+        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-8 space-y-8">
+
+          {/* HERO */}
 
           <div className="text-center space-y-3">
             <h1 className="text-3xl font-semibold tracking-tight">
               {translations[language].hero}
             </h1>
+
             <p className="text-sm text-teal-700 font-medium">
               New accounts receive <strong>3 free Keys</strong> to try Plainspeak.
             </p>
@@ -283,41 +261,66 @@ https://plainspeaknow.net`;
             )}
           </div>
 
-          <div className="text-center text-sm text-slate-600 bg-white/40 border border-teal-100 rounded-xl py-2 px-4">
-            No subscription. Keys never expire.
+          {/* TRUST STRIP */}
+
+          <div className="bg-slate-50 border border-slate-200 rounded-xl py-3 px-4">
+            <div className="flex flex-wrap justify-center gap-6 text-xs text-slate-500">
+              <span>🔒 Secure processing</span>
+              <span>🧾 Works with IEPs & official documents</span>
+              <span>🌐 English ↔ Spanish support</span>
+              <span>⚡ No subscription. Keys never expire.</span>
+            </div>
           </div>
+
+          {/* INPUT TOOLS */}
+
           <InputMethods onFileSelected={handleFileUpload} />
 
-          {/* MODE TOGGLE */}
+          {/* CONTROLS */}
 
-          <div className="flex justify-center gap-4">
-            {[
-              { id: "understand", label: "Understand", keys: 1 },
-              { id: "organize", label: "Organize", keys: 2 },
-              { id: "respond", label: "Respond", keys: 3 },
-            ].map((option) => (
-              <button
-                key={option.id}
-                onClick={() => setMode(option.id as Mode)}
-                className={`px-5 py-2 rounded-xl border text-sm transition
-                ${
-                  mode === option.id
-                    ? "bg-[#4f7c6b] text-white border-[#4f7c6b]"
-                    : "bg-white text-slate-700 border-teal-200 hover:bg-teal-50"
-                }`}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+
+            {/* Language */}
+            <div className="flex items-center gap-2 text-sm">
+              <label className="text-slate-600">🌐 Output language</label>
+
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value as "en" | "es")}
+                className="px-3 py-1.5 border border-slate-300 rounded-lg bg-white shadow-sm hover:border-teal-400 focus:ring-2 focus:ring-teal-400"
               >
-                {option.label} ({option.keys} Key{option.keys > 1 ? "s" : ""})
-              </button>
-            ))}
-          </div>
+                <option value="en">English</option>
+                <option value="es">Español</option>
+              </select>
+            </div>
 
-          {/* PROCESS BUTTON */}
+            {/* Modes */}
+            <div className="flex gap-2 flex-wrap">
+              {[
+                { id: "understand", label: "Understand", keys: 1 },
+                { id: "organize", label: "Organize", keys: 2 },
+                { id: "respond", label: "Respond", keys: 3 },
+              ].map((option) => (
+                <button
+                  key={option.id}
+                  onClick={() => setMode(option.id as Mode)}
+                  className={`px-4 py-2 rounded-xl border text-sm
+                  ${
+                    mode === option.id
+                      ? "bg-teal-700 text-white border-teal-700"
+                      : "bg-white text-slate-700 border-slate-200 hover:bg-teal-50"
+                  }`}
+                >
+                  {option.label} ({option.keys} Key{option.keys > 1 ? "s" : ""})
+                </button>
+              ))}
+            </div>
 
-          <div className="flex justify-center">
+            {/* Process */}
             <button
               onClick={handleProcess}
               disabled={isProcessing}
-              className="px-6 py-2 rounded-xl bg-[#4f7c6b] text-white disabled:opacity-50"
+              className="px-6 py-2 rounded-xl bg-teal-700 text-white font-semibold hover:bg-teal-800 disabled:opacity-50"
             >
               {isProcessing
                 ? "Processing…"
@@ -334,38 +337,34 @@ https://plainspeaknow.net`;
           {/* INPUT / OUTPUT */}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
             <textarea
-  value={inputText}
-  onChange={(e) => setInputText(e.target.value)}
-  placeholder="Paste a document here...
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              placeholder="Paste a document here..."
+              className="h-96 w-full rounded-xl border border-slate-200 p-4 resize-none"
+            />
 
-Example:
-'The school district is requesting consent to evaluate your child for eligibility under IDEA.'
-
-PlainSpeak will rewrite it in clear language."
-  className="h-96 w-full rounded-xl border border-teal-200 p-4"
-/>
-
-            <div className="h-96 w-full rounded-xl border border-teal-200 p-4 space-y-4 overflow-y-auto">
-
-              {/* SUMMARY CARD */}
+            <div className="h-96 w-full rounded-xl border border-slate-200 p-4 space-y-4 overflow-y-auto">
 
               {summary && (
-            <div className="bg-teal-50 border-l-4 border-teal-400 p-3 rounded space-y-2">
-            <div className="flex items-center justify-between">
-      <strong>PlainSpeak Summary</strong>
+                <div className="bg-teal-50 border-l-4 border-teal-400 p-3 rounded space-y-2">
 
-      <button
-          onClick={handleCopySummary}
-          className="text-xs px-2 py-1 rounded bg-teal-600 text-white hover:bg-teal-700"
-        >
-          {copied ? "Copied ✓" : "Copy"}
-        </button>
-      </div>
+                  <div className="flex items-center justify-between">
+                    <strong>PlainSpeak Summary</strong>
 
-    <p className="text-sm">{summary}</p>
-  </div>
-)}
+                    <button
+                      onClick={handleCopySummary}
+                      className="text-xs px-2 py-1 rounded bg-teal-600 text-white hover:bg-teal-700"
+                    >
+                      {copied ? "Copied ✓" : "Copy"}
+                    </button>
+                  </div>
+
+                  <p className="text-sm">{summary}</p>
+                </div>
+              )}
+
               <div className="whitespace-pre-wrap">
                 {outputText || "Your clarified version will appear here."}
               </div>
@@ -380,35 +379,29 @@ PlainSpeak will rewrite it in clear language."
               )}
 
             </div>
+
           </div>
 
         </div>
       </main>
+
       <footer className="mt-12 text-center text-xs text-slate-500">
 
-  <div className="space-x-4">
-    <a
-      href="/terms"
-      target="_blank"
-      className="hover:underline"
-    >
-      Terms of Service
-    </a>
+        <div className="space-x-4">
+          <a href="/terms" target="_blank" className="hover:underline">
+            Terms of Service
+          </a>
 
-    <a
-      href="/privacy"
-      target="_blank"
-      className="hover:underline"
-    >
-      Privacy Policy
-    </a>
-  </div>
+          <a href="/privacy" target="_blank" className="hover:underline">
+            Privacy Policy
+          </a>
+        </div>
 
-  <p className="mt-2 text-[11px] text-slate-400">
-    Plainspeak simplifies documents but does not provide legal or medical advice.
-  </p>
+        <p className="mt-2 text-[11px] text-slate-400">
+          Plainspeak simplifies documents but does not provide legal or medical advice.
+        </p>
 
-</footer>
+      </footer>
 
     </div>
   );

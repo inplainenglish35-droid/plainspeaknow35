@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { History, Trash2, X, Clock, Sparkles, Languages, ChevronDown, ChevronUp } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import type { Language, TextStats } from '@/types';
+import { cn } from '../../lib/utils';
+import type { Language, TextStats } from './types';
 
 export interface HistoryItem {
   id: string;
@@ -205,10 +205,10 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
                           Simplified
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full">
+                        <span className="inline-flex items-center gap-1 px-2">
                           <Languages className="w-3 h-3" />
-                          {item.sourceLanguage === 'english' ? 'EN → ES' : 'ES → EN'}
-                        </span>
+                          {item.sourceLanguage === "en" ? "EN → ES" : "ES → EN"}
+                        </span> 
                       )}
                       <span className="flex items-center gap-1 text-xs text-gray-400">
                         <Clock className="w-3 h-3" />

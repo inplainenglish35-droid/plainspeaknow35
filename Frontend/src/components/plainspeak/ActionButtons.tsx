@@ -2,9 +2,9 @@ console.log("ActionButtons rendered");
 
 import React from "react";
 import { Sparkles, Languages, Loader2 } from "lucide-react";
-import { useAuth } from "../../contexts/AuthContext";
-import type { Language } from "../../types";
+import { useAuth } from "./contexts/AuthContext";
 
+type Language = "en" | "es";
 interface ActionButtonsProps {
   onSimplify: () => void;
   onTranslate: () => void;
@@ -80,8 +80,8 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
         ) : (
           <>
             <Languages className="h-4 w-4" />
-            Translate to{" "}
-            {targetLanguage === "spanish" ? "Spanish" : "English"}
+          Translate to{" "}
+          {targetLanguage === "es" ? "Spanish" : "English"}
           </>
         )}
       </button>

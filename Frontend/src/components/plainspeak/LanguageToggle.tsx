@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowLeftRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import type { Language } from '@/types';
+import { cn } from '../../lib/utils';
+type Language = "en" | "es";
 
 interface LanguageToggleProps {
   currentLanguage: Language;
@@ -17,9 +17,9 @@ export const LanguageToggle: React.FC<LanguageToggleProps> = ({
   className,
 }) => {
   const languageLabels: Record<Language, { short: string; full: string; flag: string }> = {
-    english: { short: 'EN', full: 'English', flag: '🇺🇸' },
-    spanish: { short: 'ES', full: 'Español', flag: '🇪🇸' },
-  };
+  en: { short: "EN", full: "English", flag: "us" },
+  es: { short: "ES", full: "Español", flag: "es" },
+};
 
   return (
     <div className={cn('flex items-center justify-center gap-2', className)}>

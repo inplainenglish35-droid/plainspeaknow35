@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { X, Copy, Check, Loader2 } from "lucide-react";
 
-import { cn } from "../lib/utils";
-import { useDocumentSharing } from "../hooks/useDocumentSharing";
-import { useAuth } from "../contexts/AuthContext";
-import type { TextStats } from "../types";
+import { cn } from "../../lib/utils";
+import { useDocumentSharing } from "./hooks/useDocumentSharing";
+import { useAuth } from "./contexts/AuthContext";
+import type { TextStats } from "./types";
 
 interface ShareModalProps {
   isOpen: boolean;

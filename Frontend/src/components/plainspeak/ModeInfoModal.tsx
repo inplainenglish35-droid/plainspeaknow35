@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { ModeType } from "./modes";
+import type { ModeType } from "./modes";
 
 type Props = {
   mode: ModeType;

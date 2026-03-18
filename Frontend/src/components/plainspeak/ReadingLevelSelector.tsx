@@ -1,6 +1,6 @@
 import React from "react";
 import { Sparkles, ChevronDown, Check } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 
 export type SimplicityMode = "clear" | "short" | "detailed";
 

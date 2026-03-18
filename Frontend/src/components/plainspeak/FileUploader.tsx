@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useRef } from 'react';
 import { Upload, FileText, Image, X, Loader2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 interface FileUploaderProps {
   onTextExtracted: (text: string) => void;

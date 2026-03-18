@@ -6,7 +6,7 @@ import {
   sendEmailVerification,
   signOut,
 } from "firebase/auth";
-import { auth } from "../../utils/firebase";
+import { auth } from "../../lib/firebase";
 
 interface AuthModalProps {
   isOpen: boolean;

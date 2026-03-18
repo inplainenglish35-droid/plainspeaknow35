@@ -9,8 +9,8 @@ import {
   Share2,
 } from "lucide-react";
 import { cn } from "../../lib/utils";
-import type { TextStats } from "../../types";
-import { useAuth } from "../../contexts/AuthContext";
+import type { TextStats } from "./types";
+import { useAuth } from "./contexts/AuthContext";
 
 interface ResultsDisplayProps {
   originalText: string;

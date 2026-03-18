@@ -1,6 +1,6 @@
 import React from 'react';
 import { AlertCircle, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 interface ErrorAlertProps {
   message: string;

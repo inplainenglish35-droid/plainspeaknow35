@@ -1,11 +1,13 @@
+export type ModeId = "understand" | "organize" | "respond";
+
 export type ModeType = {
-  id: "understand" | "organize" | "respond";
+  id: ModeId;
   label: string;
   keys: number;
   description: string[];
 };
 
-export const MODES: Record<ModeType["id"], ModeType> = {
+export const MODES: Record<ModeId, ModeType> = {
   understand: {
     id: "understand",
     label: "Understand",
@@ -20,6 +22,7 @@ export const MODES: Record<ModeType["id"], ModeType> = {
       "Best for when you just need clarity."
     ]
   },
+
   organize: {
     id: "organize",
     label: "Organize",
@@ -32,6 +35,7 @@ export const MODES: Record<ModeType["id"], ModeType> = {
       "Best for when you need to prepare before taking action."
     ]
   },
+
   respond: {
     id: "respond",
     label: "Respond",

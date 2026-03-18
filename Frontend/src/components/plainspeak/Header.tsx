@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { AuthModal } from "./AuthModal";
 import { useAuth } from "./contexts/AuthContext";
 import { signOut as firebaseSignOut } from "firebase/auth";
-import { auth } from "../../utils/firebase";
+import { auth } from "../../lib/firebase";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 
@@ -65,7 +65,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <img
                   src={logo}
                   alt="Plainspeak Logo"
-                  className="h-10 w-auto"
+                  className="h-30 w-auto"
                 />
                 <span className="px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-800 rounded-full">
                   Beta
@@ -99,31 +99,22 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* RIGHT SIDE */}
             <div className="flex items-center gap-3">
+            {/* Output Language Selector */}
+            <div className="flex items-center justify-end gap-2 text-sm">
+             <label className="text-slate-600 flex items-center gap-1">
+              🌐 Output language
+            </label>
 
-              {/* Language Toggle */}
-              <div className="flex items-center gap-2 text-sm">
-                <button
-                  onClick={() => setLanguage("en")}
-                  className={`px-2 py-1 rounded ${
-                    language === "en"
-                      ? "bg-teal-100 text-teal-800"
-                      : "text-slate-500 hover:text-slate-800"
-                  }`}
-                >
-                  EN
-                </button>
-
-                <button
-                  onClick={() => setLanguage("es")}
-                  className={`px-2 py-1 rounded ${
-                    language === "es"
-                      ? "bg-teal-100 text-teal-800"
-                      : "text-slate-500 hover:text-slate-800"
-                  }`}
-                >
-                  ES
-                </button>
-              </div>
+            <select
+             value={language}
+             onChange={(e) => setLanguage(e.target.value as "en" | "es")}
+             className="px-3 py-1.5 border border-slate-300 rounded-lg bg-white shadow-sm
+               hover:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400"
+      >
+            <option value="en">English</option>
+            <option value="es">Español</option>
+          </select>
+            </div>
 
               {/* Dark Mode Toggle */}
               <button

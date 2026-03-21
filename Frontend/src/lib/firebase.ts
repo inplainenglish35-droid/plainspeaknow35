@@ -10,9 +10,9 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-const app = initializeApp(firebaseConfig);
+console.log("🔥 BYPASSING FIREBASE FOR NOW");
 
-export const auth = getAuth(app);
+export const auth = {} as any;
 console.log("🔥 FIREBASE ENV CHECK", {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,

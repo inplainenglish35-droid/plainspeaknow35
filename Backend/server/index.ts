@@ -52,19 +52,27 @@ const upload = multer({
 
 const app = express();
 
-app.use(express.json());
-
-const corsOptions = {
-  origin: [
-    "https://plainspeak-now.vercel.app",
-    "https://plainspeaknow.net",
-    "https://www.plainspeaknow.net",
-  ],
-  credentials: true,
-};
-
+/* 🔥 CORS FIRST — BEFORE EVERYTHING */
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
+
+/* THEN everything else */
+app.use(express.json());
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://plainspeak-now.vercel.app");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
 
 /* =========================
    HEALTH CHECK

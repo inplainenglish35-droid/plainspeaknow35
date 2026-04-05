@@ -5,15 +5,21 @@ export interface SaveHistoryParams {
   userId: string;
   inputText: string;
   outputText: string;
-  mode: "understand" | "organize" | "respond";
+  docType?: string | null;
+  language?: "en" | "es";
 }
 
 export async function saveHistory({
   userId,
   inputText,
   outputText,
-  mode,
+  docType = null,
+  language = "en",
 }: SaveHistoryParams): Promise<void> {
+
+  if (!userId || !inputText || !outputText) {
+    throw new Error("Invalid history payload");
+  }
 
   const userHistoryRef = db
     .collection("users")
@@ -23,7 +29,8 @@ export async function saveHistory({
   await userHistoryRef.add({
     inputText,
     outputText,
-    mode,
+    docType,
+    language,
     createdAt: admin.firestore.FieldValue.serverTimestamp(),
   });
 }

@@ -5,22 +5,33 @@ import path from "path";
 console.log("🔥 NODE ENV:", process.env.NODE_ENV || "development");
 console.log("🔥 FIREBASE ADMIN INITIALIZING");
 
-function loadServiceAccount(): admin.ServiceAccount {
+/* =========================
+   LOAD SERVICE ACCOUNT
+========================= */
 
-  // 1️⃣ Production (Cloud Run) — load from ENV
+function loadServiceAccount(): admin.ServiceAccount {
+  // 1️⃣ Production (Cloud Run)
   if (process.env.FIREBASE_SERVICE_ACCOUNT) {
     console.log("🔥 Loading service account from ENV");
 
     try {
-      return JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-    } catch {
+      const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
+
+      // 🔥 Handle double-escaped JSON (common issue)
+      const parsed =
+        typeof raw === "string" ? JSON.parse(raw) : raw;
+
+      return parsed;
+
+    } catch (err) {
+      console.error("🔥 ENV PARSE ERROR:", err);
       throw new Error(
         "Invalid FIREBASE_SERVICE_ACCOUNT JSON in environment variable."
       );
     }
   }
 
-  // 2️⃣ Local development — load from file
+  // 2️⃣ Local development
   const serviceAccountPath = path.resolve(
     process.cwd(),
     "secrets/firebase-service-account.json"
@@ -38,11 +49,14 @@ function loadServiceAccount(): admin.ServiceAccount {
   return JSON.parse(file);
 }
 
+/* =========================
+   INIT FIREBASE
+========================= */
+
 const serviceAccount = loadServiceAccount();
 
 const projectId =
-  (serviceAccount as any).project_id ||
-  (serviceAccount as any).projectId;
+  serviceAccount.projectId || (serviceAccount as any).projectId;
 
 if (!projectId) {
   throw new Error("Firebase service account missing project_id.");
@@ -56,6 +70,10 @@ if (!admin.apps.length) {
 }
 
 console.log("🔥 ADMIN PROJECT:", projectId);
+
+/* =========================
+   EXPORTS
+========================= */
 
 export const auth = admin.auth();
 export const db = admin.firestore();

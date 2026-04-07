@@ -1,12 +1,13 @@
 import { db } from "./firebaseAdmin";
 import admin from "firebase-admin";
+type Language = string; // local fallback type
 
 export interface SaveHistoryParams {
   userId: string;
   inputText: string;
   outputText: string;
   docType?: string | null;
-  language?: "en" | "es";
+  language?: Language;
 }
 
 export async function saveHistory({

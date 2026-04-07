@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { auth, db } from "./firebaseAdmin";
+import admin from "firebase-admin";
 
+/* ✅ CLEAN — NO MULTER HERE */
 export interface AuthenticatedRequest extends Request {
   uid?: string;
-  file?: Express.Multer.File;
 }
 
 export async function requireAuth(
@@ -18,7 +19,7 @@ export async function requireAuth(
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const token = authHeader.split("Bearer ")[1];
+    const token = authHeader.replace("Bearer ", "");
 
     const decoded = await auth.verifyIdToken(token);
 
@@ -30,14 +31,14 @@ export async function requireAuth(
 
     if (!userDoc.exists) {
       await userRef.set({
-        keyBalance: 1,                // ✅ 1 FREE KEY
+        keyBalance: 1, // ✅ Your updated model
         feedbackDeclines: 0,
         feedbackAccepted: false,
-        createdAt: new Date(),
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
       });
     }
 
-    next();
+    return next();
   } catch (err) {
     console.error("Auth error:", err);
     return res.status(401).json({ error: "Unauthorized" });

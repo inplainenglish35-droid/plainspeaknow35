@@ -26,9 +26,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const [isMuted, setIsMuted] = useState(false);
   const [highlightedWordIndex, setHighlightedWordIndex] = useState(-1);
 
-  /* ============================================================
+  /* ================================
      TEXT PROCESSING
-  ============================================================ */
+  ================================= */
 
   const words = useMemo(() => {
     return text ? text.split(/(\s+)/).filter(Boolean) : [];
@@ -37,61 +37,59 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const wordTimings = useMemo(() => {
     if (!duration || words.length === 0) return [];
 
-    const wordCount = words.filter((w) => w.trim()).length;
-    if (wordCount === 0) return [];
+    const cleanWords = words.filter((w) => w.trim());
+    const avg = duration / cleanWords.length;
 
-    const avgWordDuration = duration / wordCount;
-    let wordCounter = 0;
+    let count = 0;
 
     return words.map((word) => {
-      if (!word.trim()) {
-        return { start: 0, end: 0, isSpace: true };
-      }
+      if (!word.trim()) return { start: 0, end: 0, isSpace: true };
 
-      const start = wordCounter * avgWordDuration;
-      const end = (wordCounter + 1) * avgWordDuration;
-      wordCounter++;
+      const start = count * avg;
+      const end = (count + 1) * avg;
+      count++;
 
       return { start, end, isSpace: false };
     });
   }, [duration, words]);
 
-  /* ============================================================
-     AUDIO EVENT LISTENERS (ATTACH ONCE)
-  ============================================================ */
+  /* ================================
+     AUDIO EVENTS
+  ================================= */
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
-    const handleLoadedMetadata = () => setDuration(audio.duration || 0);
-    const handleEnded = () => {
+    const onTime = () => setCurrentTime(audio.currentTime);
+    const onMeta = () => setDuration(audio.duration || 0);
+    const onEnd = () => {
       setIsPlaying(false);
       setCurrentTime(0);
       setHighlightedWordIndex(-1);
     };
 
-    audio.addEventListener("timeupdate", handleTimeUpdate);
-    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
-    audio.addEventListener("ended", handleEnded);
+    audio.addEventListener("timeupdate", onTime);
+    audio.addEventListener("loadedmetadata", onMeta);
+    audio.addEventListener("ended", onEnd);
 
     return () => {
-      audio.removeEventListener("timeupdate", handleTimeUpdate);
-      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
-      audio.removeEventListener("ended", handleEnded);
+      audio.removeEventListener("timeupdate", onTime);
+      audio.removeEventListener("loadedmetadata", onMeta);
+      audio.removeEventListener("ended", onEnd);
     };
   }, []);
 
-  /* ============================================================
-     RESET WHEN NEW AUDIO ARRIVES
-  ============================================================ */
+  /* ================================
+     FORCE AUDIO RELOAD (IMPORTANT)
+  ================================= */
 
   useEffect(() => {
-    if (!audioRef.current) return;
+    const audio = audioRef.current;
+    if (!audio) return;
 
-    audioRef.current.pause();
-    audioRef.current.currentTime = 0;
+    audio.pause();
+    audio.load(); // 🔥 ensures new src is recognized
 
     setIsPlaying(false);
     setCurrentTime(0);
@@ -99,9 +97,9 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
     setHighlightedWordIndex(-1);
   }, [audioUrl]);
 
-  /* ============================================================
+  /* ================================
      PLAYBACK RATE
-  ============================================================ */
+  ================================= */
 
   useEffect(() => {
     if (audioRef.current) {
@@ -109,26 +107,25 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   }, [playbackRate]);
 
-  /* ============================================================
-     WORD HIGHLIGHTING
-  ============================================================ */
+  /* ================================
+     WORD HIGHLIGHTING (STABLE)
+  ================================= */
 
   useEffect(() => {
     if (!isPlaying || !duration) return;
 
-    const currentIndex = wordTimings.findIndex(
-      (timing) =>
-        !timing.isSpace &&
-        currentTime >= timing.start &&
-        currentTime < timing.end
+    const index = wordTimings.findIndex(
+      (t) => !t.isSpace && currentTime >= t.start && currentTime < t.end
     );
 
-    setHighlightedWordIndex(currentIndex);
+    if (index !== highlightedWordIndex) {
+      setHighlightedWordIndex(index);
+    }
   }, [currentTime, isPlaying, duration, wordTimings]);
 
-  /* ============================================================
+  /* ================================
      CONTROLS
-  ============================================================ */
+  ================================= */
 
   const togglePlay = async () => {
     if (!audioRef.current) return;
@@ -162,38 +159,45 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   };
 
   const formatTime = (time: number) => {
-    const mins = Math.floor(time / 60);
-    const secs = Math.floor(time % 60);
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
+    const m = Math.floor(time / 60);
+    const s = Math.floor(time % 60);
+    return `${m}:${s.toString().padStart(2, "0")}`;
   };
 
-  const speedOptions = [0.5, 0.75, 1, 1.25, 1.5, 2];
+  const speedOptions = [0.75, 1, 1.25, 1.5, 2];
 
-  /* ============================================================
+  /* ================================
      RENDER
-  ============================================================ */
+  ================================= */
 
   return (
     <div className={cn("space-y-4", className)}>
+
+      {/* AUDIO ELEMENT */}
       {audioUrl && (
-        <audio ref={audioRef} src={audioUrl} preload="metadata" />
+        <audio
+          key={audioUrl} // 🔥 forces React refresh
+          ref={audioRef}
+          src={audioUrl}
+          preload="metadata"
+        />
       )}
 
+      {/* TEXT DISPLAY */}
       {text && (
         <div
           className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl max-h-48 overflow-y-auto"
           aria-live="polite"
-          aria-label="Text being read aloud"
         >
           <p className="text-base leading-relaxed">
-            {words.map((word, index) => (
+            {words.map((word, i) => (
               <span
-                key={index}
+                key={i}
                 className={cn(
                   "transition-all duration-150",
-                  index === highlightedWordIndex &&
+                  i === highlightedWordIndex &&
                     !word.match(/^\s+$/) &&
-                    "bg-teal-200 dark:bg-teal-700 text-teal-900 dark:text-teal-100 rounded px-0.5"
+                    "bg-teal-200 dark:bg-teal-700 px-0.5 rounded"
                 )}
               >
                 {word}
@@ -203,89 +207,69 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
         </div>
       )}
 
-      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-sm">
+      {/* CONTROLS */}
+      <div className="bg-white dark:bg-gray-800 rounded-xl border p-4 shadow-sm">
+
         {!audioUrl && !isGenerating ? (
           <button
             onClick={onGenerate}
-            disabled={!text}
-            className={cn(
-              "w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-medium transition-all",
-              "bg-gradient-to-r from-teal-500 to-blue-500 text-white",
-              "hover:from-teal-600 hover:to-blue-600",
-              "focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2",
-              "disabled:opacity-50 disabled:cursor-not-allowed"
-            )}
+            disabled={!text || isGenerating}
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-gradient-to-r from-teal-500 to-blue-500 text-white disabled:opacity-50"
           >
             <Volume2 className="w-5 h-5" />
-            Generate Audio
+            Listen instead
           </button>
         ) : isGenerating ? (
           <div className="flex items-center justify-center gap-2 py-3">
             <Loader2 className="w-5 h-5 animate-spin text-teal-500" />
-            <span className="text-gray-600 dark:text-gray-300">
-              Generating audio...
-            </span>
+            Generating audio...
           </div>
         ) : (
           <div className="space-y-3">
-            <div className="flex items-center gap-3">
-              <span className="text-xs text-gray-500 w-10 text-right">
-                {formatTime(currentTime)}
-              </span>
-              <span className="text-xs text-gray-500 w-10">
-                {formatTime(duration)}
-              </span>
+
+            <div className="flex justify-between text-xs text-gray-500">
+              <span>{formatTime(currentTime)}</span>
+              <span>{formatTime(duration)}</span>
             </div>
 
             <div className="flex items-center justify-between">
+
               <div className="flex items-center gap-2">
+
                 <button
                   onClick={togglePlay}
-                  className="p-3 rounded-full bg-teal-500 text-white hover:bg-teal-600 transition-all"
+                  className="p-3 rounded-full bg-teal-500 text-white"
                 >
-                  {isPlaying ? (
-                    <Pause className="w-5 h-5" />
-                  ) : (
-                    <Play className="w-5 h-5 ml-0.5" />
-                  )}
+                  {isPlaying ? <Pause /> : <Play />}
                 </button>
 
-                <button
-                  onClick={handleRestart}
-                  className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                >
-                  <RotateCcw className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                <button onClick={handleRestart}>
+                  <RotateCcw />
                 </button>
 
-                <button
-                  onClick={toggleMute}
-                  className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                >
-                  {isMuted ? (
-                    <VolumeX className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                  ) : (
-                    <Volume2 className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                  )}
+                <button onClick={toggleMute}>
+                  {isMuted ? <VolumeX /> : <Volume2 />}
                 </button>
+
               </div>
 
-              <div className="flex items-center gap-1">
-                <span className="text-xs text-gray-500 mr-1">Speed:</span>
-                {speedOptions.map((speed) => (
+              <div className="flex gap-1">
+                {speedOptions.map((s) => (
                   <button
-                    key={speed}
-                    onClick={() => setPlaybackRate(speed)}
+                    key={s}
+                    onClick={() => setPlaybackRate(s)}
                     className={cn(
-                      "px-2 py-1 text-xs rounded transition-colors",
-                      playbackRate === speed
-                        ? "bg-teal-100 dark:bg-teal-900/50 text-teal-700 dark:text-teal-300 font-medium"
-                        : "text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      "px-2 py-1 text-xs rounded",
+                      playbackRate === s
+                        ? "bg-teal-100 text-teal-700"
+                        : "text-gray-500"
                     )}
                   >
-                    {speed}x
+                    {s}x
                   </button>
                 ))}
               </div>
+
             </div>
           </div>
         )}

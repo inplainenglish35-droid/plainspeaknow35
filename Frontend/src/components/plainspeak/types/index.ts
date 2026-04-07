@@ -1,6 +1,8 @@
 export type Language =
-  | "en"
-  | "es";
+  | "en" // English
+  | "es" // Spanish
+  | "vi" // Vietnamese
+  | "tl"; // Tagalog
 
 export type SimplicityMode =
   | "understand"

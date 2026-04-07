@@ -4,7 +4,7 @@ import React from "react";
 import { Sparkles, Languages, Loader2 } from "lucide-react";
 import { useAuth } from "./contexts/AuthContext";
 
-type Language = "en" | "es";
+type Language = "en" | "es" | "vi" | "tl";
 interface ActionButtonsProps {
   onSimplify: () => void;
   onTranslate: () => void;
@@ -64,34 +64,35 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
         )}
       </button>
 
-      {/* Secondary: Translate */}
-      <button
-        type="button"
-        onClick={onTranslate}
-        disabled={!canUseApp || disabled || isLoading}
-        aria-busy={isLoading}
-        className={secondaryButtonClass}
-      >
-        {isLoading ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin" />
-            Working…
-          </>
-        ) : (
-          <>
-            <Languages className="h-4 w-4" />
-          Translate to{" "}
-          {targetLanguage === "es" ? "Spanish" : "English"}
-          </>
-        )}
-      </button>
+{/* Secondary: Translate */}
+<button
+  type="button"
+  onClick={onTranslate}
+  disabled={!canUseApp || disabled || isLoading}
+  aria-busy={isLoading}
+  className={secondaryButtonClass}
+>
+  {isLoading ? (
+    <>
+      <Loader2 className="h-4 w-4 animate-spin" />
+      Working…
+    </>
+  ) : (
+    <>
+      <Languages className="h-4 w-4" />
+      Translate to{" "}
+      {targetLanguage === "es"
+        ? "Spanish"
+        : targetLanguage === "vi"
+        ? "Vietnamese"
+        : targetLanguage === "tl"
+        ? "Tagalog"
+        : "English"}
+    </>
+  )}
+</button>
     </div>
   );
 };
 
-
-
-
-
-
-
+export default ActionButtons;

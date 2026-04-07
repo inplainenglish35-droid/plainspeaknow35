@@ -1,73 +1,124 @@
-# React + TypeScript + Vite
+# Plainspeak Now (Frontend)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Turn confusing documents into clear, simple language.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 What This Is
 
-## React Compiler
+Frontend for **Plainspeak Now**, a web app that:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* Simplifies complex documents into plain language
+* Translates into multiple languages
+* Provides optional audio playback
+* Uses a prepaid Key system (no subscriptions)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🌍 Supported Languages
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+* English
+* Spanish
+* Vietnamese
+* Tagalog
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🧠 Core Features
+
+* Upload / paste / photo input
+* Structured output:
+
+  * Document Type
+  * Summary
+  * Key Points
+  * What Matters Most
+* Audio playback (limited per document)
+* Firebase authentication
+* Key-based usage system
+
+---
+
+## 🛠️ Local Development
+
+```bash
+cd Frontend
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## ⚙️ Environment Variables
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Create a `.env` file:
+
+```env
+VITE_API_URL=https://your-cloud-run-url
 ```
+
+---
+
+## 🔗 Backend
+
+This frontend connects to a Cloud Run backend:
+
+```
+/api/simplify
+/api/generate-audio
+/api/key-balance
+```
+
+---
+
+## 🔐 Authentication
+
+Uses Firebase Auth.
+
+User must be signed in before processing documents.
+
+---
+
+## 🔑 Key System
+
+* 1 Key per document
+* 2 Keys for large documents
+* Keys deducted **only after successful processing**
+* No subscriptions
+* Keys never expire
+
+---
+
+## ⚠️ Important Notes
+
+* This app explains documents — it does NOT provide legal or medical advice
+* Always verify critical information from original sources
+
+---
+
+## 🚀 Deployment
+
+Hosted on Vercel.
+
+Environment variable must match backend:
+
+```
+VITE_API_URL → Cloud Run URL
+```
+
+---
+
+## 🧪 Health Check
+
+Backend should respond:
+
+```
+/api/health → { ok: true }
+```
+
+---
+
+## 🎯 Goal
+
+Make complex information accessible for families, caregivers, and everyday users — especially those navigating education, legal, or medical systems.
+

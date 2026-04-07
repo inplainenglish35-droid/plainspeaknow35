@@ -14,10 +14,20 @@ import {
   ChevronDown,
 } from "lucide-react";
 
+/* =========================
+   TYPES
+========================= */
+
+type Language = "en" | "es" | "vi" | "tl";
+
 interface HeaderProps {
-  language: "en" | "es";
-  setLanguage: (lang: "en" | "es") => void;
+  language: Language;
+  setLanguage: (lang: Language) => void;
 }
+
+/* =========================
+   COMPONENT
+========================= */
 
 export const Header: React.FC<HeaderProps> = ({
   language,
@@ -28,6 +38,10 @@ export const Header: React.FC<HeaderProps> = ({
   const [isDark, setIsDark] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+
+  /* =========================
+     DARK MODE INIT
+  ========================= */
 
   useEffect(() => {
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -46,34 +60,42 @@ export const Header: React.FC<HeaderProps> = ({
     });
   };
 
+  /* =========================
+     AUTH
+  ========================= */
+
   const handleSignOut = async () => {
     await firebaseSignOut(auth);
     setUserMenuOpen(false);
   };
 
+  /* =========================
+     UI
+  ========================= */
+
   return (
     <>
       <header className="sticky top-0 z-50 bg-white/40 backdrop-blur-sm border-b border-teal-100">
-        <div className="max-w-6xl mx-auto px-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-16">
 
-            {/* LEFT SIDE */}
-            <div className="flex items-center gap-8">
+            {/* LEFT */}
+            <div className="flex items-center gap-6 sm:gap-8">
 
               {/* Logo */}
               <Link to="/" className="flex items-center gap-3">
                 <img
                   src={logo}
                   alt="Plainspeak Logo"
-                  className="h-30 w-auto"
+                  className="h-10 sm:h-12 w-auto"
                 />
                 <span className="px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-800 rounded-full">
                   Beta
                 </span>
               </Link>
 
-              {/* Navigation */}
-              <nav className="flex items-center gap-6 text-sm">
+              {/* Nav (hide on small screens later if needed) */}
+              <nav className="hidden sm:flex items-center gap-6 text-sm">
                 <a
                   href="mailto:inplainenglish35@gmail.com?subject=Plainspeak Beta Feedback"
                   className="text-slate-600 hover:text-slate-900 transition"
@@ -97,26 +119,29 @@ export const Header: React.FC<HeaderProps> = ({
               </nav>
             </div>
 
-            {/* RIGHT SIDE */}
-            <div className="flex items-center gap-3">
-            {/* Output Language Selector */}
-            <div className="flex items-center justify-end gap-2 text-sm">
-             <label className="text-slate-600 flex items-center gap-1">
-              🌐 Output language
-            </label>
+            {/* RIGHT */}
+            <div className="flex items-center gap-2 sm:gap-3">
 
-            <select
-             value={language}
-             onChange={(e) => setLanguage(e.target.value as "en" | "es")}
-             className="px-3 py-1.5 border border-slate-300 rounded-lg bg-white shadow-sm
-               hover:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400"
-      >
-            <option value="en">English</option>
-            <option value="es">Español</option>
-          </select>
-            </div>
+              {/* 🌍 LANGUAGE SELECTOR */}
+              <div className="flex items-center gap-2 text-sm">
+                <span className="hidden sm:inline text-slate-600">🌐</span>
 
-              {/* Dark Mode Toggle */}
+                <select
+                  value={language}
+                  onChange={(e) =>
+                    setLanguage(e.target.value as Language)
+                  }
+                  className="px-2 py-1 border border-slate-300 rounded-lg bg-white text-xs sm:text-sm
+                  hover:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400"
+                >
+                  <option value="en">EN</option>
+                  <option value="es">ES</option>
+                  <option value="vi">VI</option>
+                  <option value="tl">TL</option>
+                </select>
+              </div>
+
+              {/* 🌙 DARK MODE */}
               <button
                 onClick={toggleDarkMode}
                 aria-label="Toggle dark mode"
@@ -129,14 +154,14 @@ export const Header: React.FC<HeaderProps> = ({
                 )}
               </button>
 
-              {/* Auth */}
+              {/* 👤 AUTH */}
               {!user ? (
                 <button
                   onClick={() => setAuthModalOpen(true)}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#4f7c6b] text-white hover:bg-[#3e6557] transition"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#4f7c6b] text-white hover:bg-[#3e6557] transition text-sm"
                 >
                   <User className="w-4 h-4" />
-                  Sign In
+                  <span className="hidden sm:inline">Sign In</span>
                 </button>
               ) : (
                 <div className="relative">
@@ -145,7 +170,7 @@ export const Header: React.FC<HeaderProps> = ({
                     className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#4f7c6b] text-white hover:bg-[#3e6557] transition"
                   >
                     <User className="w-5 h-5" />
-                    <span className="text-sm font-medium truncate max-w-[140px]">
+                    <span className="hidden sm:inline text-sm truncate max-w-[140px]">
                       {user.displayName || user.email}
                     </span>
                     <ChevronDown className="w-4 h-4" />
@@ -165,10 +190,12 @@ export const Header: React.FC<HeaderProps> = ({
                 </div>
               )}
             </div>
+
           </div>
         </div>
       </header>
 
+      {/* AUTH MODAL */}
       <AuthModal
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}

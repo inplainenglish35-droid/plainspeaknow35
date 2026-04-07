@@ -18,7 +18,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToInput }) => 
         border-b border-slate-200
       "
     >
-      <div className="max-w-5xl mx-auto px-6 pt-24 pb-20 text-center">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-14 sm:pb-20 text-center">
+
         {/* Badge */}
         <div
           className="
@@ -31,14 +32,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToInput }) => 
           "
         >
           <Sparkles className="h-4 w-4" />
-          Plain language, without the headache
+          Clear words. Less stress.
         </div>
 
         {/* Heading */}
         <h1
           id="hero-heading"
           className="
-            text-4xl sm:text-5xl lg:text-6xl
+            text-3xl sm:text-5xl lg:text-6xl
             font-semibold
             tracking-tight
             text-white
@@ -47,13 +48,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToInput }) => 
         >
           Understand your documents.
           <br />
-          <span className="text-slate-300">Instantly.</span>
+          <span className="text-slate-300">Without the overwhelm.</span>
         </h1>
 
         {/* Subheading */}
-        <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto mb-10">
-          PlainSpeak turns complex letters, forms, and contracts into clear,
-          readable language — and can translate when you need it.
+        <p className="text-base sm:text-xl text-slate-300 max-w-2xl mx-auto mb-10">
+          Plainspeak rewrites complex letters, forms, and paperwork into clear, everyday language.
+          You can also translate or listen—whatever helps you understand faster.
         </p>
 
         {/* Feature list */}
@@ -68,7 +69,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToInput }) => 
           </li>
           <li className="flex items-center gap-2 text-sm">
             <Volume2 className="h-4 w-4" />
-            Audio playback
+            Listen instead of read
           </li>
         </ul>
 
@@ -88,7 +89,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToInput }) => 
                 "focus-visible:ring-offset-slate-800"
               )}
             >
-              Get started
+              Help me understand
               <ArrowDown className="h-4 w-4" />
             </button>
 
@@ -98,11 +99,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onScrollToInput }) => 
             </p>
           </>
         )}
+
+        {/* 🔐 Subtle trust line */}
+        <p className="text-xs text-slate-400 mt-6 max-w-md mx-auto">
+          Plainspeak helps you understand documents clearly. It does not provide legal or medical advice.
+        </p>
+
       </div>
     </section>
   );
 };
-
 
 
 

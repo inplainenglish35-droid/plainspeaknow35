@@ -182,3 +182,23 @@
     border-right-color: var(--border);
   }
 }
+/* =========================
+   PUPPY ANIMATIONS
+========================= */
+
+@keyframes puppy-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+@keyframes puppy-blink {
+  0%, 97%, 100% { transform: scaleY(1); }
+  98% { transform: scaleY(0.1); }
+  99% { transform: scaleY(1); }
+}
+
+@keyframes puppy-tilt {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(-4deg); }
+  100% { transform: rotate(0deg); }
+}

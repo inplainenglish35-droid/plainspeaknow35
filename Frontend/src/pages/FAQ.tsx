@@ -2,7 +2,16 @@ import { useState } from "react";
 import { Header } from "../components/plainspeak/Header";
 
 export default function FAQ() {
-  const [language, setLanguage] = useState<"en" | "es">("en");
+  type Language = "en" | "es" | "vi" | "tl";
+
+function basicLanguageCheck(text: string, lang: Language) {
+  if (lang === "es") return /[áéíóúñ¿¡]/i.test(text);
+  if (lang === "vi") return /[ăâđêôơư]/i.test(text);
+  if (lang === "tl") return /[áéíóúñ¿¡]/i.test(text);
+  return true;
+}
+
+const [language, setLanguage] = useState<Language>("en");
 
   return (
     <div className="min-h-screen text-slate-900 bg-[linear-gradient(135deg,rgba(226,241,255,0.4),rgba(228,243,236,0.4),rgba(230,232,255,0.4),rgba(221,242,242,0.4))]">

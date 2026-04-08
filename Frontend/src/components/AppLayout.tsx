@@ -11,7 +11,13 @@ export default function AppLayout() {
   const user = auth?.user ?? null;
 
   const API_URL = import.meta.env.VITE_API_URL ?? "";
-  const location = useLocation();
+  const routerLocation = useLocation();
+  const path = routerLocation.pathname;
+
+  // ✅ ONLY DEFINE THESE ONCE
+  const isHome = path === "/";
+  const isPricing = path.startsWith("/pricing");
+  const isFAQ = path.startsWith("/faq");
 
   const MAX_AUDIO_GENERATIONS = 3;
 
@@ -135,13 +141,6 @@ export default function AppLayout() {
   };
 
   // ================================
-  // ROUTING LOGIC
-  // ================================
-  const isHome = location.pathname === "/";
-  const isPricing = location.pathname === "/pricing";
-  const isFAQ = location.pathname === "/faq";
-
-  // ================================
   // UI
   // ================================
   return (
@@ -151,12 +150,10 @@ export default function AppLayout() {
 
       <div className="max-w-4xl mx-auto space-y-6">
 
-        {/* DEBUG */}
         <div className="text-xs text-gray-400">
           DEBUG → user: {user ? "yes" : "no"} | API: {API_URL ? "set" : "missing"}
         </div>
 
-        {/* HOME (MAIN TOOL) */}
         {isHome && (
           <>
             <InputMethods {...({ inputText, setInputText } as any)} />
@@ -202,12 +199,10 @@ export default function AppLayout() {
           </>
         )}
 
-        {/* PRICING */}
         {isPricing && (
           <div className="text-xl">Pricing Page</div>
         )}
 
-        {/* FAQ */}
         {isFAQ && (
           <div className="text-xl">FAQ Page</div>
         )}

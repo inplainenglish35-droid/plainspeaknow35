@@ -2,13 +2,14 @@ import { useState } from "react";
 import { InputMethods } from "./plainspeak/InputMethods";
 import { AudioPlayer } from "./plainspeak/AudioPlayer";
 
-type Props = {
-  user: any;
-  API_URL: string;
-  language: string;
-};
+import { useAuth } from "./plainspeak/contexts/AuthContext";
 
-export default function MainTool({ user, API_URL, language }: Props) {
+export default function MainTool() {
+  const auth = useAuth?.();
+  const user = auth?.user ?? null;
+
+  const API_URL = import.meta.env.VITE_API_URL ?? "";
+  const language = "en"; // keep simple for now {
   const MAX_AUDIO_GENERATIONS = 3;
 
   const [inputText, setInputText] = useState("");

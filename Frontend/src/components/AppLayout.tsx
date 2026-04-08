@@ -4,6 +4,9 @@ import { Header } from "./plainspeak/Header";
 import { InputMethods } from "./plainspeak/InputMethods";
 import { AudioPlayer } from "./plainspeak/AudioPlayer";
 
+// 🔐 Keep this aligned with your backend
+type Language = "en" | "es";
+
 export default function AppLayout() {
   const { user } = useAuth();
 
@@ -13,6 +16,8 @@ export default function AppLayout() {
   // ================================
   // STATE
   // ================================
+  const [language, setLanguage] = useState<Language>("en");
+
   const [inputText, setInputText] = useState("");
   const [outputText, setOutputText] = useState("");
   const [loading, setLoading] = useState(false);
@@ -26,7 +31,10 @@ export default function AppLayout() {
   // SIMPLIFY
   // ================================
   const handleSimplify = async () => {
-    if (!inputText || !user || !API_URL) return;
+    if (!inputText || !user || !API_URL) {
+      setErrorMessage("Missing input or authentication.");
+      return;
+    }
 
     try {
       setLoading(true);
@@ -42,6 +50,7 @@ export default function AppLayout() {
         },
         body: JSON.stringify({
           text: inputText,
+          language, // ✅ IMPORTANT
           mode: "understand",
         }),
       });
@@ -111,7 +120,11 @@ export default function AppLayout() {
   return (
     <div className="min-h-screen bg-slate-50 p-4">
 
-      <Header />
+      {/* ✅ FIXED */}
+      <Header
+        language={language}
+        setLanguage={setLanguage}
+      />
 
       <div className="max-w-4xl mx-auto space-y-6">
 
@@ -158,4 +171,5 @@ export default function AppLayout() {
       </div>
     </div>
   );
+}
 }

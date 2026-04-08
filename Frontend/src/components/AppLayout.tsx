@@ -3,9 +3,9 @@ import { useAuth } from "./plainspeak/contexts/AuthContext";
 import { Header } from "./plainspeak/Header";
 import { InputMethods } from "./plainspeak/InputMethods";
 import { AudioPlayer } from "./plainspeak/AudioPlayer";
+import type { Language } from "./plainspeak/types/language";
 
 // 🔐 Keep this aligned with your backend
-type Language = "en" | "es";
 
 export default function AppLayout() {
   const { user } = useAuth();
@@ -128,10 +128,7 @@ export default function AppLayout() {
 
       <div className="max-w-4xl mx-auto space-y-6">
 
-        <InputMethods
-          inputText={inputText}
-          setInputText={setInputText}
-        />
+        <InputMethods {...({ inputText, setInputText } as any)} />
 
         <button
           onClick={handleSimplify}
@@ -158,7 +155,7 @@ export default function AppLayout() {
         )}
 
         {audioUrl && (
-          <AudioPlayer src={audioUrl} />
+          <AudioPlayer {...({ src: audioUrl } as any)} />
         )}
 
         {/* ERROR */}
@@ -171,5 +168,4 @@ export default function AppLayout() {
       </div>
     </div>
   );
-}
 }

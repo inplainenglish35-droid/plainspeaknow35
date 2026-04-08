@@ -1,8 +1,13 @@
 import { useState } from "react";
 import { Header } from "../components/plainspeak/Header";
 
+type Language = "en" | "es" | "vi" | "tl";
+
+interface HeaderProps {
+  language: Language;
+  setLanguage: (lang: Language) => void;
+}
 export default function FAQ() {
-  type Language = "en" | "es" | "vi" | "tl";
 
 function basicLanguageCheck(text: string, lang: Language) {
   if (lang === "es") return /[áéíóúñ¿¡]/i.test(text);

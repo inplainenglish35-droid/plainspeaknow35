@@ -5,10 +5,10 @@ import { InputMethods } from "./plainspeak/InputMethods";
 import { AudioPlayer } from "./plainspeak/AudioPlayer";
 import type { Language } from "./plainspeak/types/language";
 
-// 🔐 Keep this aligned with your backend
-
 export default function AppLayout() {
-  const { user } = useAuth();
+  // 🔐 Auth (DO NOT wrap hooks in try/catch)
+  const auth = useAuth?.();
+  const user = auth?.user ?? null;
 
   const API_URL = import.meta.env.VITE_API_URL ?? "";
   const MAX_AUDIO_GENERATIONS = 3;
@@ -31,8 +31,19 @@ export default function AppLayout() {
   // SIMPLIFY
   // ================================
   const handleSimplify = async () => {
-    if (!inputText || !user || !API_URL) {
-      setErrorMessage("Missing input or authentication.");
+    // 🔍 Clear, explicit checks
+    if (!inputText) {
+      setErrorMessage("Please enter text.");
+      return;
+    }
+
+    if (!user) {
+      setErrorMessage("You must be signed in.");
+      return;
+    }
+
+    if (!API_URL) {
+      setErrorMessage("API not configured.");
       return;
     }
 
@@ -50,7 +61,7 @@ export default function AppLayout() {
         },
         body: JSON.stringify({
           text: inputText,
-          language, // ✅ IMPORTANT
+          language,
           mode: "understand",
         }),
       });
@@ -65,7 +76,8 @@ export default function AppLayout() {
       setAudioUrl(null);
       setAudioGenerationCount(0);
 
-    } catch {
+    } catch (err) {
+      console.error(err);
       setErrorMessage("Failed to process document.");
     } finally {
       setLoading(false);
@@ -76,7 +88,17 @@ export default function AppLayout() {
   // AUDIO
   // ================================
   const handleGenerateAudio = async () => {
-    if (!outputText || !user || !API_URL) return;
+    if (!outputText) return;
+
+    if (!user) {
+      setErrorMessage("You must be signed in.");
+      return;
+    }
+
+    if (!API_URL) {
+      setErrorMessage("API not configured.");
+      return;
+    }
 
     if (audioGenerationCount >= MAX_AUDIO_GENERATIONS) {
       setErrorMessage("Audio limit reached for this document.");
@@ -107,7 +129,8 @@ export default function AppLayout() {
       setAudioUrl(url);
       setAudioGenerationCount((prev) => prev + 1);
 
-    } catch {
+    } catch (err) {
+      console.error(err);
       setErrorMessage("Audio generation failed.");
     } finally {
       setIsGeneratingAudio(false);
@@ -120,13 +143,17 @@ export default function AppLayout() {
   return (
     <div className="min-h-screen bg-slate-50 p-4">
 
-      {/* ✅ FIXED */}
       <Header
         language={language}
         setLanguage={setLanguage}
       />
 
       <div className="max-w-4xl mx-auto space-y-6">
+
+        {/* 🔍 TEMP DEBUG (remove later) */}
+        <div className="text-xs text-gray-400">
+          DEBUG → user: {user ? "yes" : "no"} | API: {API_URL ? "set" : "missing"}
+        </div>
 
         <InputMethods {...({ inputText, setInputText } as any)} />
 

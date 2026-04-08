@@ -2,13 +2,9 @@ import { Routes, Route } from "react-router-dom";
 import AppLayout from "./components/AppLayout";
 import MainTool from "./components/MainTool";
 
-function Pricing() {
-  return <div className="p-4 text-xl">Pricing Page</div>;
-}
+import Pricing from "./pages/Pricing";
+import FAQ from "./pages/FAQ";
 
-function FAQ() {
-  return <div className="p-4 text-xl">FAQ Page</div>;
-}
 
 export default function App() {
   return (

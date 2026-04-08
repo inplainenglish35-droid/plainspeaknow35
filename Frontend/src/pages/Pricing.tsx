@@ -10,17 +10,7 @@ const API_URL = import.meta.env.VITE_API_URL ?? "";
 export default function Pricing() {
   const { user } = useAuth();
   const [language, setLanguage] = useState<"en" | "es" | "vi" | "tl">("en");
- const allowedLanguages = [
-  { code: "en", label: "English" },
-  { code: "es", label: "Spanish" },
-  { code: "vi", label: "Vietnamese" },
-  { code: "tl", label: "Tagalog" },
-];
-{allowedLanguages.map((lang) => (
-  <option key={lang.code} value={lang.code}>
-    {lang.label}
-  </option>
-))}
+ 
 
   const handlePurchase = async (packSize: "6" | "15" | "30") => {
     if (!user) {
@@ -70,99 +60,96 @@ export default function Pricing() {
           </section>
 
           {/* HOW KEYS WORK */}
+          <p className="text-xs text-slate-500">
+  Buy what you need. Use them anytime.
+</p>
           <section className="max-w-3xl mx-auto space-y-4 text-sm text-slate-700">
             <h2 className="text-lg font-semibold text-center">
               How Keys Work
             </h2>
 
-            <div className="space-y-3 bg-white border border-teal-100 rounded-xl p-6">
-              <p>• Most documents use <strong>1 Key</strong></p>
-              <p>• Longer documents (about 35+ pages) use <strong>2 Keys</strong></p>
-              <p>• All modes are included — no extra cost</p>
-              <p>• You’ll always see how many Keys are used before processing</p>
+<div className="space-y-3 bg-white border border-teal-100 rounded-xl p-6">
+  <p><strong>Most documents use 1 Key</strong></p>
+  <p>Longer documents may use 2 Keys</p>
+  <p>Includes understanding, organizing, and response drafting</p>
+  <p>You’ll always see Key usage before processing</p>
+  <p>Buying more Keys lowers the cost per Key</p>
 
-              <p className="text-xs text-slate-500 pt-2">
-                Plainspeak is built to help you understand documents clearly—not to give legal or medical advice.
-              </p>
-            </div>
-          </section>
-
-          {/* KEY PACKS */}
+  <p className="text-xs text-slate-500 pt-2">
+    Plainspeak clarifies complex documents—it does not replace professional advice.
+  </p>
+</div>
           <section className="grid gap-6 md:grid-cols-3">
 
-            {/* 6 KEYS */}
-            <div className="rounded-xl border border-teal-100 p-6 bg-white space-y-4 text-center">
-              <h3 className="text-lg font-semibold flex items-center justify-center gap-2">
-                <Leaf className="h-4 w-4 text-slate-400" />
-                6 Keys
-              </h3>
+  {/* 6 KEYS */}
+  <div className="rounded-xl border border-teal-100 p-6 bg-white space-y-4 text-center">
+    <h3 className="text-lg font-semibold flex items-center justify-center gap-2">
+      <Leaf className="h-4 w-4 text-slate-400" />
+      6 Keys
+    </h3>
 
-              <p className="text-2xl font-semibold">$18</p>
+    <p className="text-2xl font-semibold">$18</p>
+    <p className="text-xs text-slate-500">$3.00 per Key</p>
 
-              <p className="text-sm text-slate-600">
-                A simple way to try Plainspeak when you need it.
-              </p>
+    <p className="text-sm text-slate-600">
+      A simple way to try Plainspeak when you need it.
+    </p>
 
-              <button
-                onClick={() => handlePurchase("6")}
-                className="w-full py-2 rounded-xl bg-[#4f7c6b] text-white hover:opacity-90 transition"
-              >
-                Get 6 Keys
-              </button>
-            </div>
+    <button
+      onClick={() => handlePurchase("6")}
+      className="w-full py-2 rounded-xl bg-[#4f7c6b] text-white hover:opacity-90 transition"
+    >
+      Start with 6 Keys
+    </button>
+  </div>
 
-            {/* 15 KEYS */}
-            <div className="rounded-xl border border-teal-200 bg-teal-50 p-6 shadow-sm space-y-4 text-center">
-              <h3 className="text-lg font-semibold flex items-center justify-center gap-2">
-                <Layers className="h-4 w-4 text-slate-400" />
-                15 Keys
-              </h3>
+  {/* 15 KEYS */}
+  <div className="rounded-xl border border-teal-200 bg-teal-50 p-6 shadow-sm space-y-4 text-center">
+    <p className="text-xs font-medium text-teal-700">Most popular</p>
 
-              <p className="text-2xl font-semibold">$42</p>
+    <h3 className="text-lg font-semibold flex items-center justify-center gap-2">
+      <Layers className="h-4 w-4 text-slate-400" />
+      15 Keys
+    </h3>
 
-              <p className="text-sm text-slate-700">
-                A balanced option for ongoing clarity and support.
-              </p>
+    <p className="text-2xl font-semibold">$42</p>
+    <p className="text-xs text-slate-600">$2.80 per Key</p>
 
-              <button
-                onClick={() => handlePurchase("15")}
-                className="w-full py-2 rounded-xl bg-[#4f7c6b] text-white hover:opacity-90 transition"
-              >
-                Get 15 Keys
-              </button>
-            </div>
+    <p className="text-sm text-slate-700">
+      A balanced option for ongoing clarity and support.
+    </p>
 
-            {/* 30 KEYS */}
-            <div className="rounded-xl border border-teal-100 p-6 bg-white space-y-4 text-center">
-              <h3 className="text-lg font-semibold flex items-center justify-center gap-2">
-                <Shield className="h-4 w-4 text-slate-400" />
-                30 Keys
-              </h3>
+    <button
+      onClick={() => handlePurchase("15")}
+      className="w-full py-2 rounded-xl bg-[#4f7c6b] text-white hover:opacity-90 transition"
+    >
+      Choose 15 Keys
+    </button>
+  </div>
 
-              <p className="text-2xl font-semibold">$78</p>
+  {/* 30 KEYS */}
+  <div className="rounded-xl border border-teal-100 p-6 bg-white space-y-4 text-center">
+    <h3 className="text-lg font-semibold flex items-center justify-center gap-2">
+      <Shield className="h-4 w-4 text-slate-400" />
+      30 Keys
+    </h3>
 
-              <p className="text-sm text-slate-600">
-                For frequent use when you want consistent support.
-              </p>
+    <p className="text-2xl font-semibold">$78</p>
+    <p className="text-xs text-slate-500">$2.60 per Key</p>
 
-              <button
-                onClick={() => handlePurchase("30")}
-                className="w-full py-2 rounded-xl bg-[#4f7c6b] text-white hover:opacity-90 transition"
-              >
-                Get 30 Keys
-              </button>
-            </div>
+    <p className="text-sm text-slate-600">
+      For frequent use when you want consistent support.
+    </p>
 
-          </section>
+    <button
+      onClick={() => handlePurchase("30")}
+      className="w-full py-2 rounded-xl bg-[#4f7c6b] text-white hover:opacity-90 transition"
+    >
+      Get 30 Keys
+    </button>
+  </div>
 
-          {/* BACK */}
-          <section className="text-center pt-4">
-            <Link
-              to="/"
-              className="text-sm font-medium text-teal-600 underline hover:text-teal-700"
-            >
-              ← Back to Plainspeak Now
-            </Link>
+</section>
           </section>
 
         </div>
@@ -170,5 +157,3 @@ export default function Pricing() {
     </div>
   );
 }
-
-

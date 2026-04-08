@@ -74,11 +74,11 @@ const [language, setLanguage] = useState<Language>("en");
                 a small number of Keys are used based on what you need.
               </p>
 
-              <ul className="list-disc pl-5 mt-2 space-y-1 text-slate-600">
-                <li><strong>Understand</strong> uses 1 Key</li>
-                <li><strong>Organize</strong> uses 2 Keys</li>
-                <li><strong>Respond</strong> uses 3 Keys</li>
-              </ul>
+            <ul className="list-disc pl-5 mt-2 space-y-1 text-slate-600">
+                <li><strong>Most documents use just 1 Key</strong></li>
+                <li>Longer documents may use 2 Keys</li>
+                <li>Includes understanding, organizing, and response drafting</li>
+            </ul>
 
               <p className="mt-2">
                 You only use Keys when you process a document. Keys never expire.

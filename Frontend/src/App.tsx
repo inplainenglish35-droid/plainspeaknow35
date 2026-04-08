@@ -1,5 +1,3 @@
-import AppLayout from "./components/AppLayout";
-
 export default function App() {
-  return <AppLayout />;
+  return <h1 style={{ color: "purple" }}>APP ROUTER TEST</h1>;
 }

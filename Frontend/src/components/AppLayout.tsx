@@ -156,7 +156,12 @@ export default function AppLayout() {
         </div>
 
         <InputMethods {...({ inputText, setInputText } as any)} />
-
+<textarea
+  value={inputText}
+  onChange={(e) => setInputText(e.target.value)}
+  placeholder="Paste your document here..."
+  className="w-full p-4 border rounded-xl min-h-[120px]"
+/>
         <button
           onClick={handleSimplify}
           disabled={loading}

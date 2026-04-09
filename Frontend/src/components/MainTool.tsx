@@ -46,7 +46,8 @@ export default function MainTool() {
       setErrorMessage(null);
 
       const token = await user.getIdToken();
-
+console.log("API_URL VALUE:", API_URL);
+console.log("API_URL RUNTIME:", API_URL);
       const res = await fetch(`${API_URL}/api/simplify`, {
         method: "POST",
         headers: {

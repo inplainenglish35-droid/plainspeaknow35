@@ -11,6 +11,49 @@ import { ApiError } from "../middleware/ApiError";
 import { enforceRateLimits } from "../rateLimiter";
 
 /* =========================
+   APP INIT
+========================= */
+
+const app = express();
+
+/* =========================
+   CORS (SINGLE SOURCE OF TRUTH)
+========================= */
+
+const allowedOrigins = [
+  "https://plainspeak-now.vercel.app",
+  "https://plainspeaknow.net",
+  "https://www.plainspeaknow.net",
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow server-to-server or curl (no origin)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
+
+// 🔥 Ensure preflight is always handled
+app.options("*", cors());
+
+/* =========================
+   MIDDLEWARE
+========================= */
+
+app.use(express.json());
+
+/* =========================
    ENV CHECKS
 ========================= */
 
@@ -27,25 +70,12 @@ const openai = new OpenAI({
 });
 
 /* =========================
-   EXPRESS SETUP
+   HEALTH CHECK
 ========================= */
 
-const app = express();
-
-app.use(
-  cors({
-    origin: [
-      "https://plainspeak-now.vercel.app",
-      "https://plainspeaknow.net",
-      "https://www.plainspeaknow.net",
-    ],
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  })
-);
-
-app.use(express.json());
+app.get("/api/health", (_req, res) => {
+  res.json({ ok: true });
+});
 
 /* =========================
    HEALTH CHECK

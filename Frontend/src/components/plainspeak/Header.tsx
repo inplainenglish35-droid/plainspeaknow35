@@ -40,24 +40,38 @@ export const Header: React.FC<HeaderProps> = ({
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   /* =========================
-     DARK MODE INIT
+     DARK MODE SYSTEM
   ========================= */
 
+  // Init (saved or system)
   useEffect(() => {
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setIsDark(prefersDark);
+    const saved = localStorage.getItem("theme");
 
-    if (prefersDark) {
-      document.documentElement.classList.add("dark");
+    if (saved === "dark") {
+      setIsDark(true);
+    } else if (saved === "light") {
+      setIsDark(false);
+    } else {
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      setIsDark(prefersDark);
     }
   }, []);
 
+  // Apply theme
+  useEffect(() => {
+    const root = document.documentElement;
+
+    if (isDark) {
+      root.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      root.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDark]);
+
   const toggleDarkMode = () => {
-    setIsDark((prev) => {
-      const next = !prev;
-      document.documentElement.classList.toggle("dark", next);
-      return next;
-    });
+    setIsDark((prev) => !prev);
   };
 
   /* =========================
@@ -75,14 +89,13 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-white/40 backdrop-blur-sm border-b border-teal-100">
+      <header className="sticky top-0 z-50 bg-white/40 dark:bg-slate-900/80 backdrop-blur-sm border-b border-teal-100 dark:border-slate-700">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-16">
 
             {/* LEFT */}
             <div className="flex items-center gap-6 sm:gap-8">
 
-              {/* Logo */}
               <Link to="/" className="flex items-center gap-3">
                 <img
                   src={logo}
@@ -94,25 +107,24 @@ export const Header: React.FC<HeaderProps> = ({
                 </span>
               </Link>
 
-              {/* Nav (hide on small screens later if needed) */}
               <nav className="hidden sm:flex items-center gap-6 text-sm">
                 <a
                   href="mailto:inplainenglish35@gmail.com?subject=Plainspeak Beta Feedback"
-                  className="text-slate-600 hover:text-slate-900 transition"
+                  className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition"
                 >
                   Send Feedback
                 </a>
 
                 <Link
                   to="/faq"
-                  className="text-slate-600 hover:text-slate-900 transition"
+                  className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition"
                 >
                   FAQ
                 </Link>
 
                 <Link
                   to="/pricing"
-                  className="text-slate-600 hover:text-slate-900 transition"
+                  className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition"
                 >
                   Pricing
                 </Link>
@@ -122,39 +134,32 @@ export const Header: React.FC<HeaderProps> = ({
             {/* RIGHT */}
             <div className="flex items-center gap-2 sm:gap-3">
 
-              {/* 🌍 LANGUAGE SELECTOR */}
-              <div className="flex items-center gap-2 text-sm">
-                <span className="hidden sm:inline text-slate-600">🌐</span>
+              {/* LANGUAGE */}
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value as Language)}
+                className="px-2 py-1 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-xs sm:text-sm text-slate-700 dark:text-slate-200"
+              >
+                <option value="en">EN</option>
+                <option value="es">ES</option>
+                <option value="vi">VI</option>
+                <option value="tl">TL</option>
+              </select>
 
-                <select
-                  value={language}
-                  onChange={(e) =>
-                    setLanguage(e.target.value as Language)
-                  }
-                  className="px-2 py-1 border border-slate-300 rounded-lg bg-white text-xs sm:text-sm
-                  hover:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400"
-                >
-                  <option value="en">EN</option>
-                  <option value="es">ES</option>
-                  <option value="vi">VI</option>
-                  <option value="tl">TL</option>
-                </select>
-              </div>
-
-              {/* 🌙 DARK MODE */}
+              {/* DARK MODE */}
               <button
                 onClick={toggleDarkMode}
                 aria-label="Toggle dark mode"
-                className="p-2 rounded-lg hover:bg-teal-50 transition"
+                className="p-2 rounded-lg hover:bg-teal-50 dark:hover:bg-slate-700 transition"
               >
                 {isDark ? (
-                  <Sun className="w-5 h-5 text-slate-600" />
+                  <Sun className="w-5 h-5 text-slate-300" />
                 ) : (
                   <Moon className="w-5 h-5 text-slate-600" />
                 )}
               </button>
 
-              {/* 👤 AUTH */}
+              {/* AUTH */}
               {!user ? (
                 <button
                   onClick={() => setAuthModalOpen(true)}
@@ -177,10 +182,10 @@ export const Header: React.FC<HeaderProps> = ({
                   </button>
 
                   {userMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-44 rounded-lg border border-teal-100 bg-white shadow-lg">
+                    <div className="absolute right-0 mt-2 w-44 rounded-lg border border-teal-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-lg">
                       <button
                         onClick={handleSignOut}
-                        className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-teal-50"
+                        className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-teal-50 dark:hover:bg-slate-700"
                       >
                         <LogOut className="w-4 h-4" />
                         Sign out
@@ -195,7 +200,6 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </header>
 
-      {/* AUTH MODAL */}
       <AuthModal
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}

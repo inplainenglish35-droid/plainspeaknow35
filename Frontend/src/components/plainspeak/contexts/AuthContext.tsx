@@ -1,15 +1,26 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import type { User } from "firebase/auth";
+import { onAuthStateChanged, type User } from "firebase/auth";
 import { auth } from "../../../lib/firebase";
+
+/* =========================
+   TYPES
+========================= */
 
 interface AuthContextValue {
   user: User | null;
   loading: boolean;
 }
 
-const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+/* =========================
+   CONTEXT
+========================= */
+
+const AuthContext = createContext<AuthContextValue | null>(null);
+
+/* =========================
+   PROVIDER
+========================= */
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -21,7 +32,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
 
-    return unsubscribe;
+    return () => unsubscribe();
   }, []);
 
   return (
@@ -31,12 +42,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) {
-    throw new Error("useAuth must be used inside AuthProvider");
+/* =========================
+   HOOK
+========================= */
+
+export function useAuth(): AuthContextValue {
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
   }
-  return ctx;
+
+  return context;
 }
 
 

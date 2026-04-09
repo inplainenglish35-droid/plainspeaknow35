@@ -138,7 +138,59 @@ export default function MainTool() {
   return (
     <div className="space-y-6">
 
-      <InputMethods {...({ inputText, setInputText } as any)} />
+      <InputMethods
+  onFileSelected={async (file) => {
+    console.log("📂 FILE RECEIVED:", file);
+    setErrorMessage(null);
+
+    try {
+      // Handle text files
+      if (file.type === "text/plain") {
+        const text = await file.text();
+        setInputText(text);
+        return;
+      }
+
+      // Handle images / PDFs (send to backend OCR)
+      if (!API_URL) {
+        setErrorMessage("API not configured.");
+        return;
+      }
+
+      if (!user) {
+        setErrorMessage("You must be signed in.");
+        return;
+      }
+
+      const token = await user.getIdToken();
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch(`${API_URL}/api/extract-text`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data?.message || "Failed to extract text");
+      }
+
+      setInputText(data.text || "");
+    } catch (err) {
+      console.error(err);
+      setErrorMessage("Failed to read file.");
+    }
+  }}
+  onPaste={() => {
+    console.log("📋 Paste triggered");
+  }}
+/>
 
       <textarea
         value={inputText}

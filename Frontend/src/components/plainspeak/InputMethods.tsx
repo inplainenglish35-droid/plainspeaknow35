@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import type { ChangeEvent } from "react";
 
 interface InputMethodsProps {
-  onFileSelected?: (file: File) => void; // ✅ now optional (prevents crash)
+  onFileSelected?: (file: File) => void;
   onPaste?: () => void;
 }
 
@@ -12,15 +12,14 @@ export function InputMethods({
 }: InputMethodsProps) {
   const [previewFile, setPreviewFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [error, setError] = useState("");
 
   /* =========================
-     CLEANUP (prevent memory leak)
+     CLEANUP
   ========================= */
   useEffect(() => {
     return () => {
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
-      }
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
   }, [previewUrl]);
 
@@ -32,24 +31,42 @@ export function InputMethods({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Image → preview first
+    console.log("📂 File selected:", file);
+
+    setError("");
+
     if (file.type.startsWith("image/")) {
       const url = URL.createObjectURL(file);
       setPreviewFile(file);
       setPreviewUrl(url);
-    } else {
-      onFileSelected?.(file); // ✅ SAFE CALL
+      return;
     }
+
+    if (!onFileSelected) {
+      console.error("❌ onFileSelected not provided");
+      setError("Upload failed. Please refresh and try again.");
+      return;
+    }
+
+    onFileSelected(file);
 
     e.target.value = "";
   };
 
   const handleConfirm = () => {
-    if (previewFile) {
-      onFileSelected?.(previewFile); // ✅ SAFE CALL
-      setPreviewFile(null);
-      setPreviewUrl(null);
+    if (!previewFile) return;
+
+    console.log("📸 Confirming image:", previewFile);
+
+    if (!onFileSelected) {
+      console.error("❌ onFileSelected missing during confirm");
+      setError("Upload failed. Please try again.");
+      return;
     }
+
+    onFileSelected(previewFile);
+    setPreviewFile(null);
+    setPreviewUrl(null);
   };
 
   const handleRetake = () => {
@@ -99,6 +116,11 @@ export function InputMethods({
           />
         </label>
       </div>
+
+      {/* ERROR MESSAGE */}
+      {error && (
+        <p className="text-sm text-red-500">{error}</p>
+      )}
 
       {/* Preview */}
       {previewUrl && (

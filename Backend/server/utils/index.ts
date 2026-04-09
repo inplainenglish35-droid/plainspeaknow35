@@ -56,6 +56,28 @@ app.get("/api/health", (_req, res) => {
 });
 
 /* =========================
+   EXTRACT TEXT (TEMP MOCK)
+========================= */
+
+app.post(
+  "/api/extract-text",
+  requireAuth,
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      // TEMP: return mock response so frontend works
+      return res.json({
+        text: "File received successfully (mock). OCR coming soon.",
+      });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({
+        message: "Failed to extract text",
+      });
+    }
+  }
+);
+
+/* =========================
    KEY LOGIC
 ========================= */
 

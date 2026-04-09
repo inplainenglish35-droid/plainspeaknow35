@@ -60,7 +60,18 @@ export default function MainTool() {
         }),
       });
 
-      const data = await res.json();
+      let data;
+
+try {
+  data = await res.json();
+} catch {
+  data = null;
+}
+
+if (!res.ok) {
+  console.error("Server error:", data);
+  throw new Error(data?.message || "Failed to extract text");
+}
 
       if (!res.ok) {
         throw new Error(data?.message || "Failed");
@@ -138,59 +149,7 @@ export default function MainTool() {
   return (
     <div className="space-y-6">
 
-      <InputMethods
-  onFileSelected={async (file) => {
-    console.log("📂 FILE RECEIVED:", file);
-    setErrorMessage(null);
-
-    try {
-      // Handle text files
-      if (file.type === "text/plain") {
-        const text = await file.text();
-        setInputText(text);
-        return;
-      }
-
-      // Handle images / PDFs (send to backend OCR)
-      if (!API_URL) {
-        setErrorMessage("API not configured.");
-        return;
-      }
-
-      if (!user) {
-        setErrorMessage("You must be signed in.");
-        return;
-      }
-
-      const token = await user.getIdToken();
-
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const res = await fetch(`${API_URL}/api/extract-text`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data?.message || "Failed to extract text");
-      }
-
-      setInputText(data.text || "");
-    } catch (err) {
-      console.error(err);
-      setErrorMessage("Failed to read file.");
-    }
-  }}
-  onPaste={() => {
-    console.log("📋 Paste triggered");
-  }}
-/>
+      <InputMethods {...({ inputText, setInputText } as any)} />
 
       <textarea
         value={inputText}

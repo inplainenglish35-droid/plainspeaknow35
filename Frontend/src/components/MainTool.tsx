@@ -72,7 +72,6 @@ if (!res.ok) {
   console.error("Server error:", data);
   throw new Error(data?.message || "Failed to extract text");
 }
-
       if (!res.ok) {
         throw new Error(data?.message || "Failed");
       }
@@ -149,7 +148,31 @@ if (!res.ok) {
   return (
     <div className="space-y-6">
 
-      <InputMethods {...({ inputText, setInputText } as any)} />
+      <InputMethods
+  onFileSelected={async (file) => {
+    console.log("📂 FILE RECEIVED IN MAIN TOOL:", file);
+    setErrorMessage(null);
+
+    try {
+      // TEXT FILE
+      if (file.type === "text/plain") {
+        const text = await file.text();
+        setInputText(text);
+        return;
+      }
+
+      // IMAGE / PDF (TEMP MOCK UNTIL BACKEND READY)
+      setInputText("File uploaded successfully. Processing coming soon.");
+
+    } catch (err) {
+      console.error(err);
+      setErrorMessage("Upload failed. Please try again.");
+    }
+  }}
+  onPaste={() => {
+    console.log("📋 Paste clicked");
+  }}
+/>
 
       <textarea
         value={inputText}

@@ -1,30 +1,24 @@
 import { useState } from "react";
-import { Header } from "../components/plainspeak/Header";
 
 type Language = "en" | "es" | "vi" | "tl";
 
-interface HeaderProps {
-  language: Language;
-  setLanguage: (lang: Language) => void;
-}
 export default function FAQ() {
+  const [language, setLanguage] = useState<Language>("en");
 
-function basicLanguageCheck(text: string, lang: Language) {
-  if (lang === "es") return /[áéíóúñ¿¡]/i.test(text);
-  if (lang === "vi") return /[ăâđêôơư]/i.test(text);
-  if (lang === "tl") return /[áéíóúñ¿¡]/i.test(text);
-  return true;
-}
-
-const [language, setLanguage] = useState<Language>("en");
+  function basicLanguageCheck(text: string, lang: Language) {
+    if (lang === "es") return /[áéíóúñ¿¡]/i.test(text);
+    if (lang === "vi") return /[ăâđêôơư]/i.test(text);
+    if (lang === "tl") return /[áéíóúñ¿¡]/i.test(text);
+    return true;
+  }
 
   return (
     <div className="min-h-screen text-slate-900 bg-[linear-gradient(135deg,rgba(226,241,255,0.4),rgba(228,243,236,0.4),rgba(230,232,255,0.4),rgba(221,242,242,0.4))]">
-      <Header language={language} setLanguage={setLanguage} />
-
+      
       <main className="max-w-4xl mx-auto px-6 py-16">
         <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-sm p-10 space-y-10">
 
+          {/* HEADER */}
           <div className="text-center space-y-4">
             <h1 className="text-3xl font-semibold tracking-tight">
               Frequently Asked Questions
@@ -34,124 +28,108 @@ const [language, setLanguage] = useState<Language>("en");
             </p>
           </div>
 
+          {/* FAQ CONTENT */}
           <section className="space-y-8 text-sm leading-relaxed text-slate-700">
 
-        <div>
-      <h2 className="font-semibold text-base mb-2">
-    Why not just use ChatGPT?
-  </h2>
-  <p>
-    You can—and many people do. But Plainspeak is designed specifically for understanding real-world documents like IEPs, letters, and official paperwork.
-  </p>
-  <p className="mt-2">
-    With ChatGPT, you have to decide what to ask, how to phrase it, and how to interpret the response. Plainspeak handles that for you automatically.
-  </p>
-  <p className="mt-2">
-    It consistently rewrites documents in clear, calm language, can organize key points, and can draft responses—all in one step, without needing prompts.
-  </p>
-  <p className="mt-2">
-    Plainspeak also keeps things focused on clarity. It helps you understand what a document says, but it does not provide legal or medical advice.
-  </p>
-</div>
-            {/* WHAT DOES IT DO */}
+            <div>
+              <h2 className="font-semibold text-base mb-2">
+                Why not just use ChatGPT?
+              </h2>
+              <p>
+                You can—and many people do. But Plainspeak is designed specifically
+                for understanding real-world documents like IEPs, letters, and official paperwork.
+              </p>
+              <p className="mt-2">
+                Plainspeak handles the process automatically and keeps everything focused on clarity.
+              </p>
+            </div>
+
             <div>
               <h2 className="font-semibold text-base mb-2">
                 What does Plainspeak do?
               </h2>
               <p>
                 Plainspeak turns complex writing into clear, plain language.
-                Paste text, upload a document, or take a photo, and you’ll get an easier-to-understand version in seconds.
+                Paste text, upload a document, or take a photo, and get an easier-to-understand version.
               </p>
             </div>
 
-            {/* KEYS */}
             <div>
               <h2 className="font-semibold text-base mb-2">
                 What are Keys?
               </h2>
               <p>
-                Keys are how you use Plainspeak. Each time you process a document,
-                a small number of Keys are used based on what you need.
+                Keys are how you use Plainspeak. Each document uses a small number of Keys.
               </p>
 
-            <ul className="list-disc pl-5 mt-2 space-y-1 text-slate-600">
+              <ul className="list-disc pl-5 mt-2 space-y-1 text-slate-600">
                 <li><strong>Most documents use just 1 Key</strong></li>
                 <li>Longer documents may use 2 Keys</li>
                 <li>Includes understanding, organizing, and response drafting</li>
-            </ul>
+              </ul>
 
               <p className="mt-2">
-                You only use Keys when you process a document. Keys never expire.
+                Keys are only used when you process a document. They never expire.
               </p>
             </div>
 
-            {/* DO KEYS EXPIRE */}
             <div>
               <h2 className="font-semibold text-base mb-2">
                 Do Keys expire?
               </h2>
               <p>
                 No. Your Keys stay in your account until you use them.
-                No subscriptions, no resets, and no expiration dates.
               </p>
             </div>
 
-            {/* RUN OUT */}
             <div>
               <h2 className="font-semibold text-base mb-2">
                 What happens if I run out of Keys?
               </h2>
               <p>
-                You’ll be asked if you want to purchase more.
-                There are no automatic renewals or surprise charges.
+                You’ll be prompted to purchase more. No subscriptions or surprise charges.
               </p>
             </div>
 
-            {/* PRIVACY */}
             <div>
               <h2 className="font-semibold text-base mb-2">
                 Is my document stored or shared?
               </h2>
               <p>
-                Your text is processed securely. We do not sell or share your data.
-                Documents are not stored for marketing or resale.
+                Your content is processed securely and is not sold or shared.
               </p>
             </div>
 
-            {/* ACCESS */}
             <div>
               <h2 className="font-semibold text-base mb-2">
                 Who can see my document?
               </h2>
               <p>
-                Only you. Your content is tied to your account and not visible to others.
+                Only you. Your content is private to your account.
               </p>
             </div>
 
-            {/* ADVICE (IMPORTANT) */}
             <div>
               <h2 className="font-semibold text-base mb-2">
                 Is this legal, medical, or financial advice?
               </h2>
               <p>
-                No. Plainspeak explains documents in plain language to help you understand them.
-                It does not provide legal, medical, or financial advice and does not replace a professional.
+                No. Plainspeak helps explain documents but does not replace professional advice.
               </p>
             </div>
 
-            {/* REFUNDS */}
             <div>
               <h2 className="font-semibold text-base mb-2">
                 Can I get a refund?
               </h2>
               <p>
-                If something didn’t work as expected, reach out to us.
-                We aim to be fair and will review each situation individually.
+                If something didn’t work as expected, reach out. We review each situation fairly.
               </p>
             </div>
 
           </section>
 
+          {/* FOOTER */}
           <div className="text-center text-xs text-slate-400 pt-6">
             Last updated: April 2026
           </div>

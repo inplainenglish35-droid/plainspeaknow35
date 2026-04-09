@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL ?? "";
+
 interface Props {
   onClose: () => void;
 }
@@ -12,11 +14,24 @@ export default function PurchaseModal({ onClose }: Props) {
   // CHECK AUTH ON LOAD
   // ================================
   useEffect(() => {
+    let mounted = true;
+
     (async () => {
-      const { getAuth } = await import("firebase/auth");
-      const auth = getAuth();
-      setHasUser(!!auth.currentUser);
+      try {
+        const { getAuth } = await import("firebase/auth");
+        const auth = getAuth();
+
+        if (mounted) {
+          setHasUser(!!auth.currentUser);
+        }
+      } catch {
+        if (mounted) setHasUser(false);
+      }
     })();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const isDisabled = loading || !hasUser;
@@ -32,31 +47,37 @@ export default function PurchaseModal({ onClose }: Props) {
       const auth = getAuth();
 
       if (!auth.currentUser) {
-        alert("Please sign in to purchase Keys.");
-        return;
+        throw new Error("User not authenticated");
       }
 
-      const token = await auth.currentUser.getIdToken();
+      const token = await auth.currentUser.getIdToken(true);
 
-      const res = await fetch("/api/create-checkout-session", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ packSize }),
-      });
+      const response = await fetch(
+        `${API_URL}/api/create-checkout-session`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ packSize }),
+        }
+      );
 
-      const data = await res.json();
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Backend error:", data);
+        throw new Error(data.message || "Checkout failed");
+      }
 
       if (!data.url) {
-        console.error("No checkout URL returned", data);
-        alert("Something went wrong. Please try again.");
-        return;
+        console.error("No checkout URL returned:", data);
+        throw new Error("No checkout URL returned");
       }
 
+      // ✅ CRITICAL: redirect to Stripe
       window.location.href = data.url;
-
     } catch (err) {
       console.error(err);
       alert("Purchase failed. Please try again.");
@@ -71,7 +92,6 @@ export default function PurchaseModal({ onClose }: Props) {
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl p-6 w-full max-w-md space-y-4 shadow-lg">
-
         <h2 className="text-lg font-semibold text-center">
           You’re out of Keys
         </h2>
@@ -80,14 +100,13 @@ export default function PurchaseModal({ onClose }: Props) {
           Purchase more Keys to continue.
         </p>
 
-        {!hasUser && (
+        {hasUser === false && (
           <p className="text-xs text-red-500 text-center">
             Please sign in to purchase Keys.
           </p>
         )}
 
         <div className="space-y-2">
-
           <button
             disabled={isDisabled}
             onClick={() => purchase("6")}
@@ -111,7 +130,6 @@ export default function PurchaseModal({ onClose }: Props) {
           >
             30 Keys — $78
           </button>
-
         </div>
 
         <button
@@ -120,7 +138,6 @@ export default function PurchaseModal({ onClose }: Props) {
         >
           Cancel
         </button>
-
       </div>
     </div>
   );

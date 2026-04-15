@@ -11,11 +11,10 @@ console.log("🔥 FIREBASE ADMIN INITIALIZING");
 ========================= */
 
 function loadServiceAccount(): admin.ServiceAccount {
-  // 🔥 Detect Cloud Run explicitly
   const isCloudRun = !!process.env.K_SERVICE;
 
   // =========================
-  // ☁️ CLOUD RUN (ENV ONLY)
+  // ☁️ CLOUD RUN (ENV)
   // =========================
   if (isCloudRun) {
     console.log("🔥 Running in Cloud Run — using ENV");
@@ -23,30 +22,29 @@ function loadServiceAccount(): admin.ServiceAccount {
     const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
 
     if (!raw) {
-      throw new Error("FIREBASE_SERVICE_ACCOUNT is not set in Cloud Run");
+      console.error("🔥 FIREBASE ENV MISSING");
+      process.exit(1);
     }
 
     try {
-      let parsed: any;
+      let parsed: any = JSON.parse(raw);
 
-      // 🔥 Handle both normal and double-escaped JSON
-      if (raw.trim().startsWith("{")) {
-        parsed = JSON.parse(raw);
-      } else {
-        parsed = JSON.parse(JSON.parse(raw));
+      // 🔥 Fix newline issues in private key (VERY IMPORTANT)
+      if (parsed.private_key) {
+        parsed.private_key = parsed.private_key.replace(/\\n/g, "\n");
       }
 
       if (!parsed.project_id) {
         throw new Error("Missing project_id in service account JSON");
       }
 
-      return parsed as admin.ServiceAccount;
+      console.log("🔥 Firebase ENV parsed OK");
+
+      return parsed;
 
     } catch (err) {
-      console.error("🔥 ENV PARSE ERROR:", err);
-      throw new Error(
-        "Invalid FIREBASE_SERVICE_ACCOUNT JSON in environment variable."
-      );
+      console.error("🔥 FIREBASE ENV PARSE ERROR:", err);
+      process.exit(1);
     }
   }
 
@@ -61,40 +59,61 @@ function loadServiceAccount(): admin.ServiceAccount {
   );
 
   if (!fs.existsSync(serviceAccountPath)) {
-    throw new Error(
-      `Firebase service account not found at: ${serviceAccountPath}`
-    );
+    console.error("🔥 Firebase file not found:", serviceAccountPath);
+    process.exit(1);
   }
 
-  const file = fs.readFileSync(serviceAccountPath, "utf8");
-  const parsed = JSON.parse(file);
+  try {
+    const file = fs.readFileSync(serviceAccountPath, "utf8");
+    const parsed = JSON.parse(file);
 
-  if (!parsed.project_id) {
-    throw new Error("Missing project_id in local service account file");
+    if (!parsed.project_id) {
+      throw new Error("Missing project_id in local service account file");
+    }
+
+    console.log("🔥 Firebase file loaded OK");
+
+    return parsed;
+
+  } catch (err) {
+    console.error("🔥 LOCAL FIREBASE PARSE ERROR:", err);
+    process.exit(1);
   }
-
-  return parsed as admin.ServiceAccount;
 }
 
 /* =========================
    INIT FIREBASE
 ========================= */
 
-const serviceAccount = loadServiceAccount();
+let serviceAccount: admin.ServiceAccount;
 
-// 🔥 Correct property name (critical)
+try {
+  serviceAccount = loadServiceAccount();
+} catch (err) {
+  console.error("🔥 FIREBASE LOAD FAILED:", err);
+  process.exit(1);
+}
+
 const projectId = (serviceAccount as any).project_id;
 
 if (!projectId) {
-  throw new Error("Firebase service account missing project_id.");
+  console.error("🔥 Firebase missing project_id");
+  process.exit(1);
 }
 
-// 🔥 Prevent duplicate initialization
 if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    projectId,
-  });
+  try {
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+      projectId,
+    });
+
+    console.log("🔥 Firebase initialized successfully");
+
+  } catch (err) {
+    console.error("🔥 FIREBASE INIT ERROR:", err);
+    process.exit(1);
+  }
 }
 
 console.log("🔥 ADMIN PROJECT:", projectId);

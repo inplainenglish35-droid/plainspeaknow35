@@ -3,13 +3,15 @@ import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import OpenAI from "openai";
 
-import { requireAuth, AuthenticatedRequest } from "../requireAuth";
-import { db } from "../firebaseAdmin";
+import { requireAuth, AuthenticatedRequest } from "./requireAuth";
+import { db } from "./firebaseAdmin";
 import Stripe from "stripe";
-import { errorHandler } from "../middleware/errorHandler";
-import { ApiError } from "../middleware/ApiError";
-import { enforceRateLimits } from "../rateLimiter";
+import { errorHandler } from "./middleware/errorHandler";
+import { ApiError } from "./middleware/ApiError";
+import { enforceRateLimits } from "./rateLimiter";
 
+console.log("🔥 DIST FILE EXECUTING");
+console.log("🔥 AFTER FIREBASE IMPORT");
 /* =========================
    APP INIT
 ========================= */
@@ -58,7 +60,8 @@ app.use(express.json());
 ========================= */
 
 if (!process.env.OPENAI_API_KEY) {
-  throw new Error("OPENAI_API_KEY is missing");
+  console.warn("⚠️ OPENAI_API_KEY missing — AI disabled");
+  process.exit(1);
 }
 
 /* =========================
@@ -67,14 +70,6 @@ if (!process.env.OPENAI_API_KEY) {
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-});
-
-/* =========================
-   HEALTH CHECK
-========================= */
-
-app.get("/api/health", (_req, res) => {
-  res.json({ ok: true });
 });
 
 /* =========================
@@ -353,18 +348,27 @@ app.post(
     }
   }
 );
-
+console.log("🔥 BEFORE STRIPE INIT");
 /* =========================
    STRIPE SETUP
 ========================= */
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error("STRIPE_SECRET_KEY missing");
+let stripe: Stripe | null = null;
+
+if (process.env.STRIPE_SECRET_KEY) {
+  try {
+    stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: "2026-02-25.clover",
+    });
+    console.log("🔥 STRIPE INITIALIZED");
+  } catch (err) {
+    console.error("🔥 STRIPE INIT FAILED:", err);
+  }
+} else {
+  console.warn("⚠️ STRIPE_SECRET_KEY missing — Stripe disabled");
 }
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2026-02-25.clover",
-});
+console.log("🔥 AFTER STRIPE");
 
 /* =========================
    CHECKOUT
@@ -375,8 +379,11 @@ app.post(
   requireAuth,
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
-      const userId = req.uid;
+      if (!stripe) {
+        throw new ApiError("STRIPE_DISABLED", "Payments unavailable", 503);
+      }
 
+      const userId = req.uid;
       if (!userId) {
         throw new ApiError("UNAUTHORIZED", "Unauthorized", 401);
       }
@@ -419,6 +426,7 @@ app.post(
       });
 
       res.json({ url: session.url });
+
     } catch (err) {
       next(err);
     }
@@ -429,60 +437,75 @@ app.post(
    WEBHOOK (CRITICAL)
 ========================= */
 
-app.post("/webhook", async (req: Request, res: Response) => {
-  const sig = req.headers["stripe-signature"] as string;
+// ⚠️ MUST use raw body for Stripe
+app.post(
+  "/webhook",
+  express.raw({ type: "application/json" }),
+  async (req: Request, res: Response) => {
+    if (!stripe) {
+      console.warn("⚠️ Webhook hit but Stripe disabled");
+      return res.status(200).end();
+    }
 
-  let event;
+    const sig = req.headers["stripe-signature"] as string;
 
-  try {
-    event = stripe.webhooks.constructEvent(
-      req.body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    );
-  } catch (err: any) {
-    console.error("Webhook error:", err.message);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
+    let event;
 
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object as Stripe.Checkout.Session;
+    try {
+      if (!process.env.STRIPE_WEBHOOK_SECRET) {
+        throw new Error("Missing STRIPE_WEBHOOK_SECRET");
+      }
 
-    const userId = session.metadata?.userId;
-    const keys = Number(session.metadata?.keys || 0);
+      event = stripe.webhooks.constructEvent(
+        req.body,
+        sig,
+        process.env.STRIPE_WEBHOOK_SECRET
+      );
 
-    if (!userId || !keys) return res.status(400).end();
+    } catch (err: any) {
+      console.error("🔥 Webhook error:", err.message);
+      return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
 
-    const eventRef = db.collection("stripeEvents").doc(event.id);
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object as Stripe.Checkout.Session;
 
-    await db.runTransaction(async (tx) => {
-      const existing = await tx.get(eventRef);
-      if (existing.exists) return;
+      const userId = session.metadata?.userId;
+      const keys = Number(session.metadata?.keys || 0);
 
-      const userRef = db.collection("users").doc(userId);
-      const userDoc = await tx.get(userRef);
+      if (!userId || !keys) return res.status(400).end();
 
-      if (!userDoc.exists) throw new Error("User not found");
+      const eventRef = db.collection("stripeEvents").doc(event.id);
 
-      const current = userDoc.data()?.keyBalance || 0;
+      await db.runTransaction(async (tx) => {
+        const existing = await tx.get(eventRef);
+        if (existing.exists) return;
 
-      tx.update(userRef, {
-        keyBalance: current + keys,
+        const userRef = db.collection("users").doc(userId);
+        const userDoc = await tx.get(userRef);
+
+        if (!userDoc.exists) throw new Error("User not found");
+
+        const current = userDoc.data()?.keyBalance || 0;
+
+        tx.update(userRef, {
+          keyBalance: current + keys,
+        });
+
+        tx.set(eventRef, { createdAt: new Date() });
+
+        tx.set(db.collection("keyTransactions").doc(), {
+          userId,
+          change: keys,
+          type: "purchase",
+          createdAt: new Date(),
+        });
       });
+    }
 
-      tx.set(eventRef, { createdAt: new Date() });
-
-      tx.set(db.collection("keyTransactions").doc(), {
-        userId,
-        change: keys,
-        type: "purchase",
-        createdAt: new Date(),
-      });
-    });
+    res.json({ received: true });
   }
-
-  res.json({ received: true });
-});
+);
 
 /* =========================
    AUDIO
@@ -520,6 +543,7 @@ app.post(
 
       res.setHeader("Content-Type", "audio/mpeg");
       res.send(buffer);
+
     } catch (err) {
       next(err);
     }
@@ -531,6 +555,8 @@ app.post(
 ========================= */
 
 app.use(errorHandler);
+
+console.log("🔥 BEFORE LISTEN");
 
 /* =========================
    SERVER START

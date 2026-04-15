@@ -1,7 +1,7 @@
 import vision from "@google-cloud/vision";
 import fs from "fs";
 import path from "path";
-import { v4 as uuidv4 } from "uuid";
+const { v4: uuidv4 } = require("uuid");
 import { exec } from "child_process";
 import { promisify } from "util";
 

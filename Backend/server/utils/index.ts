@@ -536,8 +536,8 @@ app.use(errorHandler);
    SERVER START
 ========================= */
 
-const PORT = process.env.PORT || 8080;
+const PORT = Number(process.env.PORT) || 8080;
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Plainspeak API running on port ${PORT}`);
 });

@@ -2,10 +2,11 @@ FROM node:20
 
 WORKDIR /app
 
-COPY Backend/server/package*.json ./
+# ✅ FIXED PATHS
+COPY server/package*.json ./
 RUN npm install
 
-COPY Backend/server .
+COPY server ./
 
 RUN npm run build
 

@@ -3,7 +3,7 @@ export type ModeId = "understand" | "organize" | "respond";
 export type ModeType = {
   id: ModeId;
   label: string;
-  keys: number;
+  keys: number; // stays for display consistency, but all = 1
   description: string[];
 };
 
@@ -13,41 +13,43 @@ export const MODES: Record<ModeId, ModeType> = {
     label: "Understand",
     keys: 1,
     description: [
-      "This level makes your document easier to read.",
+      "Turn your document into clear, plain language.",
       "You will receive:",
-      "• A plain-language rewrite",
+      "• A simple rewrite",
       "• Key points",
-      "• Any deadlines",
+      "• Important dates",
       "• Clear next steps",
-      "Best for when you just need clarity."
+      "",
+      "This is the foundation of every result."
     ]
   },
 
   organize: {
     id: "organize",
     label: "Organize",
-    keys: 2,
+    keys: 1,
     description: [
-      "Includes everything in Understand, plus:",
+      "Everything from Understand, plus:",
       "• A simple timeline",
-      "• Issues that may need attention",
-      "• A checklist of helpful information",
-      "Best for when you need to prepare before taking action."
+      "• What needs attention",
+      "• A structured breakdown",
+      "",
+      "Included automatically in your result."
     ]
   },
 
   respond: {
     id: "respond",
     label: "Respond",
-    keys: 3,
+    keys: 1,
     description: [
-      "Includes Understand and Organize, plus:",
-      "• A structured reply draft",
-      "• A clear subject line",
+      "Everything from Understand and Organize, plus:",
+      "• A ready-to-use response draft",
+      "• Clear subject line",
       "• Calm, professional wording",
       "",
       "This does not provide legal advice.",
-      "Best for when you are ready to respond."
+      "Included automatically when needed."
     ]
   }
 };

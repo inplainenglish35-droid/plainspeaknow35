@@ -1,24 +1,9 @@
 import React, { useState } from "react";
-import { X } from "lucide-react";
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-  signOut,
-} from "firebase/auth";
-import { auth } from "../../lib/firebase";
-
-interface AuthModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+import type { FormEvent } from "react";
 
 type Mode = "login" | "signup";
 
-export const AuthModal: React.FC<AuthModalProps> = ({
-  isOpen,
-  onClose,
-}) => {
+export default function AuthModal() {
   const [mode, setMode] = useState<Mode>("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,149 +11,82 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [info, setInfo] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  if (!isOpen) return null;
-
   const handleSubmit = async () => {
-    setError(null);
-    setInfo(null);
     setLoading(true);
+    setError(null);
 
     try {
-      if (mode === "login") {
-        await signInWithEmailAndPassword(auth, email, password);
-        onClose();
-      } else {
-        const userCredential = await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
+      // TEMP test logic
+      console.log("Submitting:", { email, password, mode });
 
-        // Send verification email
-        await sendEmailVerification(userCredential.user);
+      // simulate delay
+      await new Promise((r) => setTimeout(r, 800));
 
-        // Sign out until verified
-        await signOut(auth);
-
-        setInfo(
-          "Verification email sent. Please check your inbox before signing in."
-        );
-
-        setMode("login");
-      }
     } catch (err: any) {
-      setError(err.message ?? "Authentication failed");
+      setError(err.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      {/* Backdrop */}
-      <div className="absolute inset-0" onClick={onClose} />
-
-      {/* Modal panel */}
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="auth-title"
-        className="relative w-full max-w-md mx-4 rounded-lg bg-white border border-slate-200 shadow-md p-6"
+    <div className="p-6">
+      {/* Form */}
+      <form
+        onSubmit={(e) => {
+  e.preventDefault();
+  handleSubmit();
+}}
+        className="space-y-3"
       >
-        {/* Close */}
+        <input
+          id="email"
+          name="email"
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoComplete="email"
+          className="w-full rounded-md border border-slate-300 px-3 py-2"
+        />
+
+        <input
+          id="password"
+          name="password"
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          autoComplete="current-password"
+          className="w-full rounded-md border border-slate-300 px-3 py-2"
+        />
+
+        {error && (
+          <p className="text-sm text-red-600">
+            {error}
+          </p>
+        )}
+
+        {info && (
+          <p className="text-sm text-slate-700">
+            {info}
+          </p>
+        )}
+
         <button
-          onClick={onClose}
-          className="absolute top-3 right-3 rounded-md p-1 text-slate-500 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
-          aria-label="Close"
+          type="submit"
+          disabled={loading}
+          className="mt-2 w-full rounded-md bg-slate-900 px-4 py-2 text-white"
         >
-          <X className="h-5 w-5" />
+          {loading
+            ? "Working…"
+            : mode === "login"
+            ? "Sign in"
+            : "Create account"}
         </button>
-
-        {/* Header */}
-        <div className="mb-4 text-center">
-          <h2
-            id="auth-title"
-            className="text-lg font-semibold text-slate-900"
-          >
-            {mode === "login"
-              ? "Sign in to PlainSpeak"
-              : "Create an account"}
-          </h2>
-          <p className="mt-1 text-sm text-slate-600">
-            Sign in is required to protect usage and costs.
-          </p>
-        </div>
-
-        {/* Form */}
-        <div className="space-y-3">
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 placeholder-slate-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
-          />
-
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 placeholder-slate-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
-          />
-
-          {error && (
-            <p className="text-sm text-red-600">
-              {error}
-            </p>
-          )}
-
-          {info && (
-            <p className="text-sm text-slate-700">
-              {info}
-            </p>
-          )}
-
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
-            className="mt-2 w-full rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading
-              ? "Working…"
-              : mode === "login"
-              ? "Sign in"
-              : "Create account"}
-          </button>
-
-          <p className="pt-2 text-sm text-center text-slate-600">
-            {mode === "login" ? (
-              <>
-                Don’t have an account?{" "}
-                <button
-                  onClick={() => setMode("signup")}
-                  className="text-slate-900 underline"
-                >
-                  Create one
-                </button>
-              </>
-            ) : (
-              <>
-                Already have an account?{" "}
-                <button
-                  onClick={() => setMode("login")}
-                  className="text-slate-900 underline"
-                >
-                  Sign in
-                </button>
-              </>
-            )}
-          </p>
-        </div>
-      </div>
+      </form>
     </div>
   );
-};
-
+}
 
 

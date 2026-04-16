@@ -4,7 +4,8 @@ import MainTool from "./components/MainTool";
 
 import Pricing from "./pages/Pricing";
 import FAQ from "./pages/FAQ";
-
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 
 export default function App() {
   return (
@@ -13,6 +14,8 @@ export default function App() {
         <Route index element={<MainTool />} />
         <Route path="pricing" element={<Pricing />} />
         <Route path="faq" element={<FAQ />} />
+        <Route path="privacy" element={<Privacy />} />
+        <Route path="terms" element={<Terms />} />
       </Route>
     </Routes>
   );

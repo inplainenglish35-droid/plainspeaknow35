@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import AuthModal from "./AuthModal";
-const AuthModalTyped = AuthModal as unknown as React.FC<{ isOpen: boolean; onClose: () => void }>;
+
 import { useAuth } from "./contexts/AuthContext";
 import { signOut as firebaseSignOut } from "firebase/auth";
 import { auth } from "../../lib/firebase";
@@ -101,7 +101,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <img
                   src={logo}
                   alt="Plainspeak Logo"
-                  className="h-10 sm:h-12 w-auto"
+                  className="h-30 sm:h-32 w-auto"
                 />
                 <span className="px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-800 rounded-full">
                   Beta
@@ -201,10 +201,9 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </header>
 
-      <AuthModalTyped
-        isOpen={authModalOpen}
-        onClose={() => setAuthModalOpen(false)}
-      />
+      {authModalOpen && (
+  <AuthModal onClose={() => setAuthModalOpen(false)} />
+)}
     </>
   );
 };

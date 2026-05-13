@@ -1,5 +1,5 @@
 import * as admin from "firebase-admin";
-import { db } from "./firebaseAdmin.js";
+import { db } from "./firebaseAdmin";
 
 /* ============================================================
    TYPES

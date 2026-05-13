@@ -1,19 +1,20 @@
-import { useState } from "react";
-import { InputMethods } from "./plainspeak/InputMethods";
+import { useEffect, useRef, useState } from "react";
 import { AudioPlayer } from "./plainspeak/AudioPlayer";
 import { useAuth } from "./plainspeak/contexts/AuthContext";
+import { auth } from "../lib/firebase";
 
 export default function MainTool() {
-  const auth = useAuth?.();
-  const user = auth?.user ?? null;
+  const { user } = useAuth();
 
-  const API_URL = import.meta.env.VITE_API_URL ?? "";
   const language = "en";
   const MAX_AUDIO_GENERATIONS = 3;
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [inputText, setInputText] = useState("");
+  const [selectedFileName, setSelectedFileName] = useState("");
   const [outputText, setOutputText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [extracting, setExtracting] = useState(false);
 
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
@@ -22,252 +23,374 @@ export default function MainTool() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  // ================================
-  // COPY FUNCTIONS
-  // ================================
-  const handleCopy = async () => {
-    if (!outputText) return;
-    await navigator.clipboard.writeText(outputText);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  };
+  useEffect(() => {
+    return () => {
+      if (audioUrl) URL.revokeObjectURL(audioUrl);
+    };
+  }, [audioUrl]);
 
-  const handleCopyEmail = async () => {
-    if (!outputText) return;
+  async function getAuthToken() {
+    const currentUser = auth.currentUser || user;
 
-    const emailFormatted = `Subject: Clarified Document Summary
-
-${outputText}
-
----
-Generated with PlainSpeak Now`;
-
-    await navigator.clipboard.writeText(emailFormatted);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  };
-
-  // ================================
-  // SECTION PARSER (SAFE)
-  // ================================
-  function splitSections(text: string) {
-    try {
-      return {
-        type: text.match(/DOCUMENT TYPE:\s*(.*)/i)?.[1]?.trim() || "",
-        summary:
-          text.match(/DOCUMENT SUMMARY:\s*([\s\S]*?)KEY POINTS:/i)?.[1]?.trim() ||
-          "",
-        points:
-          text.match(/KEY POINTS:\s*([\s\S]*?)WHAT MATTERS MOST:/i)?.[1]?.trim() ||
-          "",
-        actions:
-          text.match(/WHAT MATTERS MOST:\s*([\s\S]*)/i)?.[1]?.trim() || "",
-      };
-    } catch {
-      return { type: "", summary: "", points: "", actions: "" };
+    if (!currentUser) {
+      throw new Error("Please sign in before using Plainspeak.");
     }
+
+    return await currentUser.getIdToken(true);
   }
 
-  const sections = splitSections(outputText);
+  async function getJsonAuthHeaders() {
+    const token = await getAuthToken();
 
-  // ================================
-  // SIMPLIFY
-  // ================================
+    return {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+  }
+
+  async function getFormAuthHeaders() {
+    const token = await getAuthToken();
+
+    return {
+      Authorization: `Bearer ${token}`,
+    };
+  }
+
+  const clearPreviousResult = () => {
+    setOutputText("");
+    setCopied(false);
+
+    if (audioUrl) {
+      URL.revokeObjectURL(audioUrl);
+      setAudioUrl(null);
+    }
+
+    setAudioGenerationCount(0);
+  };
+
+  const handlePasteText = async () => {
+    try {
+      const pasted = await navigator.clipboard.readText();
+
+      if (!pasted.trim()) {
+        setErrorMessage("Clipboard is empty.");
+        return;
+      }
+
+      setInputText(pasted);
+      setSelectedFileName("");
+      setErrorMessage(null);
+      clearPreviousResult();
+    } catch {
+      const pasted = window.prompt("Paste your text here:");
+
+      if (pasted?.trim()) {
+        setInputText(pasted);
+        setSelectedFileName("");
+        setErrorMessage(null);
+        clearPreviousResult();
+      }
+    }
+  };
+
+  const handleFileSelected = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const name = file.name.toLowerCase();
+
+    const allowed =
+      name.endsWith(".pdf") ||
+      name.endsWith(".txt") ||
+      name.endsWith(".docx") ||
+      name.endsWith(".csv") ||
+      name.endsWith(".xlsx");
+
+    if (!allowed) {
+      setSelectedFileName("");
+      setErrorMessage(
+        "Please upload PDF, TXT, DOCX, CSV, or XLSX. Photos and screenshots are not supported."
+      );
+      event.target.value = "";
+      return;
+    }
+
+    try {
+      setExtracting(true);
+      setErrorMessage(null);
+      setSelectedFileName("");
+      clearPreviousResult();
+
+      const headers = await getFormAuthHeaders();
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/extract-text", {
+        method: "POST",
+        headers,
+        body: formData,
+      });
+
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok) {
+        throw new Error(
+          data?.error ||
+            data?.message ||
+            "Plainspeak could not read this file."
+        );
+      }
+
+      const extractedText = data?.text || "";
+
+      if (!extractedText.trim()) {
+        throw new Error("No readable text was found in this file.");
+      }
+
+      setInputText(extractedText);
+      setSelectedFileName(file.name);
+    } catch (err: any) {
+      console.error("File extraction error:", err);
+      setSelectedFileName("");
+      setErrorMessage(err.message || "Could not read this file.");
+    } finally {
+      setExtracting(false);
+      event.target.value = "";
+    }
+  };
+
   const handleSimplify = async () => {
-    if (!inputText) return setErrorMessage("Please enter text.");
-    if (!user) return setErrorMessage("You must be signed in.");
-    if (!API_URL) return setErrorMessage("API not configured.");
+    const trimmedInput = inputText.trim();
+
+    if (!trimmedInput) {
+      setErrorMessage("Please enter, paste, or upload text first.");
+      return;
+    }
 
     try {
       setLoading(true);
       setErrorMessage(null);
+      clearPreviousResult();
 
-      const token = await user.getIdToken();
+      const headers = await getJsonAuthHeaders();
 
-      const res = await fetch(`${API_URL}/api/simplify`, {
+      const res = await fetch("/api/simplify", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers,
         body: JSON.stringify({
-          text: inputText,
+          text: trimmedInput,
           language,
-          mode: "understand",
         }),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => null);
 
-      if (!res.ok) throw new Error(data?.message || "Failed");
+      if (!res.ok) {
+        throw new Error(
+          data?.error ||
+            data?.message ||
+            "Plainspeak could not process this document."
+        );
+      }
 
-      setOutputText(data.output);
-      setAudioUrl(null);
-      setAudioGenerationCount(0);
-
-    } catch (err) {
-      console.error(err);
-      setErrorMessage("Failed to process document.");
+      setOutputText(data?.output || data?.result || "");
+    } catch (err: any) {
+      console.error("Simplify error:", err);
+      setErrorMessage(err.message || "Failed to process document.");
     } finally {
       setLoading(false);
     }
   };
 
-  // ================================
-  // AUDIO
-  // ================================
   const handleGenerateAudio = async () => {
     if (!outputText) return;
-    if (!user) return setErrorMessage("You must be signed in.");
-    if (!API_URL) return setErrorMessage("API not configured.");
-    if (audioGenerationCount >= MAX_AUDIO_GENERATIONS)
-      return setErrorMessage("Audio limit reached.");
+
+    if (audioGenerationCount >= MAX_AUDIO_GENERATIONS) {
+      setErrorMessage("Audio limit reached for this result.");
+      return;
+    }
 
     try {
       setIsGeneratingAudio(true);
       setErrorMessage(null);
 
-      const token = await user.getIdToken();
+      const headers = await getJsonAuthHeaders();
 
-      const res = await fetch(`${API_URL}/api/generate-audio`, {
+      const res = await fetch("/api/generate-audio", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers,
         body: JSON.stringify({ text: outputText }),
       });
 
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        throw new Error("Audio generation failed.");
+      }
 
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
 
+      if (audioUrl) URL.revokeObjectURL(audioUrl);
+
       setAudioUrl(url);
       setAudioGenerationCount((prev) => prev + 1);
-
-    } catch {
-      setErrorMessage("Audio generation failed.");
+    } catch (err: any) {
+      console.error("Audio error:", err);
+      setErrorMessage(err.message || "Audio generation failed.");
     } finally {
       setIsGeneratingAudio(false);
     }
   };
 
-  // ================================
-  // STYLES
-  // ================================
-  const card =
-    "rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-sm space-y-4";
+  const handleCopy = async () => {
+    if (!outputText) return;
 
-  const textarea =
-    "w-full min-h-[140px] resize-none rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500";
+    try {
+      await navigator.clipboard.writeText(outputText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setErrorMessage("Could not copy the result.");
+    }
+  };
 
-  // ================================
-  // UI
-  // ================================
   return (
-    <div className="space-y-8">
+    <main className="mx-auto max-w-4xl space-y-6 px-4 py-8 text-slate-900 dark:text-white">
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-lg dark:border-slate-700 dark:bg-slate-900/70">
+        <h1 className="mb-2 text-2xl font-bold text-slate-950 dark:text-white">
+          Turn confusing text into clear words
+        </h1>
 
-      {/* INPUT */}
-      <div className={card}>
-        <div className="flex justify-between items-center">
-          <h2 className="text-sm font-medium">Your document</h2>
+        <p className="mb-5 text-sm text-slate-600 dark:text-slate-300">
+          Upload a text-based document, paste text, or type directly.
+          Plainspeak will turn it into clear, plain-English help.
+        </p>
+
+        <div className="mb-4 flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={handlePasteText}
+            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-800"
+          >
+            Paste text
+          </button>
 
           <button
-            onClick={handleSimplify}
-            disabled={loading}
-            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm"
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={extracting}
+            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-800"
           >
-            {loading ? "Processing…" : "Help me understand"}
+            {extracting ? "Reading document..." : "Upload document"}
           </button>
+
+          <input
+            ref={fileInputRef}
+            id="documentFile"
+            name="documentFile"
+            type="file"
+            accept=".pdf,.txt,.docx,.csv,.xlsx"
+            onChange={handleFileSelected}
+            className="hidden"
+          />
         </div>
 
-        <InputMethods
-          onFileSelected={async (file) => {
-            try {
-              if (file.type === "text/plain") {
-                const text = await file.text();
-                setInputText(text);
-              } else {
-                setInputText("File uploaded. Processing coming soon.");
-              }
-            } catch {
-              setErrorMessage("Upload failed.");
-            }
-          }}
-          onPaste={() => {}}
-        />
+        <p className="mb-4 text-xs text-slate-500 dark:text-slate-400">
+          Supports PDF, TXT, DOCX, CSV, and XLSX. Photos and screenshots are not supported.
+        </p>
+
+        {selectedFileName && (
+          <p className="mb-3 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900 dark:border-emerald-500/40 dark:bg-emerald-950/30 dark:text-emerald-100">
+            File loaded: {selectedFileName}
+          </p>
+        )}
+
+        <label
+          htmlFor="documentText"
+          className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200"
+        >
+          Document text
+        </label>
 
         <textarea
+          id="documentText"
+          name="documentText"
           value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          placeholder="Paste your document here..."
-          className={textarea}
+          onChange={(e) => {
+            setInputText(e.target.value);
+            setSelectedFileName("");
+            setErrorMessage(null);
+            clearPreviousResult();
+          }}
+          placeholder="Paste, type, or upload a text-based document..."
+          className="min-h-48 w-full rounded-xl border border-slate-300 bg-white p-4 text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
         />
-      </div>
 
-      {/* OUTPUT */}
-      <div className={card}>
-        <div className="flex justify-between items-center">
-          <h2 className="text-sm font-medium">Simplified result</h2>
+        <p className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs leading-relaxed text-amber-900 dark:border-amber-500/40 dark:bg-amber-950/30 dark:text-amber-100">
+          Plainspeak helps explain confusing documents in clearer language. It
+          does not provide legal, medical, financial, or professional advice.
+          For decisions about your rights, health, benefits, or obligations,
+          please contact a qualified professional.
+        </p>
 
-          {outputText && (
-            <div className="flex gap-2">
-              <button onClick={handleCopy} className="text-xs px-2 py-1 bg-slate-200 rounded">
-                {copied ? "Copied" : "Copy"}
-              </button>
-
-              <button onClick={handleCopyEmail} className="text-xs px-2 py-1 bg-slate-200 rounded">
-                Email
-              </button>
-
-              <button
-                onClick={handleGenerateAudio}
-                disabled={isGeneratingAudio}
-                className="text-xs px-2 py-1 bg-slate-200 rounded"
-              >
-                {isGeneratingAudio ? "Generating…" : "Listen"}
-              </button>
-            </div>
-          )}
+        <div className="mt-5">
+          <button
+            type="button"
+            onClick={handleSimplify}
+            disabled={loading || extracting || !inputText.trim()}
+            className="rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {loading
+              ? "Reading your text..."
+              : extracting
+                ? "Extracting text..."
+                : "Help me understand"}
+          </button>
         </div>
+      </section>
 
-        {/* Confidence */}
-        {outputText && (
-          <div className="text-xs text-green-600">
-            ● Full breakdown included
+      {errorMessage && (
+        <div className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-800 dark:border-red-400/60 dark:bg-red-950/40 dark:text-red-100">
+          {errorMessage}
+        </div>
+      )}
+
+      {outputText && (
+        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-lg dark:border-slate-700 dark:bg-slate-900">
+          <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <h2 className="text-xl font-semibold text-slate-950 dark:text-white">
+              Plainspeak result
+            </h2>
+
+            <button
+              type="button"
+              onClick={handleCopy}
+              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-800"
+            >
+              {copied ? "Copied!" : "Copy result"}
+            </button>
           </div>
-        )}
 
-        {/* Loading */}
-        {loading && (
-          <div className="text-sm animate-pulse">
-            Simplifying your document…
+          <div className="whitespace-pre-wrap rounded-xl bg-slate-50 p-4 text-slate-800 dark:bg-slate-950/60 dark:text-slate-100">
+            {outputText}
           </div>
-        )}
 
-        {/* Structured Output */}
-        {!loading && outputText && (
-          <div className="space-y-4 text-sm whitespace-pre-wrap">
+          <p className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs leading-relaxed text-amber-900 dark:border-amber-500/40 dark:bg-amber-950/30 dark:text-amber-100">
+            Reminder: this plain-language result is for understanding only. It
+            is not legal, medical, financial, or professional advice.
+          </p>
 
-            {sections.type && <div><strong>Type:</strong> {sections.type}</div>}
-            {sections.summary && <div><strong>Summary:</strong> {sections.summary}</div>}
-            {sections.points && <div><strong>Key Points:</strong> {sections.points}</div>}
-            {sections.actions && <div><strong>What matters:</strong> {sections.actions}</div>}
-
+          <div className="mt-4">
+            <AudioPlayer
+              audioUrl={audioUrl}
+              text={outputText}
+              isGenerating={isGeneratingAudio}
+              onGenerate={handleGenerateAudio}
+            />
           </div>
-        )}
-
-        {/* Fallback */}
-        {!loading && outputText && !sections.summary && (
-          <div className="text-sm whitespace-pre-wrap">{outputText}</div>
-        )}
-
-        {audioUrl && <AudioPlayer {...({ src: audioUrl } as any)} />}
-      </div>
-
-      {/* ERROR */}
-      {errorMessage && <div className="text-red-500 text-sm">{errorMessage}</div>}
-    </div>
+        </section>
+      )}
+    </main>
   );
 }

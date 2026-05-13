@@ -10,9 +10,6 @@ export default function PurchaseModal({ onClose }: Props) {
   const [loading, setLoading] = useState(false);
   const [hasUser, setHasUser] = useState<boolean | null>(null);
 
-  // ================================
-  // CHECK AUTH ON LOAD
-  // ================================
   useEffect(() => {
     let mounted = true;
 
@@ -36,10 +33,7 @@ export default function PurchaseModal({ onClose }: Props) {
 
   const isDisabled = loading || !hasUser;
 
-  // ================================
-  // PURCHASE HANDLER
-  // ================================
-  const purchase = async (packSize: string) => {
+  const purchase = async () => {
     try {
       setLoading(true);
 
@@ -52,17 +46,14 @@ export default function PurchaseModal({ onClose }: Props) {
 
       const token = await auth.currentUser.getIdToken(true);
 
-      const response = await fetch(
-        `${API_URL}/api/create-checkout-session`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ packSize }),
-        }
-      );
+      const response = await fetch(`${API_URL}/api/create-checkout-session`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ packSize: "2" }),
+      });
 
       const data = await response.json();
 
@@ -76,7 +67,6 @@ export default function PurchaseModal({ onClose }: Props) {
         throw new Error("No checkout URL returned");
       }
 
-      // ✅ CRITICAL: redirect to Stripe
       window.location.href = data.url;
     } catch (err) {
       console.error(err);
@@ -86,9 +76,6 @@ export default function PurchaseModal({ onClose }: Props) {
     }
   };
 
-  // ================================
-  // UI
-  // ================================
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl p-6 w-full max-w-md space-y-4 shadow-lg">
@@ -97,7 +84,7 @@ export default function PurchaseModal({ onClose }: Props) {
         </h2>
 
         <p className="text-sm text-slate-600 text-center">
-          Purchase more Keys to continue.
+          Purchase 2 Keys for $6 to continue.
         </p>
 
         {hasUser === false && (
@@ -106,31 +93,13 @@ export default function PurchaseModal({ onClose }: Props) {
           </p>
         )}
 
-        <div className="space-y-2">
-          <button
-            disabled={isDisabled}
-            onClick={() => purchase("6")}
-            className="w-full rounded-md bg-slate-900 text-white py-2 disabled:opacity-50"
-          >
-            6 Keys — $18
-          </button>
-
-          <button
-            disabled={isDisabled}
-            onClick={() => purchase("15")}
-            className="w-full rounded-md bg-slate-800 text-white py-2 disabled:opacity-50"
-          >
-            15 Keys — $42
-          </button>
-
-          <button
-            disabled={isDisabled}
-            onClick={() => purchase("30")}
-            className="w-full rounded-md bg-slate-700 text-white py-2 disabled:opacity-50"
-          >
-            30 Keys — $78
-          </button>
-        </div>
+        <button
+          disabled={isDisabled}
+          onClick={purchase}
+          className="w-full rounded-md bg-slate-900 text-white py-2 disabled:opacity-50"
+        >
+          {loading ? "Opening checkout…" : "Buy 2 Keys — $6"}
+        </button>
 
         <button
           onClick={onClose}

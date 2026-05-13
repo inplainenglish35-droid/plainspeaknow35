@@ -1,7 +1,11 @@
-// src/lib/firebase.ts  (or wherever yours lives)
+// src/lib/firebase.ts
 
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { 
+  getAuth, 
+  setPersistence, 
+  browserLocalPersistence 
+} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -12,8 +16,12 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Export auth (ONLY definition — no self-import)
 export const auth = getAuth(app);
+
+// 🔥 THIS IS THE FIX
+setPersistence(auth, browserLocalPersistence)
+  .catch((err) => {
+    console.error("Auth persistence error:", err);
+  });

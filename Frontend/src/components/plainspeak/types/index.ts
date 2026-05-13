@@ -4,11 +4,6 @@ export type Language =
   | "vi" // Vietnamese
   | "tl"; // Tagalog
 
-export type SimplicityMode =
-  | "understand"
-  | "organize"
-  | "respond";
-
 export interface TextStats {
   wordCount: number;
   sentenceCount: number;

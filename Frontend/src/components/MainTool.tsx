@@ -3,6 +3,9 @@ import { AudioPlayer } from "./plainspeak/AudioPlayer";
 import { useAuth } from "./plainspeak/contexts/AuthContext";
 import { auth } from "../lib/firebase";
 
+const API_URL = import.meta.env.VITE_API_URL ?? "";
+
+console.log("VITE_API_URL:", API_URL);
 export default function MainTool() {
   const { user } = useAuth();
 
@@ -127,7 +130,7 @@ export default function MainTool() {
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await fetch("/api/extract-text", {
+      const res = await fetch(`${API_URL}/api/extract-text`, {
         method: "POST",
         headers,
         body: formData,
@@ -176,7 +179,7 @@ export default function MainTool() {
 
       const headers = await getJsonAuthHeaders();
 
-      const res = await fetch("/api/simplify", {
+      const res = await fetch(`${API_URL}/api/simplify`, {
         method: "POST",
         headers,
         body: JSON.stringify({
@@ -218,7 +221,7 @@ export default function MainTool() {
 
       const headers = await getJsonAuthHeaders();
 
-      const res = await fetch("/api/generate-audio", {
+      const res = await fetch(`${API_URL}/api/generate-audio`, {
         method: "POST",
         headers,
         body: JSON.stringify({ text: outputText }),

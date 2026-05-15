@@ -77,8 +77,15 @@ const TWO_KEY_LIMIT = 70 * CHARS_PER_PAGE;
 
 function calculateKeyCost(text: string) {
   const length = text.length;
-  if (length <= ONE_KEY_LIMIT) return { keys: 1, requiresSplit: false };
-  if (length <= TWO_KEY_LIMIT) return { keys: 2, requiresSplit: false };
+
+  if (length <= ONE_KEY_LIMIT) {
+    return { keys: 1, requiresSplit: false };
+  }
+
+  if (length <= TWO_KEY_LIMIT) {
+    return { keys: 2, requiresSplit: false };
+  }
+
   return { keys: 2, requiresSplit: true };
 }
 
@@ -97,7 +104,11 @@ app.post(
   "/api/extract-text",
   requireAuth,
   upload.single("file"),
-  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  async (
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       if (!req.file) {
         throw new ApiError("NO_FILE", "No file uploaded", 400);
@@ -128,68 +139,84 @@ app.post(
         text = file.buffer.toString("utf8");
       }
 
-      // ✅ PDF (text only)
+      // ✅ PDF
       else if (name.endsWith(".pdf")) {
-       const { PDFParse }: any = require("pdf-parse");
+        const { PDFParse }: any = require("pdf-parse");
 
-       const parser = new PDFParse({
+        const parser = new PDFParse({
           data: file.buffer,
-       });
+        });
 
-       const parsed = await parser.getText();
+        const parsed = await parser.getText();
 
-       text = parsed?.text || "";
+        text = parsed?.text || "";
 
-       console.log("📄 PDF parsed characters:", text.length);
-   }
+        console.log("📄 PDF parsed characters:", text.length);
+      }
 
       // ✅ DOCX
       else if (name.endsWith(".docx")) {
-        const result = await mammoth.extractRawText({ buffer: file.buffer });
+        const result = await mammoth.extractRawText({
+          buffer: file.buffer,
+        });
+
         text = result.value || "";
       }
 
       // ✅ CSV
       else if (name.endsWith(".csv")) {
-        const records = parse(file.buffer.toString("utf8"));
-        text = records.map((row: any[]) => row.join(" ")).join("\n");
-      }
+        const csvText = file.buffer.toString("utf8");
 
-      // ✅ XLSX
-      else if (name.endsWith(".xlsx")) {
-        const workbook = XLSX.read(file.buffer, { type: "buffer" });
-        const sheets = workbook.SheetNames;
+        const records = parse(csvText, {
+          skip_empty_lines: true,
+        });
 
-        text = sheets
-          .map((sheetName: string) => {
-            const sheet = workbook.Sheets[sheetName];
-            return XLSX.utils.sheet_to_csv(sheet);
-          })
+        text = records
+          .map((row: string[]) => row.join(" "))
           .join("\n");
       }
 
-      // ❌ EVERYTHING ELSE
+      // ✅ XLSX
+      else if (
+        name.endsWith(".xlsx") ||
+        name.endsWith(".xls")
+      ) {
+        const workbook = XLSX.read(file.buffer, {
+          type: "buffer",
+        });
+
+        text = workbook.SheetNames.map((sheetName: string) => {
+          const sheet = workbook.Sheets[sheetName];
+
+          return XLSX.utils.sheet_to_csv(sheet);
+        }).join("\n");
+      }
+
+      // ❌ Unsupported file
       else {
         throw new ApiError(
           "UNSUPPORTED_FILE",
-          "Unsupported file type. Use PDF, TXT, DOCX, CSV, or XLSX.",
+          "Unsupported file type. Please upload PDF, TXT, DOCX, CSV, or XLSX.",
           400
         );
       }
 
-      const cleanText = text.trim();
+      text = text.trim();
 
-      if (!cleanText) {
+      if (!text) {
         throw new ApiError(
-          "NO_TEXT_FOUND",
-          "No readable text found. Scanned PDFs and images are not supported.",
+          "EMPTY_DOCUMENT",
+          "No readable text found in document.",
           400
         );
       }
 
-      res.json({ text: cleanText });
-    } catch (err) {
-      next(err);
+      return res.json({
+        success: true,
+        text,
+      });
+    } catch (error) {
+      next(error);
     }
   }
 );

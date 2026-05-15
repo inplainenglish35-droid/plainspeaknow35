@@ -7,6 +7,7 @@ import Stripe from "stripe";
 import admin from "firebase-admin";
 import path from "path";
 import multer from "multer";
+import * as pdfParse from "pdf-parse";
 
 import { requireAuth, AuthenticatedRequest } from "./requireAuth";
 import { db } from "./firebaseAdmin";
@@ -14,8 +15,6 @@ import { errorHandler } from "./middleware/errorHandler";
 import { ApiError } from "./middleware/ApiError";
 import { enforceRateLimits } from "./rateLimiter";
 
-// File parsers
-const pdfParse = require("pdf-parse");
 const mammoth = require("mammoth");
 const XLSX = require("xlsx");
 const { parse } = require("csv-parse/sync");
@@ -133,7 +132,7 @@ app.post(
       // ✅ PDF (text only)
       // ✅ PDF (text only)
 else if (name.endsWith(".pdf")) {
-  const parsed = await pdfParse(file.buffer);
+  const parsed = await (pdfParse as any)(file.buffer);
   text = parsed?.text || "";
 
   console.log("📄 PDF parsed characters:", text.length);

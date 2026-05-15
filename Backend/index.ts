@@ -130,14 +130,17 @@ app.post(
 
      // ✅ PDF (text only)
 else if (name.endsWith(".pdf")) {
-  const runtimePdfParse = require("pdf-parse");
+  const runtimePdfParse: any = require("pdf-parse");
 
   console.log("runtimePdfParse:", runtimePdfParse);
   console.log("typeof runtimePdfParse:", typeof runtimePdfParse);
+  console.log("pdfParse keys:", Object.keys(runtimePdfParse));
 
   const parser =
+    runtimePdfParse.default?.default ||
     runtimePdfParse.default ||
     runtimePdfParse.pdfParse ||
+    runtimePdfParse.PDFParse ||
     runtimePdfParse;
 
   console.log("typeof parser:", typeof parser);

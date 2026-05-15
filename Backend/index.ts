@@ -14,17 +14,8 @@ import { errorHandler } from "./middleware/errorHandler";
 import { ApiError } from "./middleware/ApiError";
 import { enforceRateLimits } from "./rateLimiter";
 
-const pdfParseImport = require("pdf-parse");
-
-console.log("pdfParseImport:", pdfParseImport);
-console.log("typeof pdfParseImport:", typeof pdfParseImport);
-console.log("default exists:", !!pdfParseImport.default);
-
-const pdfParse = pdfParseImport.default || pdfParseImport;
-
-console.log("typeof resolved pdfParse:", typeof pdfParse);
-console.log("pdfParse type:", typeof pdfParse);
-
+// File parsers
+const pdfParse = require("pdf-parse/lib/pdf-parse");
 const mammoth = require("mammoth");
 const XLSX = require("xlsx");
 const { parse } = require("csv-parse/sync");

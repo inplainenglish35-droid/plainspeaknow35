@@ -135,13 +135,11 @@ else if (name.endsWith(".pdf")) {
   console.log("runtimePdfParse:", runtimePdfParse);
   console.log("typeof runtimePdfParse:", typeof runtimePdfParse);
   console.log("pdfParse keys:", Object.keys(runtimePdfParse));
+  console.log("default keys:", Object.keys(runtimePdfParse.default || {}));
 
   const parser =
-    runtimePdfParse.default?.default ||
-    runtimePdfParse.default ||
-    runtimePdfParse.pdfParse ||
-    runtimePdfParse.PDFParse ||
-    runtimePdfParse;
+    runtimePdfParse.default?.pdfParse ||
+    runtimePdfParse.pdfParse;
 
   console.log("typeof parser:", typeof parser);
 

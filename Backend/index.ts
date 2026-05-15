@@ -15,7 +15,7 @@ import { ApiError } from "./middleware/ApiError";
 import { enforceRateLimits } from "./rateLimiter";
 
 // File parsers
-const pdfParse = require("pdf-parse/lib/pdf-parse");
+const pdfjsLib = require("pdfjs-dist/legacy/build/pdf.js");
 const mammoth = require("mammoth");
 const XLSX = require("xlsx");
 const { parse } = require("csv-parse/sync");
@@ -132,10 +132,29 @@ app.post(
 
       // ✅ PDF (text only)
       else if (name.endsWith(".pdf")) {
-        const parsed = await pdfParse(file.buffer);
-        text = parsed?.text || "";
-        console.log("📄 PDF parsed characters:", text.length);
-      }
+  const loadingTask = pdfjsLib.getDocument({
+    data: new Uint8Array(file.buffer),
+  });
+
+  const pdf = await loadingTask.promise;
+
+  let textContent = "";
+
+  for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+    const page = await pdf.getPage(pageNum);
+    const content = await page.getTextContent();
+
+    const pageText = content.items
+      .map((item: any) => item.str)
+      .join(" ");
+
+    textContent += pageText + "\n";
+  }
+
+  text = textContent.trim();
+
+  console.log("📄 PDF parsed characters:", text.length);
+}
 
       // ✅ DOCX
       else if (name.endsWith(".docx")) {

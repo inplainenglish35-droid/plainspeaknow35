@@ -7,7 +7,6 @@ import Stripe from "stripe";
 import admin from "firebase-admin";
 import path from "path";
 import multer from "multer";
-const pdfParse = require("pdf-parse");
 
 import { requireAuth, AuthenticatedRequest } from "./requireAuth";
 import { db } from "./firebaseAdmin";
@@ -131,7 +130,17 @@ app.post(
 
      // ✅ PDF (text only)
 else if (name.endsWith(".pdf")) {
-  const parser = (pdfParse as any).default || pdfParse;
+  const runtimePdfParse = require("pdf-parse");
+
+  console.log("runtimePdfParse:", runtimePdfParse);
+  console.log("typeof runtimePdfParse:", typeof runtimePdfParse);
+
+  const parser =
+    runtimePdfParse.default ||
+    runtimePdfParse.pdfParse ||
+    runtimePdfParse;
+
+  console.log("typeof parser:", typeof parser);
 
   const parsed = await parser(file.buffer);
 

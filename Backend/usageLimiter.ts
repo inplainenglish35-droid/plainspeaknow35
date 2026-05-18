@@ -81,9 +81,13 @@ export async function consumeKeys(
     tx.set(transactionRef, {
       uid,
       type: "debit",
+      source: "document_processing",
       amount: requiredKeys,
       remainingBalance: newBalance,
-      ...metadata,
+      mode: metadata?.mode ?? null,
+      pageCount: metadata?.pageCount ?? null,
+      inputLanguage: metadata?.inputLanguage ?? null,
+      outputLanguage: metadata?.outputLanguage ?? null,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
 

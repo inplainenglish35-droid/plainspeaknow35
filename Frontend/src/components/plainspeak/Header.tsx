@@ -19,7 +19,7 @@ import {
    TYPES
 ========================= */
 
-type Language = "en" | "es" | "vi" | "tl";
+type Language = "en" | "es" | "vi" | "tl" | "fr";
 
 interface HeaderProps {
   language: Language;
@@ -145,6 +145,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <option value="es">ES</option>
                 <option value="vi">VI</option>
                 <option value="tl">TL</option>
+                <option value="fr">FR</option>
               </select>
 
               {/* DARK MODE */}

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-type Language = "en" | "es" | "vi" | "tl";
+type Language = "en" | "es" | "vi" | "tl" | "fr";
 
 export default function FAQ() {
   const [language, setLanguage] = useState<Language>("en");
@@ -9,6 +9,7 @@ export default function FAQ() {
     if (lang === "es") return /[áéíóúñ¿¡]/i.test(text);
     if (lang === "vi") return /[ăâđêôơư]/i.test(text);
     if (lang === "tl") return /[áéíóúñ¿¡]/i.test(text);
+    if (lang === "fr") return /[éèêëàâîïùûçœ]/i.test(text);
     return true;
   }
 
@@ -50,7 +51,7 @@ export default function FAQ() {
               </h2>
               <p>
                 Plainspeak turns complex writing into clear, plain language.
-                Paste text, upload a document, or take a photo, and get an easier-to-understand version.
+                Paste text, upload a document, and get an easier-to-understand version.
               </p>
             </div>
 

@@ -74,44 +74,46 @@ export const Header: React.FC<HeaderProps> = ({
   const toggleDarkMode = () => {
     setIsDark((prev) => !prev);
   };
-    /* =========================
-     KEY BALANCE
-  ========================= */
+/* =========================
+   KEY BALANCE
+========================= */
 
-  useEffect(() => {
-    const fetchKeyBalance = async () => {
-      try {
-        if (!user) {
-          setKeyBalance(null);
-          return;
-        }
-
-        const token = await user.getIdToken();
-
-        const res = await fetch(
-          "https://plainspeaknow.net/api/key-balance",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch key balance");
-        }
-
-        const data = await res.json();
-
-        setKeyBalance(data.keyBalance || 0);
-
-      } catch (error) {
-        console.error("Key balance fetch failed:", error);
+useEffect(() => {
+  const fetchKeyBalance = async () => {
+    try {
+      if (!user) {
+        setKeyBalance(null);
+        return;
       }
-    };
 
-    fetchKeyBalance();
-  }, [user]);
+      const API_URL = import.meta.env.VITE_API_URL;
+
+      const token = await user.getIdToken();
+
+      const res = await fetch(
+        `${API_URL}/api/key-balance`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch key balance");
+      }
+
+      const data = await res.json();
+
+      setKeyBalance(data.keyBalance || 0);
+
+    } catch (error) {
+      console.error("Key balance fetch failed:", error);
+    }
+  };
+
+  fetchKeyBalance();
+}, [user]);
   /* =========================
      AUTH
   ========================= */

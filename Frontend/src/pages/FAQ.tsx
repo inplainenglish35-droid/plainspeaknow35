@@ -66,7 +66,7 @@ export default function FAQ() {
               <ul className="list-disc pl-5 mt-2 space-y-1 text-slate-600">
                 <li><strong>Most documents use just 1 Key</strong></li>
                 <li>Longer documents may use 2 Keys</li>
-                <li>Includes understanding, organizing, and response drafting</li>
+                <li>Includes understanding, organizing, and Gives you a list of Important items.</li>
               </ul>
 
               <p className="mt-2">

@@ -8,6 +8,10 @@ import admin from "firebase-admin";
 import path from "path";
 import multer from "multer";
 
+import {
+  sendWelcomeEmail,
+  sendKeysAddedEmail
+} from "./services/email";
 import { requireAuth, AuthenticatedRequest } from "./requireAuth";
 import { db } from "./firebaseAdmin";
 import { errorHandler } from "./middleware/errorHandler";
@@ -443,11 +447,13 @@ app.post(
   "/webhook",
   express.raw({ type: "application/json" }),
   async (req: Request, res: Response) => {
-    if (!stripe) return res.status(200).end();
+    if (!stripe) {
+      return res.status(200).end();
+    }
 
     const sig = req.headers["stripe-signature"] as string;
 
-    let event;
+    let event: Stripe.Event;
 
     try {
       event = stripe.webhooks.constructEvent(
@@ -456,26 +462,123 @@ app.post(
         process.env.STRIPE_WEBHOOK_SECRET as string
       );
     } catch (err: any) {
-      return res.status(400).send(err.message);
+      console.error("Webhook signature verification failed:", err.message);
+
+      return res.status(400).send(`Webhook Error: ${err.message}`);
     }
 
-    if (event.type === "checkout.session.completed") {
-      const session = event.data.object as Stripe.Checkout.Session;
+    try {
+      if (event.type === "checkout.session.completed") {
+        const session = event.data.object as Stripe.Checkout.Session;
 
-      const userId = session.metadata?.userId;
-      const keys = Number(session.metadata?.keys || 0);
+        const userId = session.metadata?.userId;
+        const keys = Number(session.metadata?.keys || 0);
+        const customerEmail = session.customer_details?.email || "";
 
-      if (!userId || !keys) return res.status(400).end();
+        if (!userId || !keys) {
+          console.error("Missing userId or keys in Stripe metadata");
 
-      await db.collection("users").doc(userId).update({
-        keyBalance: admin.firestore.FieldValue.increment(keys),
+          return res.status(400).json({
+            error: "Missing metadata",
+          });
+        }
+
+        // Add Keys to Firestore
+        await db.collection("users").doc(userId).update({
+          keyBalance: admin.firestore.FieldValue.increment(keys),
+        });
+
+        console.log(`Added ${keys} Keys to user ${userId}`);
+
+        // Send confirmation email
+        if (customerEmail) {
+          await sendKeysAddedEmail(customerEmail);
+
+          console.log(`Confirmation email sent to ${customerEmail}`);
+        }
+      }
+
+      return res.json({ received: true });
+
+    } catch (error) {
+      console.error("Webhook processing failed:", error);
+
+      return res.status(500).json({
+        error: "Webhook processing failed",
       });
     }
+  }
+);
+app.post(
+  "/api/send-welcome-email",
+  async (req: Request, res: Response) => {
+    try {
+      const { email } = req.body;
 
-    res.json({ received: true });
+      if (!email) {
+        return res.status(400).json({
+          error: "Email required",
+        });
+      }
+
+      await sendWelcomeEmail(email);
+
+      console.log(`Welcome email sent to ${email}`);
+
+      return res.json({
+        success: true,
+      });
+
+    } catch (error) {
+      console.error("Welcome email failed:", error);
+
+      return res.status(500).json({
+        error: "Failed to send welcome email",
+      });
+    }
   }
 );
 
+app.get(
+  "/api/key-balance",
+  requireAuth,
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.uid;
+
+      if (!userId) {
+        return res.status(401).json({
+          error: "Unauthorized",
+        });
+      }
+
+      console.log("KEY BALANCE UID:", userId);
+
+      const doc = await db.collection("users").doc(userId).get();
+
+      console.log("FIRESTORE DATA:", doc.data());
+
+      if (!doc.exists) {
+        return res.status(404).json({
+          error: "User not found",
+        });
+      }
+
+      const keyBalance = doc.data()?.keyBalance || 0;
+
+      return res.json({
+        keyBalance,
+      });
+
+    } catch (error) {
+      console.error("Failed to fetch key balance:", error);
+
+      return res.status(500).json({
+        error: "Failed to fetch key balance",
+      });
+    }
+  }
+);
 /* =========================
    API 404
 ========================= */

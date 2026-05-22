@@ -34,12 +34,28 @@ export default function AuthModal({ isOpen, onClose }: Props) {
     try {
       if (mode === "login") {
         await signInWithEmailAndPassword(auth, email, password);
+
         setInfo("Signed in successfully");
-        onClose(); // 👈 closes modal after success
+
+        onClose(); // closes modal after success
       } else {
+        // Create Firebase account
         await createUserWithEmailAndPassword(auth, email, password);
+
+        // Trigger welcome email
+        await fetch("https://plainspeaknow.net/api/send-welcome-email", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+          }),
+        });
+
         setInfo("Account created successfully");
-        onClose(); // 👈 closes modal after success
+
+        onClose(); // closes modal after success
       }
     } catch (err: any) {
       console.error(err);
@@ -156,5 +172,3 @@ export default function AuthModal({ isOpen, onClose }: Props) {
     </div>
   );
 }
-
-

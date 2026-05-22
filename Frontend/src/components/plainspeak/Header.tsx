@@ -39,7 +39,7 @@ export const Header: React.FC<HeaderProps> = ({
   const [isDark, setIsDark] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-
+  const [keyBalance, setKeyBalance] = useState<number | null>(null);
   /* =========================
      DARK MODE SYSTEM
   ========================= */
@@ -74,7 +74,44 @@ export const Header: React.FC<HeaderProps> = ({
   const toggleDarkMode = () => {
     setIsDark((prev) => !prev);
   };
+    /* =========================
+     KEY BALANCE
+  ========================= */
 
+  useEffect(() => {
+    const fetchKeyBalance = async () => {
+      try {
+        if (!user) {
+          setKeyBalance(null);
+          return;
+        }
+
+        const token = await user.getIdToken();
+
+        const res = await fetch(
+          "https://plainspeaknow.net/api/key-balance",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch key balance");
+        }
+
+        const data = await res.json();
+
+        setKeyBalance(data.keyBalance || 0);
+
+      } catch (error) {
+        console.error("Key balance fetch failed:", error);
+      }
+    };
+
+    fetchKeyBalance();
+  }, [user]);
   /* =========================
      AUTH
   ========================= */
@@ -184,16 +221,41 @@ export const Header: React.FC<HeaderProps> = ({
                   </button>
 
                   {userMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-44 rounded-lg border border-teal-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-lg">
-                      <button
-                        onClick={handleSignOut}
-                        className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-teal-50 dark:hover:bg-slate-700"
-                      >
-                        <LogOut className="w-4 h-4" />
-                        Sign out
-                      </button>
-                    </div>
-                  )}
+  <div className="absolute right-0 mt-2 w-56 rounded-xl border border-teal-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-lg overflow-hidden">
+
+    {/* USER INFO */}
+    <div className="px-4 py-3 border-b border-teal-100 dark:border-slate-700">
+      <p className="text-xs text-slate-500 dark:text-slate-400">
+        Signed in as
+      </p>
+
+      <p className="text-sm font-medium text-slate-800 dark:text-slate-100 truncate">
+        {user.email}
+      </p>
+    </div>
+
+    {/* KEY BALANCE */}
+    <div className="px-4 py-3 border-b border-teal-100 dark:border-slate-700">
+      <p className="text-xs text-slate-500 dark:text-slate-400">
+        Key Balance
+      </p>
+
+      <p className="text-lg font-semibold text-[#4f7c6b]">
+        {keyBalance ?? "—"} Keys
+      </p>
+    </div>
+
+    {/* SIGN OUT */}
+    <button
+      onClick={handleSignOut}
+      className="w-full flex items-center gap-2 px-4 py-3 text-sm hover:bg-teal-50 dark:hover:bg-slate-700 transition"
+    >
+      <LogOut className="w-4 h-4" />
+      Sign out
+    </button>
+
+  </div>
+)}
                 </div>
               )}
             </div>

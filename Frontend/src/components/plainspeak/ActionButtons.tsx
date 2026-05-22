@@ -4,7 +4,7 @@ import React from "react";
 import { Sparkles, Languages, Loader2 } from "lucide-react";
 import { useAuth } from "./contexts/AuthContext";
 
-type Language = "en" | "es" | "vi" | "tl";
+type Language = "en" | "es" | "vi" | "tl" | "fr";
 interface ActionButtonsProps {
   onSimplify: () => void;
   onTranslate: () => void;
@@ -87,6 +87,8 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
         ? "Vietnamese"
         : targetLanguage === "tl"
         ? "Tagalog"
+        : targetLanguage === "fr"
+        ? "French"
         : "English"}
     </>
   )}

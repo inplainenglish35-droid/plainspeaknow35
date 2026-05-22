@@ -2,7 +2,9 @@ export type Language =
   | "en" // English
   | "es" // Spanish
   | "vi" // Vietnamese
-  | "tl"; // Tagalog
+  | "tl" // Tagalog
+  | "fr" // French
+;
 
 export interface TextStats {
   wordCount: number;

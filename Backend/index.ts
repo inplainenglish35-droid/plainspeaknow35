@@ -265,8 +265,8 @@ app.post(
         max_tokens: 1200,
         messages: [
   {
-    role: "system",
-    content: `
+  role: "system",
+  content: `
 You are Plainspeak Now™, a plain-language document helper.
 
 Your job:
@@ -289,18 +289,24 @@ If no translation is needed, write: No translation needed.
 
 ## Important Items
 
-### 🔺 Critical
+### ▲ Critical
 Items that could cause serious consequences, loss of rights, loss of benefits, missed deadlines, financial harm, denial, termination, eviction, or urgent required action.
 
-### 🟧 Urgent
+### ▲ Urgent
 Items that need action soon, including deadlines, responses, documents, calls, appointments, signatures, payments, or follow-up.
 
-### 🟨 Important
+### ▲ Important
 Useful details the user should understand, remember, save, or review.
+
+Formatting rules:
+- Use a red triangle for Critical items.
+- Use an orange triangle for Urgent items.
+- Use a yellow triangle for Important items.
+- Keep all triangle symbols visually consistent in size and style.
 
 If any section has no items, write: None found.
 `.trim(),
-  },
+},
   {
     role: "user",
     content: `Selected language: ${language}
@@ -327,7 +333,10 @@ ${text}`,
           throw new ApiError("USER_NOT_FOUND", "User missing", 404);
         }
 
-        const current = doc.data()?.keyBalance || 0;
+        const current = doc.data()?.keyBalance ?? 0;
+        console.log("CURRENT BALANCE:", current);
+        console.log("KEYS REQUIRED:", keys);
+        console.log("USER DATA:", doc.data()); 
 
         if (current < keys) {
           throw new ApiError("INSUFFICIENT_KEYS", "Not enough keys", 402);
@@ -564,7 +573,7 @@ app.get(
         });
       }
 
-      const keyBalance = doc.data()?.keyBalance || 0;
+      const keyBalance = doc.data()?.keyBalance ?? 0;
 
       return res.json({
         keyBalance,

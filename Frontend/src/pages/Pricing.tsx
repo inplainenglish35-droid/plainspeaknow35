@@ -8,7 +8,7 @@ const API_URL = import.meta.env.VITE_API_URL ?? "";
 
 export default function Pricing() {
   const { user } = useAuth();
-  const [language] = useState<"en" | "es" | "vi" | "tl">("en");
+  const [language] = useState<"en" | "es" | "vi" | "tl" | "fr">("en");
 
   const handlePurchase = async () => {
     if (!user) {

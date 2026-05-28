@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../lib/utils";
 
-type Language = "en" | "es" | "vi" | "tl";
+type Language = "en" | "es" | "vi" | "tl" | "fr";
 
 interface LanguageToggleProps {
   currentLanguage: Language;
@@ -19,6 +19,7 @@ export const LanguageToggle: React.FC<LanguageToggleProps> = ({
     es: "Spanish",
     vi: "Vietnamese",
     tl: "Tagalog",
+    fr: "French",
   };
 
   return (

@@ -21,6 +21,7 @@ Frontend for **Plainspeak Now**, a web app that:
 * Spanish
 * Vietnamese
 * Tagalog
+* French
 
 ---
 
@@ -82,7 +83,7 @@ User must be signed in before processing documents.
 ## 🔑 Key System
 
 * 1 Key per document
-* 2 Keys for large documents
+* 2 Keys for large documents (over 30 pages)
 * Keys deducted **only after successful processing**
 * No subscriptions
 * Keys never expire

@@ -65,6 +65,7 @@ GitHub → Cloud Build → Cloud Run
 * Spanish
 * Vietnamese
 * Tagalog
+* French
 
 ---
 

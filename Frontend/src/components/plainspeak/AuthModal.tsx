@@ -1,12 +1,22 @@
 "use client";
 
 import { useState } from "react";
+
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
 
+import {
+  doc,
+  getFirestore,
+  setDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+
 import { auth } from "../../lib/firebase";
+
+const db = getFirestore();
 
 type Mode = "login" | "signup";
 
@@ -15,16 +25,30 @@ type Props = {
   onClose: () => void;
 };
 
-export default function AuthModal({ isOpen, onClose }: Props) {
+export default function AuthModal({
+  isOpen,
+  onClose,
+}: Props) {
   // 🔒 CONTROL RENDER HERE (not outside)
   if (!isOpen) return null;
 
-  const [mode, setMode] = useState<Mode>("login");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [info, setInfo] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [mode, setMode] =
+    useState<Mode>("login");
+
+  const [email, setEmail] =
+    useState("");
+
+  const [password, setPassword] =
+    useState("");
+
+  const [error, setError] =
+    useState<string | null>(null);
+
+  const [info, setInfo] =
+    useState<string | null>(null);
+
+  const [loading, setLoading] =
+    useState(false);
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -33,43 +57,88 @@ export default function AuthModal({ isOpen, onClose }: Props) {
 
     try {
       if (mode === "login") {
-        await signInWithEmailAndPassword(auth, email, password);
+        await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
 
         setInfo("Signed in successfully");
 
-        onClose(); // closes modal after success
+        onClose();
       } else {
         // Create Firebase account
-        await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential =
+          await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+
+        const user = userCredential.user;
+
+        // Create Firestore user document
+        await setDoc(
+          doc(db, "users", user.uid),
+          {
+            email: user.email,
+            displayName:
+              user.displayName || "",
+            keyBalance: 1,
+            role: "user",
+            feedbackAccepted: false,
+            feedbackDeclines: 0,
+            createdAt: serverTimestamp(),
+          }
+        );
 
         // Trigger welcome email
-        await fetch("https://plainspeaknow.net/api/send-welcome-email", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-          }),
-        });
+        await fetch(
+          "https://plainspeaknow.net/api/send-welcome-email",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+            body: JSON.stringify({
+              email,
+            }),
+          }
+        );
 
-        setInfo("Account created successfully");
+        setInfo(
+          "Account created successfully"
+        );
 
-        onClose(); // closes modal after success
+        onClose();
       }
     } catch (err: any) {
       console.error(err);
 
       if (err.code === "auth/user-not-found") {
-        setError("No account found with this email.");
-      } else if (err.code === "auth/wrong-password") {
+        setError(
+          "No account found with this email."
+        );
+      } else if (
+        err.code === "auth/wrong-password"
+      ) {
         setError("Incorrect password.");
-      } else if (err.code === "auth/email-already-in-use") {
+      } else if (
+        err.code ===
+        "auth/email-already-in-use"
+      ) {
         setError("Email already in use.");
-      } else if (err.code === "auth/weak-password") {
-        setError("Password should be at least 6 characters.");
+      } else if (
+        err.code === "auth/weak-password"
+      ) {
+        setError(
+          "Password should be at least 6 characters."
+        );
       } else {
-        setError("Something went wrong. Please try again.");
+        setError(
+          "Something went wrong. Please try again."
+        );
       }
     } finally {
       setLoading(false);
@@ -83,7 +152,9 @@ export default function AuthModal({ isOpen, onClose }: Props) {
         {/* Header */}
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">
-            {mode === "login" ? "Sign in" : "Create account"}
+            {mode === "login"
+              ? "Sign in"
+              : "Create account"}
           </h2>
 
           <button
@@ -108,7 +179,9 @@ export default function AuthModal({ isOpen, onClose }: Props) {
             type="email"
             placeholder="Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
             autoComplete="email"
             className="w-full rounded-md border border-slate-300 dark:border-slate-700 px-3 py-2 text-sm bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-400"
           />
@@ -119,12 +192,19 @@ export default function AuthModal({ isOpen, onClose }: Props) {
             type="password"
             placeholder="Password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
             autoComplete="current-password"
             className="w-full rounded-md border border-slate-300 dark:border-slate-700 px-3 py-2 text-sm bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-400"
           />
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && (
+            <p className="text-sm text-red-600">
+              {error}
+            </p>
+          )}
+
           {info && (
             <p className="text-sm text-slate-600 dark:text-slate-300">
               {info}
@@ -150,7 +230,9 @@ export default function AuthModal({ isOpen, onClose }: Props) {
             <>
               Don’t have an account?{" "}
               <button
-                onClick={() => setMode("signup")}
+                onClick={() =>
+                  setMode("signup")
+                }
                 className="text-slate-900 dark:text-white font-medium"
               >
                 Create one
@@ -160,7 +242,9 @@ export default function AuthModal({ isOpen, onClose }: Props) {
             <>
               Already have an account?{" "}
               <button
-                onClick={() => setMode("login")}
+                onClick={() =>
+                  setMode("login")
+                }
                 className="text-slate-900 dark:text-white font-medium"
               >
                 Sign in

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Leaf } from "lucide-react";
-
+import { translations } from "../components/plainspeak/lib/translations";
 import { useAuth } from "../components/plainspeak/contexts/AuthContext";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "";
@@ -9,7 +9,7 @@ const API_URL = import.meta.env.VITE_API_URL ?? "";
 export default function Pricing() {
   const { user } = useAuth();
   const [language] = useState<"en" | "es" | "vi" | "tl" | "fr">("en");
-
+  const t = translations[language];
   const handlePurchase = async () => {
     if (!user) {
       alert("Please sign in to continue.");
@@ -115,7 +115,7 @@ export default function Pricing() {
               <div className="space-y-2">
 
                 <h3 className="text-2xl font-semibold">
-                  2 Keys
+                  2 {t.pricing.keys}
                 </h3>
 
                 <p className="text-4xl font-semibold">

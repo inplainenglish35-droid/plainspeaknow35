@@ -284,8 +284,16 @@ Output format:
 Explain the document in plain language.
 
 ## Translation
-If translation is needed, provide the translated simplified explanation.
-If no translation is needed, write: No translation needed.
+
+If the selected language is NOT English:
+
+- Translate the ENTIRE simplified explanation into the selected language.
+- Translate ALL section headers.
+- Translate ALL Important Items categories.
+- Output EVERYTHING after simplification in the selected language.
+
+If the selected language IS English, write:
+No translation needed.
 
 ## Important Items
 
@@ -310,6 +318,8 @@ If any section has no items, write: None found.
   {
     role: "user",
     content: `Selected language: ${language}
+
+You MUST respond fully in the selected language when it is not English.
 
 Text:
 ${text}`,

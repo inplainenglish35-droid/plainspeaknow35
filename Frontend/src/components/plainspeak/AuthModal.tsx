@@ -77,8 +77,6 @@ export default function AuthModal({
 
         const user = userCredential.user;
 
-console.log("BEFORE SETDOC");
-
 await setDoc(
   doc(db, "users", user.uid),
   {
@@ -92,15 +90,7 @@ await setDoc(
   }
 );
 
-console.log("AFTER SETDOC");
-console.log("API_URL =", API_URL);
-
-console.log(
-  "WELCOME URL =",
-  `${API_URL}/api/send-welcome-email`
-);
-        // Trigger welcome email
-        // Trigger welcome email
+// Trigger welcome email
 try {
   await fetch(
     `${API_URL}/api/send-welcome-email`,

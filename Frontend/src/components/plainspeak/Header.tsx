@@ -34,12 +34,16 @@ export const Header: React.FC<HeaderProps> = ({
   language,
   setLanguage,
 }) => {
-  const { user } = useAuth();
+  const {
+  user,
+  keyBalance,
+  setKeyBalance,
+} = useAuth();
 
   const [isDark, setIsDark] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [keyBalance, setKeyBalance] = useState<number | null>(null);
+  
   /* =========================
      DARK MODE SYSTEM
   ========================= */

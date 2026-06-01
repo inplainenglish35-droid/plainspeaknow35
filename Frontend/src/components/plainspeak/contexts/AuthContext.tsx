@@ -10,6 +10,11 @@ import { auth } from "../../../lib/firebase";
 interface AuthContextValue {
   user: User | null;
   loading: boolean;
+
+  keyBalance: number | null;
+  setKeyBalance: React.Dispatch<
+    React.SetStateAction<number | null>
+  >;
 }
 
 /* =========================
@@ -25,7 +30,8 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-
+  const [keyBalance, setKeyBalance] =
+  useState<number | null>(null);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
@@ -36,7 +42,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider
+  value={{
+    user,
+    loading,
+    keyBalance,
+    setKeyBalance,
+  }}
+>
       {children}
     </AuthContext.Provider>
   );

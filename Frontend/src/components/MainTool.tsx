@@ -7,7 +7,10 @@ const API_URL = import.meta.env.VITE_API_URL ?? "";
 
 console.log("VITE_API_URL:", API_URL);
 export default function MainTool() {
-  const { user } = useAuth();
+  const {
+  user,
+  setKeyBalance,
+} = useAuth();
 
   const language = "en";
   const MAX_AUDIO_GENERATIONS = 3;
@@ -188,17 +191,27 @@ export default function MainTool() {
         }),
       });
 
-      const data = await res.json().catch(() => null);
+     const data = await res.json().catch(() => null);
 
-      if (!res.ok) {
-        throw new Error(
-          data?.error ||
-            data?.message ||
-            "Plainspeak could not process this document."
-        );
-      }
+if (!res.ok) {
+  throw new Error(
+    data?.error ||
+      data?.message ||
+      "Plainspeak could not process this document."
+  );
+}
 
-      setOutputText(data?.output || data?.result || "");
+setOutputText(data?.output || data?.result || "");
+
+alert("SIMPLIFY SUCCESS");
+
+console.log("remainingKeys =", data?.remainingKeys);
+
+setKeyBalance(data?.remainingKeys ?? 0);
+
+console.log("setKeyBalance called");
+// Update displayed Key Balance immediately
+setKeyBalance(data?.remainingKeys ?? 0);
     } catch (err: any) {
       console.error("Simplify error:", err);
       setErrorMessage(err.message || "Failed to process document.");

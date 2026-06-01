@@ -17,7 +17,7 @@ import {
 import { auth } from "../../lib/firebase";
 
 const db = getFirestore();
-
+const API_URL = import.meta.env.VITE_API_URL ?? "";
 type Mode = "login" | "signup";
 
 type Props = {
@@ -77,44 +77,56 @@ export default function AuthModal({
 
         const user = userCredential.user;
 
-        // Create Firestore user document
-        await setDoc(
-          doc(db, "users", user.uid),
-          {
-            email: user.email,
-            displayName:
-              user.displayName || "",
-            keyBalance: 1,
-            role: "user",
-            feedbackAccepted: false,
-            feedbackDeclines: 0,
-            createdAt: serverTimestamp(),
-          }
-        );
+console.log("BEFORE SETDOC");
 
+await setDoc(
+  doc(db, "users", user.uid),
+  {
+    email: user.email,
+    displayName: user.displayName || "",
+    keyBalance: 1,
+    role: "user",
+    feedbackAccepted: false,
+    feedbackDeclines: 0,
+    createdAt: serverTimestamp(),
+  }
+);
+
+console.log("AFTER SETDOC");
+console.log("API_URL =", API_URL);
+
+console.log(
+  "WELCOME URL =",
+  `${API_URL}/api/send-welcome-email`
+);
         // Trigger welcome email
-        await fetch(
-          "https://plainspeaknow.net/api/send-welcome-email",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
-            body: JSON.stringify({
-              email,
-            }),
-          }
-        );
+        // Trigger welcome email
+try {
+  await fetch(
+    `${API_URL}/api/send-welcome-email`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+      }),
+    }
+  );
+} catch (error) {
+  console.error("Welcome email failed:", error);
+}
 
-        setInfo(
-          "Account created successfully"
-        );
+setInfo("Account created successfully");
 
-        onClose();
+onClose();
       }
     } catch (err: any) {
-      console.error(err);
+      console.error("FULL SIGNUP ERROR:", err);
+      console.error("ERROR CODE:", err?.code);
+      console.error("ERROR MESSAGE:", err?.message);
+      
 
       if (err.code === "auth/user-not-found") {
         setError(

@@ -203,13 +203,8 @@ if (!res.ok) {
 
 setOutputText(data?.output || data?.result || "");
 
-alert("SIMPLIFY SUCCESS");
-
-console.log("remainingKeys =", data?.remainingKeys);
-
 setKeyBalance(data?.remainingKeys ?? 0);
 
-console.log("setKeyBalance called");
 // Update displayed Key Balance immediately
 setKeyBalance(data?.remainingKeys ?? 0);
     } catch (err: any) {

@@ -15,6 +15,16 @@ interface AuthContextValue {
   setKeyBalance: React.Dispatch<
     React.SetStateAction<number | null>
   >;
+
+  feedbackAccepted: boolean;
+  setFeedbackAccepted: React.Dispatch<
+    React.SetStateAction<boolean>
+  >;
+
+  feedbackDeclines: number;
+  setFeedbackDeclines: React.Dispatch<
+    React.SetStateAction<number>
+  >;
 }
 
 /* =========================
@@ -30,8 +40,16 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+
   const [keyBalance, setKeyBalance] =
-  useState<number | null>(null);
+    useState<number | null>(null);
+
+  const [feedbackAccepted, setFeedbackAccepted] =
+    useState(false);
+
+  const [feedbackDeclines, setFeedbackDeclines] =
+    useState(0);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
@@ -46,8 +64,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   value={{
     user,
     loading,
+
     keyBalance,
     setKeyBalance,
+
+    feedbackAccepted,
+    setFeedbackAccepted,
+
+    feedbackDeclines,
+    setFeedbackDeclines,
   }}
 >
       {children}

@@ -38,6 +38,12 @@ export const Header: React.FC<HeaderProps> = ({
   user,
   keyBalance,
   setKeyBalance,
+
+  feedbackAccepted,
+  setFeedbackAccepted,
+
+  feedbackDeclines,
+  setFeedbackDeclines,
 } = useAuth();
 
   const [isDark, setIsDark] = useState(false);
@@ -109,7 +115,15 @@ useEffect(() => {
 
       const data = await res.json();
 
-      setKeyBalance(data.keyBalance || 0);
+      setKeyBalance(data.keyBalance ?? 0);
+
+      setFeedbackAccepted(
+        data.feedbackAccepted ?? false
+    );
+
+setFeedbackDeclines(
+  data.feedbackDeclines ?? 0
+);
 
     } catch (error) {
       console.error("Key balance fetch failed:", error);

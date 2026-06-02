@@ -583,10 +583,16 @@ app.get(
         });
       }
 
-      const keyBalance = doc.data()?.keyBalance ?? 0;
+      const userData = doc.data() || {};
 
-      return res.json({
-        keyBalance,
+      const keyBalance = userData.keyBalance ?? 0;
+      const feedbackAccepted = userData.feedbackAccepted ?? false;
+      const feedbackDeclines = userData.feedbackDeclines ?? 0;
+
+        return res.json({
+          keyBalance,
+          feedbackAccepted,
+          feedbackDeclines,
       });
 
     } catch (error) {

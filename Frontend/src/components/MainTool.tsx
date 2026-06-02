@@ -10,6 +10,9 @@ export default function MainTool() {
   const {
   user,
   setKeyBalance,
+
+  feedbackAccepted,
+  feedbackDeclines,
 } = useAuth();
 
   const language = "en";
@@ -25,7 +28,7 @@ export default function MainTool() {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
   const [audioGenerationCount, setAudioGenerationCount] = useState(0);
-
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
@@ -203,10 +206,16 @@ if (!res.ok) {
 
 setOutputText(data?.output || data?.result || "");
 
-setKeyBalance(data?.remainingKeys ?? 0);
-
 // Update displayed Key Balance immediately
 setKeyBalance(data?.remainingKeys ?? 0);
+
+// Temporary trigger for feedback modal
+console.log("remainingKeys:", data?.remainingKeys);
+
+if (data?.remainingKeys === 0) {
+  console.log("SHOW FEEDBACK MODAL");
+  setShowFeedbackModal(true);
+}
     } catch (err: any) {
       console.error("Simplify error:", err);
       setErrorMessage(err.message || "Failed to process document.");
@@ -402,6 +411,42 @@ setKeyBalance(data?.remainingKeys ?? 0);
           </div>
         </section>
       )}
+      {showFeedbackModal && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div className="bg-white dark:bg-slate-800 rounded-xl p-6 max-w-md w-full mx-4">
+
+      <h2 className="text-xl font-bold mb-4">
+        Get 1 Bonus Key
+      </h2>
+
+      <p className="mb-4">
+        Tell us how Plainspeak worked for you.
+        Leave feedback and receive 1 bonus Key.
+      </p>
+
+      <textarea
+        className="w-full border rounded p-3 min-h-[120px]"
+        placeholder="Share your feedback..."
+      />
+
+      <div className="flex gap-3 mt-4">
+        <button
+          onClick={() => setShowFeedbackModal(false)}
+          className="px-4 py-2 border rounded"
+        >
+          No Thanks
+        </button>
+
+        <button
+          className="px-4 py-2 bg-[#4f7c6b] text-white rounded"
+        >
+          Send Feedback + Get 1 Key
+        </button>
+      </div>
+
+    </div>
+  </div>
+)}
     </main>
   );
 }

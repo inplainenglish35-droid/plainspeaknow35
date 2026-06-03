@@ -539,7 +539,7 @@ if (
         </button>
 
         <button
-  onClick={handleFeedbackSubmit}
+  onClick={() => alert("BUTTON CLICKED")}
   disabled={submittingFeedback}
   className="px-4 py-2 bg-[#4f7c6b] text-white rounded disabled:opacity-60"
 >

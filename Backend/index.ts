@@ -297,20 +297,24 @@ No translation needed.
 
 ## Important Items
 
-### ▲ Critical
+### 🟥 Critical
 Items that could cause serious consequences, loss of rights, loss of benefits, missed deadlines, financial harm, denial, termination, eviction, or urgent required action.
 
-### ▲ Urgent
+### 🟧 Urgent
 Items that need action soon, including deadlines, responses, documents, calls, appointments, signatures, payments, or follow-up.
 
-### ▲ Important
+### 🟨 Important
 Useful details the user should understand, remember, save, or review.
 
 Formatting rules:
-- Use a red triangle for Critical items.
-- Use an orange triangle for Urgent items.
-- Use a yellow triangle for Important items.
-- Keep all triangle symbols visually consistent in size and style.
+- Use the colored square in each section header.
+- Do not use triangles.
+- Do not use warning icons.
+- Do not substitute different emojis.
+- Use 🟥 only for Critical.
+- Use 🟧 only for Urgent.
+- Use 🟨 only for Important.
+- Keep the square icons visually consistent.
 
 If any section has no items, write: None found.
 `.trim(),

@@ -286,11 +286,18 @@ if (
     }
   };
   const handleFeedbackSubmit = async () => {
-    console.log("FEEDBACK BUTTON CLICKED");
+  console.log("STEP 1");
+
   try {
+    console.log("STEP 2");
+
     setSubmittingFeedback(true);
 
+    console.log("STEP 3");
+
     const token = await auth.currentUser?.getIdToken();
+
+    console.log("STEP 4", token);
 
     const res = await fetch(
       `${import.meta.env.VITE_API_URL}/api/feedback-submit`,
@@ -306,7 +313,11 @@ if (
       }
     );
 
+    console.log("STEP 5");
+
     const data = await res.json();
+
+    console.log("STEP 6", data);
 
     if (!res.ok) {
       throw new Error(
@@ -325,6 +336,7 @@ if (
       "Thank you! Your bonus Key has been added to your account."
     );
   } catch (err: any) {
+    console.error("FEEDBACK ERROR:", err);
     alert(err.message || "Failed to submit feedback.");
   } finally {
     setSubmittingFeedback(false);

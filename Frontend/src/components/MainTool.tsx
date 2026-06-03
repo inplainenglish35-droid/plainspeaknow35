@@ -2,6 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { AudioPlayer } from "./plainspeak/AudioPlayer";
 import { useAuth } from "./plainspeak/contexts/AuthContext";
 import { auth } from "../lib/firebase";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "./ui/dialog";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "";
 

@@ -24,7 +24,7 @@ export default function MainTool() {
   const [outputText, setOutputText] = useState("");
   const [loading, setLoading] = useState(false);
   const [extracting, setExtracting] = useState(false);
-
+  const [showFeedbackBanner, setShowFeedbackBanner] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
   const [audioGenerationCount, setAudioGenerationCount] = useState(0);
@@ -204,17 +204,17 @@ if (!res.ok) {
   );
 }
 
-setOutputText(data?.output || data?.result || "");
+  setOutputText(data?.output || data?.result || "");
 
 // Update displayed Key Balance immediately
-setKeyBalance(data?.remainingKeys ?? 0);
+  setKeyBalance(data?.remainingKeys ?? 0);
 
-// Temporary trigger for feedback modal
-console.log("remainingKeys:", data?.remainingKeys);
-
-if (data?.remainingKeys === 0) {
-  console.log("SHOW FEEDBACK MODAL");
-  setShowFeedbackModal(true);
+if (
+  data?.remainingKeys === 0 &&
+  !feedbackAccepted &&
+  feedbackDeclines === 0
+) {
+  setShowFeedbackBanner(true);
 }
     } catch (err: any) {
       console.error("Simplify error:", err);
@@ -377,11 +377,47 @@ if (data?.remainingKeys === 0) {
       )}
 
       {outputText && (
-        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-lg dark:border-slate-700 dark:bg-slate-900">
-          <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-xl font-semibold text-slate-950 dark:text-white">
-              Plainspeak result
-            </h2>
+  <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-lg dark:border-slate-700 dark:bg-slate-900">
+
+    {showFeedbackBanner && (
+      <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-500/40 dark:bg-emerald-950/30">
+
+        <p className="font-medium text-emerald-900 dark:text-emerald-100">
+          🎁 You've used your free Key.
+        </p>
+
+        <p className="mt-2 text-sm text-emerald-800 dark:text-emerald-200">
+          If Plainspeak helped you understand your document,
+          leave feedback and receive 1 bonus Key.
+        </p>
+
+        <p className="mt-2 text-sm text-emerald-800 dark:text-emerald-200">
+          Your bonus Key never expires, so you don't need to use it right away.
+        </p>
+
+        <div className="mt-4 flex gap-3">
+          <button
+            onClick={() => setShowFeedbackModal(true)}
+            className="rounded-lg bg-[#4f7c6b] px-4 py-2 text-white"
+          >
+            Give Feedback
+          </button>
+
+          <button
+            onClick={() => setShowFeedbackBanner(false)}
+            className="rounded-lg border px-4 py-2"
+          >
+            Dismiss
+          </button>
+        </div>
+
+      </div>
+    )}
+
+    <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <h2 className="text-xl font-semibold text-slate-950 dark:text-white">
+        Plainspeak result
+      </h2>
 
             <button
               type="button"
@@ -420,9 +456,16 @@ if (data?.remainingKeys === 0) {
       </h2>
 
       <p className="mb-4">
-        Tell us how Plainspeak worked for you.
-        Leave feedback and receive 1 bonus Key.
-      </p>
+  Tell us how Plainspeak worked for you.
+</p>
+
+<p className="mb-4">
+  As a thank-you, we'll add 1 bonus Key to your account.
+</p>
+
+<p className="mb-4">
+  Your bonus Key never expires and will remain available whenever you need it.
+</p>
 
       <textarea
         className="w-full border rounded p-3 min-h-[120px]"

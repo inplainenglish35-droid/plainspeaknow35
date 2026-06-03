@@ -36,6 +36,10 @@ export default function MainTool() {
   const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
   const [audioGenerationCount, setAudioGenerationCount] = useState(0);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+
+  const [feedbackText, setFeedbackText] = useState("");
+  const [submittingFeedback, setSubmittingFeedback] = useState(false);
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
@@ -281,6 +285,51 @@ if (
       setErrorMessage("Could not copy the result.");
     }
   };
+  const handleFeedbackSubmit = async () => {
+    console.log("FEEDBACK BUTTON CLICKED");
+  try {
+    setSubmittingFeedback(true);
+
+    const token = await auth.currentUser?.getIdToken();
+
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/feedback-submit`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          feedback: feedbackText,
+        }),
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(
+        data?.error || "Failed to submit feedback"
+      );
+    }
+
+    setKeyBalance(data.keyBalance ?? 1);
+
+    setShowFeedbackModal(false);
+    setShowFeedbackBanner(false);
+
+    setFeedbackText("");
+
+    alert(
+      "Thank you! Your bonus Key has been added to your account."
+    );
+  } catch (err: any) {
+    alert(err.message || "Failed to submit feedback.");
+  } finally {
+    setSubmittingFeedback(false);
+  }
+};
 
   return (
     <main className="mx-auto max-w-4xl space-y-6 px-4 py-8 text-slate-900 dark:text-white">
@@ -475,6 +524,8 @@ if (
 </p>
 
       <textarea
+        value={feedbackText}
+        onChange={(e) => setFeedbackText(e.target.value)}
         className="w-full border rounded p-3 min-h-[120px]"
         placeholder="Share your feedback..."
       />
@@ -488,10 +539,12 @@ if (
         </button>
 
         <button
-          className="px-4 py-2 bg-[#4f7c6b] text-white rounded"
-        >
-          Send Feedback + Get 1 Key
-        </button>
+  onClick={handleFeedbackSubmit}
+  disabled={submittingFeedback}
+  className="px-4 py-2 bg-[#4f7c6b] text-white rounded disabled:opacity-60"
+>
+  RONICKA TEST
+</button>
       </div>
 
     </div>

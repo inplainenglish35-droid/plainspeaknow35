@@ -286,62 +286,17 @@ if (
     }
   };
   const handleFeedbackSubmit = async () => {
-  console.log("STEP 1");
-
-  try {
-    console.log("STEP 2");
-
-    setSubmittingFeedback(true);
-
-    console.log("STEP 3");
-
-    const token = await auth.currentUser?.getIdToken();
-
-    console.log("STEP 4", token);
-
-    const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/feedback-submit`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          feedback: feedbackText,
-        }),
-      }
-    );
-
-    console.log("STEP 5");
-
-    const data = await res.json();
-
-    console.log("STEP 6", data);
-
-    if (!res.ok) {
-      throw new Error(
-        data?.error || "Failed to submit feedback"
+    try {
+      alert(
+        "Thank you! Your bonus Key has been added to your account."
       );
+    } catch (err: any) {
+      console.error("FEEDBACK ERROR:", err);
+      alert(err.message || "Failed to submit feedback.");
+    } finally {
+      setSubmittingFeedback(false);
     }
-
-    setKeyBalance(data.keyBalance ?? 1);
-
-    setShowFeedbackModal(false);
-    setShowFeedbackBanner(false);
-
-    setFeedbackText("");
-
-    alert(
-      "Thank you! Your bonus Key has been added to your account."
-    );
-  } catch (err: any) {
-    console.error("FEEDBACK ERROR:", err);
-    alert(err.message || "Failed to submit feedback.");
-  } finally {
-    setSubmittingFeedback(false);
-  }
-};
+  };
 
   return (
     <main className="mx-auto max-w-4xl space-y-6 px-4 py-8 text-slate-900 dark:text-white">

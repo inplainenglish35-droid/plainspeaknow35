@@ -550,12 +550,14 @@ if (
           No Thanks
         </button>
 
-        <button
-  onClick={() => alert("BUTTON CLICKED")}
-  disabled={submittingFeedback}
-  className="px-4 py-2 bg-[#4f7c6b] text-white rounded disabled:opacity-60"
->
-  RONICKA TEST
+        <button  
+        onClick={handleFeedbackSubmit}
+        disabled={submittingFeedback}
+        className="px-4 py-2 bg-[#4f7c6b] text-white rounded disabled:opacity-60"
+      >
+  {submittingFeedback
+    ? "Submitting..."
+    : "Send Feedback + Get 1 Key"}
 </button>
       </div>
 

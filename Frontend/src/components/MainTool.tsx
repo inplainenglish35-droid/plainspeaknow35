@@ -12,6 +12,7 @@ import {
 import { LanguageToggle } from "./plainspeak/LanguageToggle";
 import { useOutletContext } from "react-router-dom";
 import type { Language } from "./plainspeak/types/language";
+import { translations } from "../i18n";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "";
 
@@ -27,7 +28,7 @@ export default function MainTool() {
 const { language } = useOutletContext<{
   language: Language;
 }>();
-console.log("MAINTOOL RENDER LANGUAGE:", language);
+const t = translations[language];
   const MAX_AUDIO_GENERATIONS = 3;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -201,9 +202,7 @@ console.log("MAINTOOL RENDER LANGUAGE:", language);
 
       const headers = await getJsonAuthHeaders();
 
-      console.log("LANGUAGE BEING SENT:", language);
-
-      const res = await fetch(`${API_URL}/api/simplify`, {
+            const res = await fetch(`${API_URL}/api/simplify`, {
         method: "POST",
         headers,
         body: JSON.stringify({
@@ -309,12 +308,11 @@ if (
     <main className="mx-auto max-w-4xl space-y-6 px-4 py-8 text-slate-900 dark:text-white">
       <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-lg dark:border-slate-700 dark:bg-slate-900/70">
         <h1 className="mb-2 text-2xl font-bold text-slate-950 dark:text-white">
-          Turn confusing text into clear words
+          {t.hero}
         </h1>
 
         <p className="mb-5 text-sm text-slate-600 dark:text-slate-300">
-          Upload a text-based document, paste text, or type directly.
-          Plainspeak will turn it into clear, plain-English help.
+          {t.description}
         </p>
 
        

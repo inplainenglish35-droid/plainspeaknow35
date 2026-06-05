@@ -1,4 +1,6 @@
 export const translations = {
+ 
+  
   en: {
     hero: "Turn confusing text into clear words",
     processButton: "Help me understand",

@@ -9,6 +9,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "./ui/dialog";
+import { LanguageToggle } from "./plainspeak/LanguageToggle";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "";
 
@@ -22,7 +23,9 @@ export default function MainTool() {
   feedbackDeclines,
 } = useAuth();
 
-  const language = "en";
+  const [language, setLanguage] = useState<
+  "en" | "es" | "vi" | "tl" | "fr"
+>("en");
   const MAX_AUDIO_GENERATIONS = 3;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -196,6 +199,8 @@ export default function MainTool() {
 
       const headers = await getJsonAuthHeaders();
 
+      console.log("LANGUAGE BEING SENT:", language);
+
       const res = await fetch(`${API_URL}/api/simplify`, {
         method: "POST",
         headers,
@@ -309,6 +314,11 @@ if (
           Upload a text-based document, paste text, or type directly.
           Plainspeak will turn it into clear, plain-English help.
         </p>
+
+        <LanguageToggle
+          currentLanguage={language}
+          onChange={setLanguage}
+        />
 
         <div className="mb-4 flex flex-wrap items-center gap-3">
           <button

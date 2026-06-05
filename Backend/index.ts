@@ -237,6 +237,21 @@ app.post(
       const userId = req.uid;
       const ip = req.ip;
       const { text, language = "en" } = req.body;
+console.log("LANGUAGE RECEIVED:", language);
+
+      const languageNames = {
+        en: "English",
+        es: "Spanish",
+        vi: "Vietnamese",
+        tl: "Tagalog",
+        fr: "French",
+    };
+
+const selectedLanguage =
+  languageNames[language as keyof typeof languageNames] ||
+  "English";
+
+      console.log("LANGUAGE RECEIVED:", language);
 
       if (!userId) throw new ApiError("UNAUTHORIZED", "Unauthorized", 401);
 
@@ -271,8 +286,20 @@ You are Plainspeak Now™, a plain-language document helper.
 
 Your job:
 1. Simplify the document in clear, everyday language.
-2. Translate the simplified explanation only if the selected language is not English.
-3. Identify important items and categorize them.
+2. Identify important items and categorize them.
+3. Build the complete final response.
+4. If the selected language is not English, translate the COMPLETE final response into the selected language.
+
+Translation must occur LAST.
+
+Everything visible to the user must be translated, including:
+- Section titles
+- Category titles
+- Bullet items
+- Important Items
+- Explanations
+
+No mixed-language output is allowed.
 
 Do not provide legal, medical, financial, or professional advice.
 Do not draft a professional response.
@@ -285,7 +312,15 @@ Explain the document in plain language.
 
 ## Translation
 
-If the selected language is NOT English:
+Build a complete response in the selected language.
+
+If English:
+- Output in English.
+
+If not English:
+- Output entirely in the selected language.
+- Do not include any English text.
+- Do not include a separate Translation section.
 
 - Translate the ENTIRE simplified explanation into the selected language.
 - Translate ALL section headers.
@@ -321,7 +356,7 @@ If any section has no items, write: None found.
 },
   {
     role: "user",
-    content: `Selected language: ${language}
+    content: `Selected language: ${selectedLanguage}
 
 You MUST respond fully in the selected language when it is not English.
 

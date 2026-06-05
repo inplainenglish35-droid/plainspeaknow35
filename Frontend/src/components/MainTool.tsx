@@ -317,11 +317,7 @@ if (
           Plainspeak will turn it into clear, plain-English help.
         </p>
 
-        <LanguageToggle
-          currentLanguage={language}
-          onChange={setLanguage}
-        />
-
+       
         <div className="mb-4 flex flex-wrap items-center gap-3">
           <button
             type="button"

@@ -20,7 +20,7 @@ export default function AppLayout() {
       {/* Main Content */}
       <main className="flex-1">
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-8">
-          <Outlet />
+          <Outlet context={{ language }} />
         </div>
       </main>
 

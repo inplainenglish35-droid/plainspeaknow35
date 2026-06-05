@@ -10,6 +10,8 @@ import {
   DialogDescription,
 } from "./ui/dialog";
 import { LanguageToggle } from "./plainspeak/LanguageToggle";
+import { useOutletContext } from "react-router-dom";
+import type { Language } from "./plainspeak/types/language";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "";
 
@@ -18,14 +20,14 @@ export default function MainTool() {
   const {
   user,
   setKeyBalance,
-
   feedbackAccepted,
   feedbackDeclines,
 } = useAuth();
 
-  const [language, setLanguage] = useState<
-  "en" | "es" | "vi" | "tl" | "fr"
->("en");
+const { language } = useOutletContext<{
+  language: Language;
+}>();
+
   const MAX_AUDIO_GENERATIONS = 3;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 

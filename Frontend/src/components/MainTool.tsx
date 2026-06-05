@@ -2,21 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { AudioPlayer } from "./plainspeak/AudioPlayer";
 import { useAuth } from "./plainspeak/contexts/AuthContext";
 import { auth } from "../lib/firebase";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "./ui/dialog";
-import { LanguageToggle } from "./plainspeak/LanguageToggle";
+
 import { useOutletContext } from "react-router-dom";
 import type { Language } from "./plainspeak/types/language";
 import { translations } from "../i18n";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "";
 
-console.log("VITE_API_URL:", API_URL);
 export default function MainTool() {
   const {
   user,
@@ -330,7 +322,7 @@ if (
           disabled={extracting}
           className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-800"
         >
-          {extracting ? "Reading document..." : t.uploadDocument}
+          {extracting ? t.readingDocument : t.uploadDocument}
         </button>
 
         <input
@@ -345,12 +337,12 @@ if (
       </div>
 
       <p className="mb-4 text-xs text-slate-500 dark:text-slate-400">
-        Supports PDF, TXT, DOCX, CSV, and XLSX. Photos and screenshots are not supported.
+        {t.supportedFiles}
       </p>
 
       {selectedFileName && (
         <p className="mb-3 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900 dark:border-emerald-500/40 dark:bg-emerald-950/30 dark:text-emerald-100">
-          File loaded: {selectedFileName}
+          {t.fileLoaded} <strong>{selectedFileName}</strong>
         </p>
       )}
 
@@ -358,7 +350,7 @@ if (
         htmlFor="documentText"
         className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200"
       >
-        Document text
+      {t.documentText}
       </label>
 
       <textarea
@@ -371,7 +363,7 @@ if (
           setErrorMessage(null);
           clearPreviousResult();
         }}
-        placeholder="Paste, type, or upload a text-based document..."
+        placeholder={t.placeholder}
         className="min-h-48 w-full rounded-xl border border-slate-300 bg-white p-4 text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
       />
 
@@ -390,9 +382,9 @@ if (
           className="rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading
-            ? "Reading your text..."
+            ? t.readingYourText
             : extracting
-            ? "Extracting text..."
+            ? t.extractingText
             : t.processButton}
         </button>
       </div>
@@ -441,7 +433,7 @@ if (
 
         <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-xl font-semibold text-slate-950 dark:text-white">
-            Plainspeak result
+            {t.resultTitle}
           </h2>
 
           <button
@@ -449,7 +441,7 @@ if (
             onClick={handleCopy}
             className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-800"
           >
-            {copied ? "Copied!" : "Copy result"}
+            {copied ? t.copied : t.copyResult}
           </button>
         </div>
 

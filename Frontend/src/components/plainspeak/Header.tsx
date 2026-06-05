@@ -6,7 +6,7 @@ import { signOut as firebaseSignOut } from "firebase/auth";
 import { auth } from "../../lib/firebase";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
-
+import { translations } from "../../i18n";
 import {
   Sun,
   Moon,
@@ -49,7 +49,7 @@ export const Header: React.FC<HeaderProps> = ({
   const [isDark, setIsDark] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  
+  const t = translations[language];
   /* =========================
      DARK MODE SYSTEM
   ========================= */
@@ -170,21 +170,21 @@ setFeedbackDeclines(
                   href="mailto:inplainenglish35@gmail.com?subject=Plainspeak Beta Feedback"
                   className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition"
                 >
-                  Send Feedback
+                  {t.sendFeedback}
                 </a>
 
                 <Link
                   to="/faq"
                   className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition"
                 >
-                  FAQ
+                  {t.faq}
                 </Link>
 
                 <Link
                   to="/pricing"
                   className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition"
                 >
-                  Pricing
+                  {t.pricing}
                 </Link>
               </nav>
             </div>
@@ -225,7 +225,9 @@ setFeedbackDeclines(
                   className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#4f7c6b] text-white hover:bg-[#3e6557] transition text-sm"
                 >
                   <User className="w-4 h-4" />
-                  <span className="hidden sm:inline">Sign In</span>
+                  <span className="hidden sm:inline">
+                    {t.signIn}
+                  </span>
                 </button>
               ) : (
                 <div className="relative">
@@ -257,7 +259,7 @@ setFeedbackDeclines(
     {/* KEY BALANCE */}
     <div className="px-4 py-3 border-b border-teal-100 dark:border-slate-700">
       <p className="text-xs text-slate-500 dark:text-slate-400">
-        Key Balance
+        {t.keyBalance}
       </p>
 
       <p className="text-lg font-semibold text-[#4f7c6b]">
@@ -271,7 +273,7 @@ setFeedbackDeclines(
       className="w-full flex items-center gap-2 px-4 py-3 text-sm hover:bg-teal-50 dark:hover:bg-slate-700 transition"
     >
       <LogOut className="w-4 h-4" />
-      Sign out
+      {t.signOut}
     </button>
 
   </div>

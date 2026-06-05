@@ -304,227 +304,223 @@ if (
     }
   };
 
-  return (
-    <main className="mx-auto max-w-4xl space-y-6 px-4 py-8 text-slate-900 dark:text-white">
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-lg dark:border-slate-700 dark:bg-slate-900/70">
-        <h1 className="mb-2 text-2xl font-bold text-slate-950 dark:text-white">
-          {t.hero}
-        </h1>
+ return (
+  <main className="mx-auto max-w-4xl space-y-6 px-4 py-8 text-slate-900 dark:text-white">
+    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-lg dark:border-slate-700 dark:bg-slate-900/70">
+      <h1 className="mb-2 text-2xl font-bold text-slate-950 dark:text-white">
+        {t.hero}
+      </h1>
 
-        <p className="mb-5 text-sm text-slate-600 dark:text-slate-300">
-          {t.description}
-        </p>
+      <p className="mb-5 text-sm text-slate-600 dark:text-slate-300">
+        {t.description}
+      </p>
 
-       
-        <div className="mb-4 flex flex-wrap items-center gap-3">
-          <button
-            type="button"
-            onClick={handlePasteText}
-            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-800"
-          >
-            Paste text
-          </button>
-
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={extracting}
-            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-800"
-          >
-            {extracting ? "Reading document..." : "Upload document"}
-          </button>
-
-          <input
-            ref={fileInputRef}
-            id="documentFile"
-            name="documentFile"
-            type="file"
-            accept=".pdf,.txt,.docx,.csv,.xlsx"
-            onChange={handleFileSelected}
-            className="hidden"
-          />
-        </div>
-
-        <p className="mb-4 text-xs text-slate-500 dark:text-slate-400">
-          Supports PDF, TXT, DOCX, CSV, and XLSX. Photos and screenshots are not supported.
-        </p>
-
-        {selectedFileName && (
-          <p className="mb-3 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900 dark:border-emerald-500/40 dark:bg-emerald-950/30 dark:text-emerald-100">
-            File loaded: {selectedFileName}
-          </p>
-        )}
-
-        <label
-          htmlFor="documentText"
-          className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200"
+      <div className="mb-4 flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          onClick={handlePasteText}
+          className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-800"
         >
-          Document text
-        </label>
+          {t.pasteText}
+        </button>
 
-        <textarea
-          id="documentText"
-          name="documentText"
-          value={inputText}
-          onChange={(e) => {
-            setInputText(e.target.value);
-            setSelectedFileName("");
-            setErrorMessage(null);
-            clearPreviousResult();
-          }}
-          placeholder="Paste, type, or upload a text-based document..."
-          className="min-h-48 w-full rounded-xl border border-slate-300 bg-white p-4 text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={extracting}
+          className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-800"
+        >
+          {extracting ? "Reading document..." : t.uploadDocument}
+        </button>
+
+        <input
+          ref={fileInputRef}
+          id="documentFile"
+          name="documentFile"
+          type="file"
+          accept=".pdf,.txt,.docx,.csv,.xlsx"
+          onChange={handleFileSelected}
+          className="hidden"
         />
+      </div>
 
-        <p className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs leading-relaxed text-amber-900 dark:border-amber-500/40 dark:bg-amber-950/30 dark:text-amber-100">
-          Plainspeak helps explain confusing documents in clearer language. It
-          does not provide legal, medical, financial, or professional advice.
-          For decisions about your rights, health, benefits, or obligations,
-          please contact a qualified professional.
+      <p className="mb-4 text-xs text-slate-500 dark:text-slate-400">
+        Supports PDF, TXT, DOCX, CSV, and XLSX. Photos and screenshots are not supported.
+      </p>
+
+      {selectedFileName && (
+        <p className="mb-3 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900 dark:border-emerald-500/40 dark:bg-emerald-950/30 dark:text-emerald-100">
+          File loaded: {selectedFileName}
         </p>
-
-        <div className="mt-5">
-          <button
-            type="button"
-            onClick={handleSimplify}
-            disabled={loading || extracting || !inputText.trim()}
-            className="rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {loading
-              ? "Reading your text..."
-              : extracting
-                ? "Extracting text..."
-                : "Help me understand"}
-          </button>
-        </div>
-      </section>
-
-      {errorMessage && (
-        <div className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-800 dark:border-red-400/60 dark:bg-red-950/40 dark:text-red-100">
-          {errorMessage}
-        </div>
       )}
 
-      {outputText && (
-  <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-lg dark:border-slate-700 dark:bg-slate-900">
+      <label
+        htmlFor="documentText"
+        className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200"
+      >
+        Document text
+      </label>
 
-    {showFeedbackBanner && (
-      <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-500/40 dark:bg-emerald-950/30">
+      <textarea
+        id="documentText"
+        name="documentText"
+        value={inputText}
+        onChange={(e) => {
+          setInputText(e.target.value);
+          setSelectedFileName("");
+          setErrorMessage(null);
+          clearPreviousResult();
+        }}
+        placeholder="Paste, type, or upload a text-based document..."
+        className="min-h-48 w-full rounded-xl border border-slate-300 bg-white p-4 text-slate-900 outline-none focus:ring-2 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+      />
 
-        <p className="font-medium text-emerald-900 dark:text-emerald-100">
-          🎁 You've used your free Key.
-        </p>
+      <p className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs leading-relaxed text-amber-900 dark:border-amber-500/40 dark:bg-amber-950/30 dark:text-amber-100">
+        Plainspeak helps explain confusing documents in clearer language. It
+        does not provide legal, medical, financial, or professional advice.
+        For decisions about your rights, health, benefits, or obligations,
+        please contact a qualified professional.
+      </p>
 
-        <p className="mt-2 text-sm text-emerald-800 dark:text-emerald-200">
-          If Plainspeak helped you understand your document,
-          leave feedback and receive 1 bonus Key.
-        </p>
+      <div className="mt-5">
+        <button
+          type="button"
+          onClick={handleSimplify}
+          disabled={loading || extracting || !inputText.trim()}
+          className="rounded-lg bg-emerald-600 px-5 py-3 font-semibold text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {loading
+            ? "Reading your text..."
+            : extracting
+            ? "Extracting text..."
+            : t.processButton}
+        </button>
+      </div>
+    </section>
 
-        <p className="mt-2 text-sm text-emerald-800 dark:text-emerald-200">
-          Your bonus Key never expires, so you don't need to use it right away.
-        </p>
-
-        <div className="mt-4 flex gap-3">
-          <button
-            onClick={() => setShowFeedbackModal(true)}
-            className="rounded-lg bg-[#4f7c6b] px-4 py-2 text-white"
-          >
-            Give Feedback
-          </button>
-
-          <button
-            onClick={() => setShowFeedbackBanner(false)}
-            className="rounded-lg border px-4 py-2"
-          >
-            Dismiss
-          </button>
-        </div>
-
+    {errorMessage && (
+      <div className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-800 dark:border-red-400/60 dark:bg-red-950/40 dark:text-red-100">
+        {errorMessage}
       </div>
     )}
 
-    <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <h2 className="text-xl font-semibold text-slate-950 dark:text-white">
-        Plainspeak result
-      </h2>
+    {outputText && (
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-lg dark:border-slate-700 dark:bg-slate-900">
+        {showFeedbackBanner && (
+          <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-500/40 dark:bg-emerald-950/30">
+            <p className="font-medium text-emerald-900 dark:text-emerald-100">
+              🎁 You've used your free Key.
+            </p>
 
-            <button
-              type="button"
-              onClick={handleCopy}
-              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-800"
-            >
-              {copied ? "Copied!" : "Copy result"}
-            </button>
+            <p className="mt-2 text-sm text-emerald-800 dark:text-emerald-200">
+              If Plainspeak helped you understand your document,
+              leave feedback and receive 1 bonus Key.
+            </p>
+
+            <p className="mt-2 text-sm text-emerald-800 dark:text-emerald-200">
+              Your bonus Key never expires, so you don't need to use it right away.
+            </p>
+
+            <div className="mt-4 flex gap-3">
+              <button
+                onClick={() => setShowFeedbackModal(true)}
+                className="rounded-lg bg-[#4f7c6b] px-4 py-2 text-white"
+              >
+                Give Feedback
+              </button>
+
+              <button
+                onClick={() => setShowFeedbackBanner(false)}
+                className="rounded-lg border px-4 py-2"
+              >
+                Dismiss
+              </button>
+            </div>
           </div>
+        )}
 
-          <div className="whitespace-pre-wrap rounded-xl bg-slate-50 p-4 text-slate-800 dark:bg-slate-950/60 dark:text-slate-100">
-            {outputText}
-          </div>
+        <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="text-xl font-semibold text-slate-950 dark:text-white">
+            Plainspeak result
+          </h2>
 
-          <p className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs leading-relaxed text-amber-900 dark:border-amber-500/40 dark:bg-amber-950/30 dark:text-amber-100">
-            Reminder: this plain-language result is for understanding only. It
-            is not legal, medical, financial, or professional advice.
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-800"
+          >
+            {copied ? "Copied!" : "Copy result"}
+          </button>
+        </div>
+
+        <div className="whitespace-pre-wrap rounded-xl bg-slate-50 p-4 text-slate-800 dark:bg-slate-950/60 dark:text-slate-100">
+          {outputText}
+        </div>
+
+        <p className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs leading-relaxed text-amber-900 dark:border-amber-500/40 dark:bg-amber-950/30 dark:text-amber-100">
+          Reminder: this plain-language result is for understanding only. It
+          is not legal, medical, financial, or professional advice.
+        </p>
+
+        <div className="mt-4">
+          <AudioPlayer
+            audioUrl={audioUrl}
+            text={outputText}
+            isGenerating={isGeneratingAudio}
+            onGenerate={handleGenerateAudio}
+          />
+        </div>
+      </section>
+    )}
+
+    {showFeedbackModal && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+        <div className="bg-white dark:bg-slate-800 rounded-xl p-6 max-w-md w-full mx-4">
+          <h2 className="text-xl font-bold mb-4">
+            Get 1 Bonus Key
+          </h2>
+
+          <p className="mb-4">
+            Tell us how Plainspeak worked for you.
           </p>
 
-          <div className="mt-4">
-            <AudioPlayer
-              audioUrl={audioUrl}
-              text={outputText}
-              isGenerating={isGeneratingAudio}
-              onGenerate={handleGenerateAudio}
-            />
+          <p className="mb-4">
+            As a thank-you, we'll add 1 bonus Key to your account.
+          </p>
+
+          <p className="mb-4">
+            Your bonus Key never expires and will remain available whenever you need it.
+          </p>
+
+          <textarea
+            value={feedbackText}
+            onChange={(e) => setFeedbackText(e.target.value)}
+            className="w-full border rounded p-3 min-h-[120px]"
+            placeholder="Share your feedback..."
+          />
+
+          <div className="flex gap-3 mt-4">
+            <button
+              onClick={() => setShowFeedbackModal(false)}
+              className="px-4 py-2 border rounded"
+            >
+              No Thanks
+            </button>
+
+            <button
+              onClick={handleFeedbackSubmit}
+              disabled={submittingFeedback}
+              className="px-4 py-2 bg-[#4f7c6b] text-white rounded disabled:opacity-60"
+            >
+              {submittingFeedback
+                ? "Submitting..."
+                : "Send Feedback + Get 1 Key"}
+            </button>
           </div>
-        </section>
-      )}
-      {showFeedbackModal && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div className="bg-white dark:bg-slate-800 rounded-xl p-6 max-w-md w-full mx-4">
-
-      <h2 className="text-xl font-bold mb-4">
-        Get 1 Bonus Key
-      </h2>
-
-      <p className="mb-4">
-  Tell us how Plainspeak worked for you.
-</p>
-
-<p className="mb-4">
-  As a thank-you, we'll add 1 bonus Key to your account.
-</p>
-
-<p className="mb-4">
-  Your bonus Key never expires and will remain available whenever you need it.
-</p>
-
-      <textarea
-        value={feedbackText}
-        onChange={(e) => setFeedbackText(e.target.value)}
-        className="w-full border rounded p-3 min-h-[120px]"
-        placeholder="Share your feedback..."
-      />
-
-      <div className="flex gap-3 mt-4">
-        <button
-          onClick={() => setShowFeedbackModal(false)}
-          className="px-4 py-2 border rounded"
-        >
-          No Thanks
-        </button>
-
-        <button  
-        onClick={handleFeedbackSubmit}
-        disabled={submittingFeedback}
-        className="px-4 py-2 bg-[#4f7c6b] text-white rounded disabled:opacity-60"
-      >
-  {submittingFeedback
-    ? "Submitting..."
-    : "Send Feedback + Get 1 Key"}
-</button>
+        </div>
       </div>
-
-    </div>
-  </div>
-)}
-    </main>
-  );
+    )}
+  </main>
+);
 }
+

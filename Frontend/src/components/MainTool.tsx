@@ -27,7 +27,7 @@ export default function MainTool() {
 const { language } = useOutletContext<{
   language: Language;
 }>();
-
+console.log("MAINTOOL RENDER LANGUAGE:", language);
   const MAX_AUDIO_GENERATIONS = 3;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 

@@ -89,6 +89,50 @@ pricingFreeKey: "New accounts receive 1 Free Key.",
 pricingBonusKey: "Receive 1 Bonus Key after successfully using Plainspeak Now and submitting feedback.",
 
 pricingBackHome: "Back to Home",
+privacyTitle: "Privacy Policy",
+privacyLastUpdated: "Last updated: February 2026",
+
+privacyPlainTitle: "PlainSpeak version (human-friendly)",
+
+privacyPlainP1: "We collect only what we need to run the app: your account information, usage counts, and the text you submit.",
+
+privacyPlainP2: "Your text is processed to generate results. We do not sell it. We do not use it to advertise to you.",
+
+privacyPlainP3: "We track usage limits to keep costs fair and predictable.",
+
+privacyPlainP4: "You can delete your account at any time.",
+
+privacyLegalTitle: "Legal version",
+
+privacyLegalP1: "PlainSpeak Now collects account identifiers, authentication data, usage metrics, and user-submitted content solely for service operation and security.",
+
+privacyLegalP2: "User-submitted content may be transmitted to third-party AI providers strictly for processing purposes.",
+
+privacyLegalP3: "Data is retained only as long as necessary for operational, legal, or security requirements.",
+
+privacyLegalP4: "Reasonable administrative and technical safeguards are used to protect user data.",
+termsTitle: "Terms of Service",
+termsLastUpdated: "Last updated: February 2026",
+
+termsPlainTitle: "PlainSpeak version (human-friendly)",
+
+termsPlainP1: "PlainSpeak helps turn complicated text into clearer language. It does not give legal, medical, or professional advice.",
+
+termsPlainP2: "You are responsible for how you use the results. Always rely on the original document if something matters legally or medically.",
+
+termsPlainP3: "Your account has usage limits based on your plan. If you reach your limit, you may need to wait or upgrade.",
+
+termsPlainP4: "Abuse, automated scraping, or attempts to bypass limits are not allowed.",
+
+termsLegalTitle: "Legal version",
+
+termsLegalP1: "PlainSpeak Now provides an AI-powered text transformation service. The service does not provide legal, medical, or professional advice. All outputs are informational only.",
+
+termsLegalP2: "Users remain solely responsible for verifying the accuracy, appropriateness, and applicability of any output.",
+
+termsLegalP3: "Usage limits are enforced per account and per billing period. Attempts to circumvent limits may result in suspension or termination.",
+
+termsLegalP4: "PlainSpeak Now is provided 'as is' without warranties of any kind. To the maximum extent permitted by law, liability is disclaimed.",
 },
 
 
@@ -181,6 +225,50 @@ pricingFreeKey: "Las cuentas nuevas reciben 1 Key gratuita.",
 pricingBonusKey: "Recibe 1 Key adicional después de usar Plainspeak Now y enviar comentarios.",
 
 pricingBackHome: "Volver al inicio",
+privacyTitle: "Política de Privacidad",
+privacyLastUpdated: "Última actualización: febrero de 2026",
+
+privacyPlainTitle: "Versión PlainSpeak (fácil de entender)",
+
+privacyPlainP1: "Recopilamos únicamente lo necesario para operar la aplicación: la información de su cuenta, los conteos de uso y el texto que envía.",
+
+privacyPlainP2: "Su texto se procesa para generar resultados. No lo vendemos. No lo utilizamos para mostrarle publicidad.",
+
+privacyPlainP3: "Realizamos un seguimiento de los límites de uso para mantener los costos justos y predecibles.",
+
+privacyPlainP4: "Puede eliminar su cuenta en cualquier momento.",
+
+privacyLegalTitle: "Versión legal",
+
+privacyLegalP1: "PlainSpeak Now recopila identificadores de cuenta, datos de autenticación, métricas de uso y contenido enviado por los usuarios únicamente para la operación y seguridad del servicio.",
+
+privacyLegalP2: "El contenido enviado por los usuarios puede transmitirse a proveedores externos de inteligencia artificial estrictamente con fines de procesamiento.",
+
+privacyLegalP3: "Los datos se conservan únicamente durante el tiempo necesario para cumplir con requisitos operativos, legales o de seguridad.",
+
+privacyLegalP4: "Se utilizan medidas administrativas y técnicas razonables para proteger los datos de los usuarios.",
+termsTitle: "Términos de Servicio",
+termsLastUpdated: "Última actualización: febrero de 2026",
+
+termsPlainTitle: "Versión PlainSpeak (fácil de entender)",
+
+termsPlainP1: "PlainSpeak ayuda a convertir textos complicados en un lenguaje más claro. No proporciona asesoramiento legal, médico ni profesional.",
+
+termsPlainP2: "Usted es responsable de cómo utiliza los resultados. Siempre consulte el documento original si algo tiene importancia legal o médica.",
+
+termsPlainP3: "Su cuenta tiene límites de uso según su plan. Si alcanza su límite, es posible que deba esperar o actualizar su plan.",
+
+termsPlainP4: "No se permite el abuso, la recopilación automatizada de datos ni los intentos de eludir los límites.",
+
+termsLegalTitle: "Versión legal",
+
+termsLegalP1: "PlainSpeak Now proporciona un servicio de transformación de texto impulsado por inteligencia artificial. El servicio no proporciona asesoramiento legal, médico ni profesional. Todos los resultados son únicamente informativos.",
+
+termsLegalP2: "Los usuarios son los únicos responsables de verificar la exactitud, adecuación y aplicabilidad de cualquier resultado.",
+
+termsLegalP3: "Los límites de uso se aplican por cuenta y por período de facturación. Los intentos de eludir estos límites pueden resultar en suspensión o cancelación.",
+
+termsLegalP4: "PlainSpeak Now se proporciona 'tal cual', sin garantías de ningún tipo. En la máxima medida permitida por la ley, se rechaza toda responsabilidad.",
 
   },
 
@@ -273,6 +361,50 @@ pricingFreeKey: "Tài khoản mới nhận 1 Key miễn phí.",
 pricingBonusKey: "Nhận thêm 1 Key sau khi sử dụng Plainspeak Now và gửi phản hồi.",
 
 pricingBackHome: "Quay lại Trang Chủ",
+privacyTitle: "Chính Sách Quyền Riêng Tư",
+privacyLastUpdated: "Cập nhật lần cuối: Tháng 2 năm 2026",
+
+privacyPlainTitle: "Phiên bản PlainSpeak (dễ hiểu)",
+
+privacyPlainP1: "Chúng tôi chỉ thu thập những gì cần thiết để vận hành ứng dụng: thông tin tài khoản, số liệu sử dụng và văn bản bạn gửi.",
+
+privacyPlainP2: "Văn bản của bạn được xử lý để tạo kết quả. Chúng tôi không bán dữ liệu của bạn. Chúng tôi không sử dụng dữ liệu đó để quảng cáo cho bạn.",
+
+privacyPlainP3: "Chúng tôi theo dõi giới hạn sử dụng để duy trì chi phí công bằng và dễ dự đoán.",
+
+privacyPlainP4: "Bạn có thể xóa tài khoản của mình bất kỳ lúc nào.",
+
+privacyLegalTitle: "Phiên bản pháp lý",
+
+privacyLegalP1: "PlainSpeak Now thu thập thông tin định danh tài khoản, dữ liệu xác thực, số liệu sử dụng và nội dung do người dùng gửi chỉ nhằm mục đích vận hành và bảo mật dịch vụ.",
+
+privacyLegalP2: "Nội dung do người dùng gửi có thể được chuyển đến các nhà cung cấp AI bên thứ ba chỉ cho mục đích xử lý.",
+
+privacyLegalP3: "Dữ liệu chỉ được lưu giữ trong thời gian cần thiết để đáp ứng các yêu cầu vận hành, pháp lý hoặc bảo mật.",
+
+privacyLegalP4: "Các biện pháp bảo vệ hành chính và kỹ thuật hợp lý được áp dụng để bảo vệ dữ liệu người dùng.",
+termsTitle: "Điều Khoản Dịch Vụ",
+termsLastUpdated: "Cập nhật lần cuối: Tháng 2 năm 2026",
+
+termsPlainTitle: "Phiên bản PlainSpeak (dễ hiểu)",
+
+termsPlainP1: "PlainSpeak giúp chuyển đổi văn bản phức tạp thành ngôn ngữ rõ ràng hơn. Dịch vụ không cung cấp lời khuyên pháp lý, y tế hoặc chuyên môn.",
+
+termsPlainP2: "Bạn chịu trách nhiệm về cách sử dụng kết quả. Luôn tham khảo tài liệu gốc nếu vấn đề liên quan đến pháp lý hoặc y tế.",
+
+termsPlainP3: "Tài khoản của bạn có giới hạn sử dụng dựa trên gói dịch vụ. Nếu đạt đến giới hạn, bạn có thể cần chờ hoặc nâng cấp.",
+
+termsPlainP4: "Không được phép lạm dụng, thu thập dữ liệu tự động hoặc cố gắng vượt qua các giới hạn.",
+
+termsLegalTitle: "Phiên bản pháp lý",
+
+termsLegalP1: "PlainSpeak Now cung cấp dịch vụ chuyển đổi văn bản bằng trí tuệ nhân tạo. Dịch vụ không cung cấp lời khuyên pháp lý, y tế hoặc chuyên môn. Mọi kết quả chỉ mang tính thông tin.",
+
+termsLegalP2: "Người dùng hoàn toàn chịu trách nhiệm xác minh tính chính xác, phù hợp và khả năng áp dụng của bất kỳ kết quả nào.",
+
+termsLegalP3: "Giới hạn sử dụng được áp dụng theo tài khoản và chu kỳ thanh toán. Các nỗ lực vượt qua giới hạn có thể dẫn đến đình chỉ hoặc chấm dứt dịch vụ.",
+
+termsLegalP4: "PlainSpeak Now được cung cấp 'nguyên trạng' mà không có bất kỳ bảo đảm nào. Trong phạm vi tối đa được pháp luật cho phép, mọi trách nhiệm pháp lý đều được từ chối.",
 
   },
 
@@ -364,6 +496,50 @@ pricingFreeKey: "Ang mga bagong account ay tumatanggap ng 1 Libreng Key.",
 pricingBonusKey: "Tumanggap ng 1 Bonus Key pagkatapos gamitin ang Plainspeak Now at magsumite ng feedback.",
 
 pricingBackHome: "Bumalik sa Home",
+privacyTitle: "Patakaran sa Privacy",
+privacyLastUpdated: "Huling Na-update: Pebrero 2026",
+
+privacyPlainTitle: "Bersyon ng PlainSpeak (madaling maintindihan)",
+
+privacyPlainP1: "Kinokolekta lamang namin ang kinakailangan upang mapatakbo ang app: impormasyon ng iyong account, bilang ng paggamit, at tekstong iyong isinusumite.",
+
+privacyPlainP2: "Pinoproseso ang iyong teksto upang makabuo ng mga resulta. Hindi namin ito ibinebenta. Hindi namin ito ginagamit upang magpakita ng mga advertisement sa iyo.",
+
+privacyPlainP3: "Sinusubaybayan namin ang mga limitasyon sa paggamit upang mapanatiling patas at mahuhulaan ang mga gastos.",
+
+privacyPlainP4: "Maaari mong tanggalin ang iyong account anumang oras.",
+
+privacyLegalTitle: "Legal na Bersyon",
+
+privacyLegalP1: "Kinokolekta ng PlainSpeak Now ang mga identifier ng account, data ng pagpapatunay, mga sukatan ng paggamit, at nilalamang isinumite ng gumagamit para lamang sa operasyon at seguridad ng serbisyo.",
+
+privacyLegalP2: "Ang nilalamang isinumite ng gumagamit ay maaaring ipadala sa mga third-party AI provider para lamang sa layunin ng pagproseso.",
+
+privacyLegalP3: "Ang data ay pinananatili lamang hangga't kinakailangan para sa mga operasyonal, legal, o pangseguridad na pangangailangan.",
+
+privacyLegalP4: "Gumagamit ng makatwirang administratibo at teknikal na mga pananggalang upang protektahan ang data ng gumagamit.",
+termsTitle: "Mga Tuntunin ng Serbisyo",
+termsLastUpdated: "Huling Na-update: Pebrero 2026",
+
+termsPlainTitle: "Bersyon ng PlainSpeak (madaling maintindihan)",
+
+termsPlainP1: "Tinutulungan ng PlainSpeak na gawing mas malinaw ang mahihirap na teksto. Hindi ito nagbibigay ng legal, medikal, o propesyonal na payo.",
+
+termsPlainP2: "Ikaw ang may pananagutan sa paggamit ng mga resulta. Palaging sumangguni sa orihinal na dokumento kung may legal o medikal na kahalagahan ang isang bagay.",
+
+termsPlainP3: "May mga limitasyon sa paggamit ang iyong account batay sa iyong plano. Kapag naabot mo ang limitasyon, maaaring kailanganin mong maghintay o mag-upgrade.",
+
+termsPlainP4: "Hindi pinapayagan ang pang-aabuso, awtomatikong pagkuha ng data, o pagtatangkang lampasan ang mga limitasyon.",
+
+termsLegalTitle: "Legal na Bersyon",
+
+termsLegalP1: "Ang PlainSpeak Now ay nagbibigay ng AI-powered na serbisyo para sa pagbabago ng teksto. Ang serbisyo ay hindi nagbibigay ng legal, medikal, o propesyonal na payo. Ang lahat ng output ay para sa impormasyong layunin lamang.",
+
+termsLegalP2: "Ang mga gumagamit ay nananatiling ganap na responsable sa pagpapatunay ng katumpakan, pagiging angkop, at pagiging naaangkop ng anumang output.",
+
+termsLegalP3: "Ang mga limitasyon sa paggamit ay ipinapatupad bawat account at bawat panahon ng pagsingil. Ang mga pagtatangkang lampasan ang mga limitasyon ay maaaring magresulta sa suspensyon o pagwawakas ng serbisyo.",
+
+termsLegalP4: "Ang PlainSpeak Now ay ibinibigay 'kung ano ito' nang walang anumang uri ng garantiya. Sa pinakamalawak na saklaw na pinapahintulutan ng batas, ang pananagutan ay itinatanggi.",
 
   },
 
@@ -454,6 +630,50 @@ pricingFreeKey: "Les nouveaux comptes reçoivent 1 Key gratuite.",
 pricingBonusKey: "Recevez 1 Key bonus après avoir utilisé Plainspeak Now et soumis un commentaire.",
 
 pricingBackHome: "Retour à l'accueil",
+privacyTitle: "Politique de Confidentialité",
+privacyLastUpdated: "Dernière mise à jour : février 2026",
+
+privacyPlainTitle: "Version PlainSpeak (facile à comprendre)",
+
+privacyPlainP1: "Nous recueillons uniquement ce qui est nécessaire pour faire fonctionner l'application : les informations de votre compte, les données d'utilisation et le texte que vous soumettez.",
+
+privacyPlainP2: "Votre texte est traité afin de générer des résultats. Nous ne le vendons pas. Nous ne l'utilisons pas pour vous adresser de la publicité.",
+
+privacyPlainP3: "Nous suivons les limites d'utilisation afin de maintenir des coûts équitables et prévisibles.",
+
+privacyPlainP4: "Vous pouvez supprimer votre compte à tout moment.",
+
+privacyLegalTitle: "Version juridique",
+
+privacyLegalP1: "PlainSpeak Now collecte les identifiants de compte, les données d'authentification, les statistiques d'utilisation et le contenu soumis par les utilisateurs uniquement pour le fonctionnement et la sécurité du service.",
+
+privacyLegalP2: "Le contenu soumis par les utilisateurs peut être transmis à des fournisseurs tiers d'intelligence artificielle uniquement à des fins de traitement.",
+
+privacyLegalP3: "Les données sont conservées uniquement aussi longtemps que nécessaire pour répondre aux exigences opérationnelles, juridiques ou de sécurité.",
+
+privacyLegalP4: "Des mesures administratives et techniques raisonnables sont mises en œuvre afin de protéger les données des utilisateurs.",
+termsTitle: "Conditions d'Utilisation",
+termsLastUpdated: "Dernière mise à jour : février 2026",
+
+termsPlainTitle: "Version PlainSpeak (facile à comprendre)",
+
+termsPlainP1: "PlainSpeak aide à transformer des textes complexes en langage plus clair. Il ne fournit pas de conseils juridiques, médicaux ou professionnels.",
+
+termsPlainP2: "Vous êtes responsable de l'utilisation que vous faites des résultats. Référez-vous toujours au document original lorsqu'une question juridique ou médicale est importante.",
+
+termsPlainP3: "Votre compte est soumis à des limites d'utilisation selon votre formule. Si vous atteignez votre limite, vous devrez peut-être attendre ou effectuer une mise à niveau.",
+
+termsPlainP4: "Les abus, la collecte automatisée de données et les tentatives de contournement des limites ne sont pas autorisés.",
+
+termsLegalTitle: "Version juridique",
+
+termsLegalP1: "PlainSpeak Now fournit un service de transformation de texte alimenté par l'intelligence artificielle. Le service ne fournit pas de conseils juridiques, médicaux ou professionnels. Tous les résultats sont fournis à titre informatif uniquement.",
+
+termsLegalP2: "Les utilisateurs demeurent seuls responsables de vérifier l'exactitude, la pertinence et l'applicabilité de tout résultat.",
+
+termsLegalP3: "Les limites d'utilisation sont appliquées par compte et par période de facturation. Les tentatives de contournement des limites peuvent entraîner une suspension ou une résiliation.",
+
+termsLegalP4: "PlainSpeak Now est fourni 'tel quel', sans garantie d'aucune sorte. Dans toute la mesure permise par la loi, toute responsabilité est exclue.",
 
   },
 } as const;

@@ -1,78 +1,90 @@
+import { useOutletContext } from "react-router-dom";
+import { translations } from "../i18n";
+import type { Language } from "../components/plainspeak/types/language";
+
 export default function Terms() {
-  return (
-    <main className="min-h-screen bg-slate-50 text-slate-900 px-6 py-16">
-      <div className="max-w-3xl mx-auto space-y-10">
-        <header className="space-y-3">
-          <h1 className="text-3xl font-semibold">Terms of Service</h1>
-          <p className="text-slate-600 text-sm">
-            Last updated: February 2026
-          </p>
-        </header>
+const { language } = useOutletContext<{
+language: Language;
+}>();
 
-        {/* PlainSpeak Version */}
-        <section
-          aria-labelledby="plainspeak-terms"
-          className="rounded-xl border border-slate-200 bg-white p-6 space-y-4"
-        >
-          <h2 id="plainspeak-terms" className="text-xl font-semibold">
-            PlainSpeak version (human-friendly)
-          </h2>
+const t = translations[language];
 
-          <p>
-            PlainSpeak helps turn complicated text into clearer language.
-            It does not give legal, medical, or professional advice.
-          </p>
+return ( <main className="min-h-screen bg-slate-50 text-slate-900 px-6 py-16"> <div className="max-w-3xl mx-auto space-y-10">
 
-          <p>
-            You are responsible for how you use the results. Always rely on
-            the original document if something matters legally or medically.
-          </p>
+```
+    <header className="space-y-3">
+      <h1 className="text-3xl font-semibold">
+        {t.termsTitle}
+      </h1>
 
-          <p>
-            Your account has usage limits based on your plan. If you reach
-            your limit, you may need to wait or upgrade.
-          </p>
+      <p className="text-slate-600 text-sm">
+        {t.termsLastUpdated}
+      </p>
+    </header>
 
-          <p>
-            Abuse, automated scraping, or attempts to bypass limits are not
-            allowed.
-          </p>
-        </section>
+    {/* PlainSpeak Version */}
+    <section
+      aria-labelledby="plainspeak-terms"
+      className="rounded-xl border border-slate-200 bg-white p-6 space-y-4"
+    >
+      <h2
+        id="plainspeak-terms"
+        className="text-xl font-semibold"
+      >
+        {t.termsPlainTitle}
+      </h2>
 
-        {/* Legal Version */}
-        <section
-          aria-labelledby="legal-terms"
-          className="rounded-xl border border-slate-200 bg-white p-6 space-y-4 text-sm text-slate-700"
-        >
-          <h2 id="legal-terms" className="text-xl font-semibold text-slate-900">
-            Legal version
-          </h2>
+      <p>
+        {t.termsPlainP1}
+      </p>
 
-          <p>
-            PlainSpeak Now provides an AI-powered text transformation service.
-            The service does not provide legal, medical, or professional advice.
-            All outputs are informational only.
-          </p>
+      <p>
+        {t.termsPlainP2}
+      </p>
 
-          <p>
-            Users remain solely responsible for verifying the accuracy,
-            appropriateness, and applicability of any output.
-          </p>
+      <p>
+        {t.termsPlainP3}
+      </p>
 
-          <p>
-            Usage limits are enforced per account and per billing period.
-            Attempts to circumvent limits may result in suspension or
-            termination.
-          </p>
+      <p>
+        {t.termsPlainP4}
+      </p>
+    </section>
 
-          <p>
-            PlainSpeak Now is provided “as is” without warranties of any kind.
-            To the maximum extent permitted by law, liability is disclaimed.
-          </p>
-        </section>
-      </div>
-    </main>
-  );
+    {/* Legal Version */}
+    <section
+      aria-labelledby="legal-terms"
+      className="rounded-xl border border-slate-200 bg-white p-6 space-y-4 text-sm text-slate-700"
+    >
+      <h2
+        id="legal-terms"
+        className="text-xl font-semibold text-slate-900"
+      >
+        {t.termsLegalTitle}
+      </h2>
+
+      <p>
+        {t.termsLegalP1}
+      </p>
+
+      <p>
+        {t.termsLegalP2}
+      </p>
+
+      <p>
+        {t.termsLegalP3}
+      </p>
+
+      <p>
+        {t.termsLegalP4}
+      </p>
+    </section>
+
+  </div>
+</main>
+
+
+);
 }
 
 

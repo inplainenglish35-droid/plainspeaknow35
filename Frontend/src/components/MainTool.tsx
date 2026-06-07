@@ -368,11 +368,8 @@ if (
       />
 
       <p className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs leading-relaxed text-amber-900 dark:border-amber-500/40 dark:bg-amber-950/30 dark:text-amber-100">
-        Plainspeak helps explain confusing documents in clearer language. It
-        does not provide legal, medical, financial, or professional advice.
-        For decisions about your rights, health, benefits, or obligations,
-        please contact a qualified professional.
-      </p>
+  {t.disclaimer}
+</p>
 
       <div className="mt-5">
         <button

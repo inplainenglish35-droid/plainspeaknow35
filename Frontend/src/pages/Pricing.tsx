@@ -1,14 +1,16 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Leaf } from "lucide-react";
-import { translations } from "../components/plainspeak/lib/translations";
-import { useAuth } from "../components/plainspeak/contexts/AuthContext";
 
+import { Link, useOutletContext } from "react-router-dom";
+import { Leaf } from "lucide-react";
+import { translations } from "../i18n";
+import { useAuth } from "../components/plainspeak/contexts/AuthContext";
+import type { Language } from "../components/plainspeak/types/language";
 const API_URL = import.meta.env.VITE_API_URL ?? "";
 
 export default function Pricing() {
   const { user } = useAuth();
-  const [language] = useState<"en" | "es" | "vi" | "tl" | "fr">("en");
+  const { language } = useOutletContext<{
+    language: Language;
+  }>();
   const t = translations[language];
   const handlePurchase = async () => {
     if (!user) {
@@ -57,15 +59,15 @@ export default function Pricing() {
           <section className="text-center space-y-4">
 
             <h1 className="text-3xl font-semibold tracking-tight">
-              Simple, Transparent Pricing
+              {t.pricingTitle}
             </h1>
 
             <p className="text-slate-600 text-sm max-w-2xl mx-auto">
-              No subscriptions. No surprise renewals. Keys never expire.
+              {t.pricingSubtitle}
             </p>
 
             <p className="text-xs text-slate-500">
-              Buy what you need. Use them anytime.
+              {t.pricingBuyWhatYouNeed}
             </p>
 
           </section>
@@ -74,29 +76,29 @@ export default function Pricing() {
           <section className="max-w-3xl mx-auto space-y-4 text-sm text-slate-700">
 
             <h2 className="text-lg font-semibold text-center">
-              How Keys Work
+              {t.pricingHowKeysWork}
             </h2>
 
             <div className="space-y-3 bg-white border border-teal-100 rounded-xl p-6">
 
               <p>
-                <strong>Most documents use 1 Key</strong>
+                <strong>{t.pricingMostDocs}</strong>
               </p>
 
               <p>
-                Longer documents may use 2 Keys
+                {t.pricingLongDocs}
               </p>
 
               <p>
-                Includes simplified explanations and important-item breakdowns
+                {t.pricingIncludes}
               </p>
 
               <p>
-                You’ll always see Key usage before processing
+                {t.pricingSeeUsage}
               </p>
 
               <p className="text-xs text-slate-500 pt-2">
-                Plainspeak clarifies complex documents. It does not replace professional advice.
+                {t.pricingDisclaimer}
               </p>
 
             </div>
@@ -115,7 +117,7 @@ export default function Pricing() {
               <div className="space-y-2">
 
                 <h3 className="text-2xl font-semibold">
-                  2 {t.pricing.keys}
+                  2 Keys
                 </h3>
 
                 <p className="text-4xl font-semibold">
@@ -127,15 +129,15 @@ export default function Pricing() {
               <div className="space-y-2 text-sm text-slate-600">
 
                 <p>
-                  Most documents use 1 Key
+                  {t.pricingCardMostDocs}
                 </p>
 
                 <p>
-                  Longer documents may use 2 Keys
+                  {t.pricingCardLongDocs}
                 </p>
 
                 <p>
-                  Keys never expire
+                  {t.pricingCardNeverExpire}
                 </p>
 
               </div>
@@ -144,17 +146,17 @@ export default function Pricing() {
                 onClick={handlePurchase}
                 className="w-full py-3 rounded-xl bg-[#4f7c6b] text-white hover:opacity-90 transition"
               >
-                Buy 2 Keys
+                {t.pricingBuy2Keys}
               </button>
 
               <div className="pt-4 border-t border-slate-100 space-y-3 text-xs text-slate-500">
 
                 <p>
-                  New accounts receive 1 free Key.
+                  {t.pricingFreeKey}
                 </p>
 
                 <p>
-                  After your first successful use, you may unlock a surprise bonus Key by leaving feedback about Plainspeak Now LLC.
+                  {t.pricingBonusKey}
                 </p>
 
               </div>
@@ -170,7 +172,7 @@ export default function Pricing() {
               to="/"
               className="text-sm font-medium text-teal-600 underline hover:text-teal-700"
             >
-              ← Back to Plainspeak Now
+              {t.pricingBackHome}
             </Link>
 
           </section>

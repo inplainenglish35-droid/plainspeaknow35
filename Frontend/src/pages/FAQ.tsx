@@ -1,17 +1,17 @@
-import { useState } from "react";
+import { useOutletContext } from "react-router-dom";
+import type { Language } from "../components/plainspeak/types/language";
+import { translations } from "../i18n";
 
-type Language = "en" | "es" | "vi" | "tl" | "fr";
 
 export default function FAQ() {
-  const [language, setLanguage] = useState<Language>("en");
 
-  function basicLanguageCheck(text: string, lang: Language) {
-    if (lang === "es") return /[áéíóúñ¿¡]/i.test(text);
-    if (lang === "vi") return /[ăâđêôơư]/i.test(text);
-    if (lang === "tl") return /[áéíóúñ¿¡]/i.test(text);
-    if (lang === "fr") return /[éèêëàâîïùûçœ]/i.test(text);
-    return true;
-  }
+  const { language } = useOutletContext<{
+    language: Language;
+  }>();
+
+  const t = translations[language];
+
+
 
   return (
     <div className="min-h-screen text-slate-900 bg-[linear-gradient(135deg,rgba(226,241,255,0.4),rgba(228,243,236,0.4),rgba(230,232,255,0.4),rgba(221,242,242,0.4))]">
@@ -30,6 +30,7 @@ export default function FAQ() {
           </div>
 
           {/* FAQ CONTENT */}
+      
           <section className="space-y-8 text-sm leading-relaxed text-slate-700">
 
             <div>

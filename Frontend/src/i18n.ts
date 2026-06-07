@@ -1,10 +1,5 @@
 export const translations = {
   en: {
- faqTitle: "Frequently Asked Questions",
-faqSubtitle: "Answers to common questions",
-faqQ1: "What does Plainspeak Now do?",
-faqA1: "Plainspeak Now rewrites confusing documents into easier-to-understand language.",
-faqLastUpdated: "Last Updated: June 2026",   
 hero: "Turn confusing text into clear words",
 description:
 "Upload a text-based document, paste text, or type directly. Plainspeak will turn it into clear, plain-English help.",
@@ -28,6 +23,43 @@ copyResult: "Copy result",
 copied: "Copied!",
 sendFeedback: "Send Feedback",
 faq: "FAQ",
+faqTitle: "Frequently Asked Questions",
+faqSubtitle: "Simple answers about how Plainspeak works.",
+
+faqQ1: "Why not just use ChatGPT?",
+faqA1: "You can, and many people do. But Plainspeak is designed specifically for understanding real-world documents like IEPs, letters, and official paperwork.",
+faqA1b: "Plainspeak handles the process automatically and keeps everything focused on clarity.",
+
+faqQ2: "What does Plainspeak do?",
+faqA2: "Plainspeak turns complex writing into clear, plain language. Paste text, upload a document, and get an easier-to-understand version.",
+
+faqQ3: "What are Keys?",
+faqA3: "Keys are how you use Plainspeak. Each document uses a small number of Keys.",
+faqA3Bullet1: "Most documents use just 1 Key",
+faqA3Bullet2: "Longer documents may use 2 Keys",
+faqA3Bullet3: "Includes understanding, organizing, and important action items",
+faqA3b: "Keys are only used when you process a document. They never expire.",
+
+faqQ4: "Do Keys expire?",
+faqA4: "No. Your Keys stay in your account until you use them.",
+
+faqQ5: "What happens if I run out of Keys?",
+faqA5: "You'll be prompted to purchase more. No subscriptions or surprise charges.",
+
+faqQ6: "Is my document stored or shared?",
+faqA6: "Your content is processed securely and is not sold or shared.",
+
+faqQ7: "Who can see my document?",
+faqA7: "Only you. Your content is private to your account.",
+
+faqQ8: "Is this legal, medical, or financial advice?",
+faqA8: "No. Plainspeak helps explain documents but does not replace professional advice.",
+
+faqQ9: "Can I get a refund?",
+faqA9: "If something didn't work as expected, reach out. We review each situation fairly.",
+
+faqLastUpdated: "Last Updated: June 2026",
+
 pricing: "Pricing",
 signIn: "Sign In",
 keyBalance: "Key Balance",
@@ -62,10 +94,42 @@ pricingBackHome: "Back to Home",
 
   es: {
     faqTitle: "Preguntas Frecuentes",
-faqSubtitle: "Respuestas a preguntas comunes",
-faqQ1: "¿Qué hace Plainspeak Now?",
-faqA1: "Plainspeak Now reescribe documentos confusos en un lenguaje más fácil de entender.",
+faqSubtitle: "Respuestas sencillas sobre cómo funciona Plainspeak.",
+
+faqQ1: "¿Por qué no usar simplemente ChatGPT?",
+faqA1: "Puedes hacerlo, y muchas personas lo hacen. Pero Plainspeak está diseñado específicamente para comprender documentos del mundo real como IEPs, cartas y documentación oficial.",
+faqA1b: "Plainspeak maneja el proceso automáticamente y mantiene todo enfocado en la claridad.",
+
+faqQ2: "¿Qué hace Plainspeak?",
+faqA2: "Plainspeak convierte textos complejos en lenguaje claro y sencillo. Pega texto, carga un documento y obtén una versión más fácil de entender.",
+
+faqQ3: "¿Qué son las Keys?",
+faqA3: "Las Keys son la forma de usar Plainspeak. Cada documento utiliza una pequeña cantidad de Keys.",
+faqA3Bullet1: "La mayoría de los documentos usan solo 1 Key",
+faqA3Bullet2: "Los documentos más largos pueden usar 2 Keys",
+faqA3Bullet3: "Incluye comprensión, organización y elementos de acción importantes",
+faqA3b: "Las Keys solo se utilizan cuando procesas un documento. Nunca vencen.",
+
+faqQ4: "¿Las Keys vencen?",
+faqA4: "No. Tus Keys permanecen en tu cuenta hasta que las uses.",
+
+faqQ5: "¿Qué sucede si me quedo sin Keys?",
+faqA5: "Se te pedirá que compres más. Sin suscripciones ni cargos sorpresa.",
+
+faqQ6: "¿Mi documento se almacena o comparte?",
+faqA6: "Tu contenido se procesa de forma segura y no se vende ni comparte.",
+
+faqQ7: "¿Quién puede ver mi documento?",
+faqA7: "Solo tú. Tu contenido es privado para tu cuenta.",
+
+faqQ8: "¿Esto es asesoramiento legal, médico o financiero?",
+faqA8: "No. Plainspeak ayuda a explicar documentos, pero no sustituye el asesoramiento profesional.",
+
+faqQ9: "¿Puedo obtener un reembolso?",
+faqA9: "Si algo no funcionó como esperabas, contáctanos. Revisamos cada situación de manera justa.",
+
 faqLastUpdated: "Última actualización: junio de 2026",
+
 
     hero: "Convierte texto confuso en palabras claras",
     description:
@@ -122,10 +186,42 @@ pricingBackHome: "Volver al inicio",
 
   vi: {
     faqTitle: "Câu Hỏi Thường Gặp",
-faqSubtitle: "Câu trả lời cho những câu hỏi phổ biến",
-faqQ1: "Plainspeak Now làm gì?",
-faqA1: "Plainspeak Now viết lại các tài liệu khó hiểu bằng ngôn ngữ dễ hiểu hơn.",
+faqSubtitle: "Những câu trả lời đơn giản về cách Plainspeak hoạt động.",
+
+faqQ1: "Tại sao không chỉ sử dụng ChatGPT?",
+faqA1: "Bạn có thể, và nhiều người vẫn làm vậy. Nhưng Plainspeak được thiết kế đặc biệt để giúp hiểu các tài liệu thực tế như IEP, thư từ và giấy tờ chính thức.",
+faqA1b: "Plainspeak tự động xử lý quy trình và luôn tập trung vào sự rõ ràng.",
+
+faqQ2: "Plainspeak làm gì?",
+faqA2: "Plainspeak chuyển đổi văn bản phức tạp thành ngôn ngữ rõ ràng, dễ hiểu. Dán văn bản, tải tài liệu lên và nhận phiên bản dễ hiểu hơn.",
+
+faqQ3: "Keys là gì?",
+faqA3: "Keys là cách bạn sử dụng Plainspeak. Mỗi tài liệu sử dụng một số lượng Keys nhỏ.",
+faqA3Bullet1: "Hầu hết tài liệu chỉ sử dụng 1 Key",
+faqA3Bullet2: "Tài liệu dài hơn có thể sử dụng 2 Keys",
+faqA3Bullet3: "Bao gồm khả năng hiểu nội dung, sắp xếp và các mục hành động quan trọng",
+faqA3b: "Keys chỉ được sử dụng khi bạn xử lý tài liệu. Chúng không bao giờ hết hạn.",
+
+faqQ4: "Keys có hết hạn không?",
+faqA4: "Không. Keys sẽ ở trong tài khoản của bạn cho đến khi bạn sử dụng chúng.",
+
+faqQ5: "Điều gì xảy ra nếu tôi hết Keys?",
+faqA5: "Bạn sẽ được nhắc mua thêm. Không có đăng ký định kỳ hoặc phí bất ngờ.",
+
+faqQ6: "Tài liệu của tôi có được lưu trữ hoặc chia sẻ không?",
+faqA6: "Nội dung của bạn được xử lý an toàn và không bị bán hoặc chia sẻ.",
+
+faqQ7: "Ai có thể xem tài liệu của tôi?",
+faqA7: "Chỉ có bạn. Nội dung của bạn là riêng tư trong tài khoản của bạn.",
+
+faqQ8: "Đây có phải là lời khuyên pháp lý, y tế hoặc tài chính không?",
+faqA8: "Không. Plainspeak giúp giải thích tài liệu nhưng không thay thế lời khuyên chuyên môn.",
+
+faqQ9: "Tôi có thể được hoàn tiền không?",
+faqA9: "Nếu có điều gì đó không hoạt động như mong đợi, hãy liên hệ với chúng tôi. Chúng tôi sẽ xem xét từng trường hợp một cách công bằng.",
+
 faqLastUpdated: "Cập nhật lần cuối: Tháng 6 năm 2026",
+
 
     hero: "Biến văn bản phức tạp thành dễ hiểu",
     description:
@@ -182,10 +278,42 @@ pricingBackHome: "Quay lại Trang Chủ",
 
   tl: {
     faqTitle: "Mga Madalas Itanong",
-faqSubtitle: "Mga sagot sa karaniwang tanong",
-faqQ1: "Ano ang ginagawa ng Plainspeak Now?",
-faqA1: "Binabago ng Plainspeak Now ang mga nakakalitong dokumento upang maging mas madaling maintindihan.",
+faqSubtitle: "Mga simpleng sagot tungkol sa kung paano gumagana ang Plainspeak.",
+
+faqQ1: "Bakit hindi na lang gumamit ng ChatGPT?",
+faqA1: "Maaari mo naman, at marami ang gumagawa nito. Ngunit ang Plainspeak ay partikular na ginawa upang tulungan kang maunawaan ang mga totoong dokumento tulad ng mga IEP, liham, at opisyal na papeles.",
+faqA1b: "Awtomatikong pinangangasiwaan ng Plainspeak ang proseso at nakatuon sa malinaw na paliwanag.",
+
+faqQ2: "Ano ang ginagawa ng Plainspeak?",
+faqA2: "Ginagawang malinaw at madaling maintindihan ng Plainspeak ang mahihirap na teksto. Mag-paste ng teksto, mag-upload ng dokumento, at makatanggap ng mas madaling maunawaang bersyon.",
+
+faqQ3: "Ano ang mga Keys?",
+faqA3: "Ang Keys ang ginagamit upang magamit ang Plainspeak. Bawat dokumento ay gumagamit ng maliit na bilang ng Keys.",
+faqA3Bullet1: "Karamihan sa mga dokumento ay gumagamit lamang ng 1 Key",
+faqA3Bullet2: "Maaaring gumamit ng 2 Keys ang mas mahahabang dokumento",
+faqA3Bullet3: "Kasama ang pag-unawa, pag-oorganisa, at mahahalagang aksyon na dapat gawin",
+faqA3b: "Ginagamit lamang ang Keys kapag pinoproseso mo ang isang dokumento. Hindi ito nag-e-expire.",
+
+faqQ4: "Nag-e-expire ba ang Keys?",
+faqA4: "Hindi. Mananatili ang iyong Keys sa iyong account hanggang sa magamit mo ito.",
+
+faqQ5: "Ano ang mangyayari kung maubusan ako ng Keys?",
+faqA5: "Hihikayatin kang bumili ng higit pa. Walang subscription at walang nakakagulat na bayarin.",
+
+faqQ6: "Iniimbak o ibinabahagi ba ang aking dokumento?",
+faqA6: "Ligtas na pinoproseso ang iyong nilalaman at hindi ito ibinebenta o ibinabahagi.",
+
+faqQ7: "Sino ang makakakita ng aking dokumento?",
+faqA7: "Ikaw lamang. Ang iyong nilalaman ay pribado sa iyong account.",
+
+faqQ8: "Ito ba ay legal, medikal, o pinansyal na payo?",
+faqA8: "Hindi. Tumutulong ang Plainspeak na ipaliwanag ang mga dokumento ngunit hindi nito pinapalitan ang propesyonal na payo.",
+
+faqQ9: "Maaari ba akong makakuha ng refund?",
+faqA9: "Kung may hindi gumana ayon sa inaasahan, makipag-ugnayan sa amin. Sinusuri namin ang bawat sitwasyon nang patas.",
+
 faqLastUpdated: "Huling Na-update: Hunyo 2026",
+
 
     hero: "Gawing malinaw ang magulong teksto",
     description:
@@ -241,10 +369,42 @@ pricingBackHome: "Bumalik sa Home",
 
   fr: {
     faqTitle: "Questions Fréquemment Posées",
-faqSubtitle: "Réponses aux questions courantes",
-faqQ1: "Que fait Plainspeak Now ?",
-faqA1: "Plainspeak Now réécrit les documents complexes dans un langage plus facile à comprendre.",
+faqSubtitle: "Réponses simples sur le fonctionnement de Plainspeak.",
+
+faqQ1: "Pourquoi ne pas simplement utiliser ChatGPT ?",
+faqA1: "Vous le pouvez, et beaucoup de personnes le font. Mais Plainspeak est spécialement conçu pour aider à comprendre des documents réels comme les IEP, les lettres et les documents officiels.",
+faqA1b: "Plainspeak gère automatiquement le processus et reste concentré sur la clarté.",
+
+faqQ2: "Que fait Plainspeak ?",
+faqA2: "Plainspeak transforme les textes complexes en langage clair et simple. Collez du texte, téléversez un document et obtenez une version plus facile à comprendre.",
+
+faqQ3: "Que sont les Keys ?",
+faqA3: "Les Keys sont la manière d'utiliser Plainspeak. Chaque document utilise un petit nombre de Keys.",
+faqA3Bullet1: "La plupart des documents utilisent seulement 1 Key",
+faqA3Bullet2: "Les documents plus longs peuvent utiliser 2 Keys",
+faqA3Bullet3: "Comprend la compréhension, l'organisation et les actions importantes à entreprendre",
+faqA3b: "Les Keys ne sont utilisées que lorsque vous traitez un document. Elles n'expirent jamais.",
+
+faqQ4: "Les Keys expirent-elles ?",
+faqA4: "Non. Vos Keys restent dans votre compte jusqu'à ce que vous les utilisiez.",
+
+faqQ5: "Que se passe-t-il si je n'ai plus de Keys ?",
+faqA5: "Vous serez invité à en acheter davantage. Aucun abonnement ni frais surprises.",
+
+faqQ6: "Mon document est-il stocké ou partagé ?",
+faqA6: "Votre contenu est traité de manière sécurisée et n'est ni vendu ni partagé.",
+
+faqQ7: "Qui peut voir mon document ?",
+faqA7: "Vous seul. Votre contenu reste privé dans votre compte.",
+
+faqQ8: "S'agit-il de conseils juridiques, médicaux ou financiers ?",
+faqA8: "Non. Plainspeak aide à expliquer les documents mais ne remplace pas les conseils professionnels.",
+
+faqQ9: "Puis-je obtenir un remboursement ?",
+faqA9: "Si quelque chose ne fonctionne pas comme prévu, contactez-nous. Nous examinons chaque situation équitablement.",
+
 faqLastUpdated: "Dernière mise à jour : juin 2026",
+
     hero: "Transformez un texte complexe en mots simples",
     description:
       "Téléchargez un document texte, collez du texte ou saisissez-le directement. Plainspeak le transformera en langage clair et compréhensible.",

@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import AppLayout from "./components/AppLayout";
 import MainTool from "./components/MainTool";
-
+import Contact from "./pages/Contact";
 import Pricing from "./pages/Pricing";
 import FAQ from "./pages/FAQ";
 import Privacy from "./pages/Privacy";
@@ -12,6 +12,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<AppLayout />}>
         <Route index element={<MainTool />} />
+        <Route path="contact" element={<Contact />} />
         <Route path="pricing" element={<Pricing />} />
         <Route path="faq" element={<FAQ />} />
         <Route path="privacy" element={<Privacy />} />

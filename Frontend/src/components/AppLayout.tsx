@@ -9,12 +9,12 @@ import { useEffect } from "react";
 export default function AppLayout() {
   const [language, setLanguage] = useState<Language>(() => {
   const saved = localStorage.getItem("language");
-
-  useEffect(() => {
-  localStorage.setItem("language", language);
-}, [language]);
   return (saved as Language) || "en";
 });
+
+useEffect(() => {
+  localStorage.setItem("language", language);
+}, [language]);
 
   // keeps component reactive to theme changes (no destructure needed)
   useTheme();

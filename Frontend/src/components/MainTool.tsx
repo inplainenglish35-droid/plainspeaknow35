@@ -157,7 +157,7 @@ const t = translations[language];
         throw new Error(
           data?.error ||
             data?.message ||
-            "Plainspeak could not read this file."
+            "Plainspeak Now™ could not read this file."
         );
       }
 
@@ -209,7 +209,7 @@ if (!res.ok) {
   throw new Error(
     data?.error ||
       data?.message ||
-      "Plainspeak could not process this document."
+      "Plainspeak Now™ could not process this document."
   );
 }
 

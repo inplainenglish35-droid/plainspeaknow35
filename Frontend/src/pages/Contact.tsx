@@ -51,7 +51,7 @@ export default function Contact() {
 
         <p className="text-gray-700">
           If you represent a nonprofit, clinic, school, or organization and are
-          interested in PlainSpeak Now™, please share a few details below.
+          interested in purchasing Key bundles from PlainSpeak Now™, please share a few details below.
         </p>
 
         {/* Contact form */}

@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
+import { translations } from "../i18n";
+import type { Language } from "../components/plainspeak/types/language";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "";
 
@@ -9,7 +12,9 @@ export default function Contact() {
   const [email, setEmail] = useState("");
   const [success, setSuccess] = useState(false);
   const isValid = name.trim() && organization.trim() && email.trim();
+  const { language } = useOutletContext<{ language: Language }>();
 
+  const t = translations[language];
   const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
 
@@ -47,11 +52,10 @@ export default function Contact() {
   return (
     <main className="min-h-screen bg-white text-black px-6 py-16">
       <div className="mx-auto max-w-2xl space-y-8">
-        <h1 className="text-3xl font-bold">Contact PlainSpeak</h1>
+        <h1 className="text-3xl font-bold">{t.contactTitle}</h1>
 
         <p className="text-gray-700">
-          If you represent a nonprofit, clinic, school, or organization and are
-          interested in purchasing Key bundles from PlainSpeak Now™, please share a few details below.
+          {t.contactSubtitle}
         </p>
 
         {/* Contact form */}
@@ -60,7 +64,9 @@ export default function Contact() {
           className="space-y-4 rounded-lg border border-gray-200 p-6"
         >
           <div className="space-y-1">
-            <label className="block text-sm font-medium">Name</label>
+            <label className="block text-sm font-medium">
+  {t.contactName}
+</label>
             <input
               type="text"
               value={name}
@@ -76,7 +82,9 @@ export default function Contact() {
           </div>
 
           <div className="space-y-1">
-            <label className="block text-sm font-medium">Organization</label>
+            <label className="block text-sm font-medium">
+  {t.contactOrganization}
+</label>
             <input
               type="text"
               value={organization}
@@ -87,7 +95,9 @@ export default function Contact() {
           </div>
 
           <div className="space-y-1">
-            <label className="block text-sm font-medium">Email</label>
+            <label className="block text-sm font-medium">
+  {t.contactEmail}
+</label>
             <input
               type="email"
               value={email}
@@ -102,27 +112,23 @@ export default function Contact() {
             disabled={!isValid}
             className="inline-flex items-center justify-center rounded-md bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
           >
-            Send inquiry
+            {t.contactSend}
           </button>
         </form>
 
         {/* What happens next */}
         <p className="text-sm text-gray-600">
-          <strong>What happens next:</strong> We’ll review your inquiry and
-          follow up by email to learn more about your needs. There’s no
-          obligation — just a conversation to see whether PlainSpeak Now™ is a good
-          fit for your organization.
+          <strong>{t.contactNextStepsTitle}</strong> {t.contactNextSteps}
         </p>
 
         {/* Response time */}
         <p className="text-sm text-gray-600">
-          We typically respond within <strong>1–2 business days</strong>.
+          {t.contactResponseTime}.
         </p>
 
         {/* Privacy reassurance */}
         <p className="text-sm text-gray-600">
-          We respect your privacy. Your information is used only to respond to
-          your inquiry and is never shared or sold.
+          {t.contactPrivacy}
         </p>
 
         {/* Fallback email */}
@@ -142,7 +148,7 @@ export default function Contact() {
             to="/pricing"
             className="text-sm font-medium text-teal-600 underline hover:text-teal-700"
           >
-            ← Back to pricing
+            {t.contactBack}
           </Link>
         </div>
       </div>

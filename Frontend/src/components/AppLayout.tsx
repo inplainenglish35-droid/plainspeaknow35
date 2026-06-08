@@ -4,9 +4,17 @@ import { Outlet } from "react-router-dom";
 import { useState } from "react";
 import { useTheme } from "next-themes";
 import type { Language } from "./plainspeak/types/language";
+import { useEffect } from "react";
 
 export default function AppLayout() {
-  const [language, setLanguage] = useState<Language>("en");
+  const [language, setLanguage] = useState<Language>(() => {
+  const saved = localStorage.getItem("language");
+
+  useEffect(() => {
+  localStorage.setItem("language", language);
+}, [language]);
+  return (saved as Language) || "en";
+});
 
   // keeps component reactive to theme changes (no destructure needed)
   useTheme();

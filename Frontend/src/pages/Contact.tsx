@@ -1,27 +1,48 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_API_URL ?? "";
+
 export default function Contact() {
   const [name, setName] = useState("");
   const [organization, setOrganization] = useState("");
   const [email, setEmail] = useState("");
-
+  const [success, setSuccess] = useState(false);
   const isValid = name.trim() && organization.trim() && email.trim();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isValid) return;
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    const subject = encodeURIComponent(
-      "PlainSpeak Organization Plans Inquiry"
-    );
+  if (!isValid) return;
 
-    const body = encodeURIComponent(
-      `Name: ${name}\nOrganization: ${organization}\nEmail: ${email}\n\nTell us a bit about your needs:`
-    );
+  try {
+    const response = await fetch(`${API_URL}/api/support`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        type: "organization",
+        name,
+        organization,
+        email,
+      }),
+    });
 
-    window.location.href = `mailto:inplainenglish@gmail.com?subject=${subject}&body=${body}`;
-  };
+    if (!response.ok) {
+      throw new Error("Request failed");
+    }
+
+    setSuccess(true);
+
+    setName("");
+    setOrganization("");
+    setEmail("");
+  } catch (error) {
+    console.error(error);
+    alert("Something went wrong. Please try again.");
+  }
+};
 
   return (
     <main className="min-h-screen bg-white text-black px-6 py-16">
@@ -30,7 +51,7 @@ export default function Contact() {
 
         <p className="text-gray-700">
           If you represent a nonprofit, clinic, school, or organization and are
-          interested in PlainSpeak, please share a few details below.
+          interested in PlainSpeak Now™, please share a few details below.
         </p>
 
         {/* Contact form */}
@@ -47,6 +68,11 @@ export default function Contact() {
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
               required
             />
+            {success && (
+  <div className="rounded-md border border-green-200 bg-green-50 p-4 text-green-800">
+    Thank you. Your message has been sent.
+  </div>
+)}
           </div>
 
           <div className="space-y-1">
@@ -84,7 +110,7 @@ export default function Contact() {
         <p className="text-sm text-gray-600">
           <strong>What happens next:</strong> We’ll review your inquiry and
           follow up by email to learn more about your needs. There’s no
-          obligation — just a conversation to see whether PlainSpeak is a good
+          obligation — just a conversation to see whether PlainSpeak Now™ is a good
           fit for your organization.
         </p>
 
@@ -103,10 +129,10 @@ export default function Contact() {
         <p className="text-sm text-gray-600">
           Prefer email? Reach us directly at{" "}
           <a
-            href="mailto:inplainenglish@gmail.com"
+            href="mailto:support@plainspeaknow.net"
             className="font-medium text-teal-600 underline hover:text-teal-700"
           >
-            inplainenglish@gmail.com
+            support@plainspeaknow.net
           </a>
         </p>
 
@@ -123,5 +149,4 @@ export default function Contact() {
     </main>
   );
 }
-
-
+ 

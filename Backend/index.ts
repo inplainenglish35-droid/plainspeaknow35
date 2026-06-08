@@ -10,7 +10,8 @@ import multer from "multer";
 
 import {
   sendWelcomeEmail,
-  sendKeysAddedEmail
+  sendKeysAddedEmail,
+  sendSupportEmail
 } from "./services/email";
 import { requireAuth, AuthenticatedRequest } from "./requireAuth";
 import { db } from "./firebaseAdmin";
@@ -701,6 +702,45 @@ app.post(
     }
   }
 );
+app.post(
+"/api/support",
+async (req: Request, res: Response) => {
+try {
+const {
+type,
+name,
+organization,
+email,
+subject,
+message,
+} = req.body;
+
+
+  await sendSupportEmail({
+    type,
+    name,
+    organization,
+    email,
+    subject,
+    message,
+  });
+
+  return res.json({
+    success: true,
+  });
+
+} catch (error) {
+  console.error("Support request failed:", error);
+
+  return res.status(500).json({
+    error: "Failed to send support request",
+  });
+}
+
+
+}
+);
+
 /* =========================
    API 404
 ========================= */

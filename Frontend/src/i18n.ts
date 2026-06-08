@@ -8,7 +8,7 @@ pasteText: "Paste text",
 uploadDocument: "Upload document",
 
 disclaimer:
-"Plainspeak helps explain confusing documents in clearer language. It does not provide legal, medical, financial, or professional advice. For decisions about your rights, health, benefits, or obligations, please contact a qualified professional.",
+"Plainspeak Now™ helps explain confusing documents in clearer language. It does not provide legal, medical, financial, or professional advice. For decisions about your rights, health, benefits, or obligations, please contact a qualified professional.",
 
 documentText: "Document text",
 placeholder: "Paste, type, or upload a text-based document...",
@@ -18,23 +18,23 @@ readingYourText: "Reading your text...",
 supportedFiles: "Supports PDF, TXT, DOCX, CSV, and XLSX. Photos and screenshots are not supported.",
 fileLoaded: "File loaded:",
 
-resultTitle: "Plainspeak result",
+resultTitle: "Plainspeak Now™ result",
 copyResult: "Copy result",
 copied: "Copied!",
 sendFeedback: "Send Feedback",
 faq: "FAQ",
 faqTitle: "Frequently Asked Questions",
-faqSubtitle: "Simple answers about how Plainspeak works.",
+faqSubtitle: "Simple answers about how Plainspeak Now™ works.",
 
 faqQ1: "Why not just use ChatGPT?",
-faqA1: "You can, and many people do. But Plainspeak is designed specifically for understanding real-world documents like IEPs, letters, and official paperwork.",
-faqA1b: "Plainspeak handles the process automatically and keeps everything focused on clarity.",
+faqA1: "You can, and many people do. But Plainspeak Now™ is designed specifically for understanding real-world documents like IEPs, letters, and official paperwork.",
+faqA1b: "Plainspeak Now™ handles the process automatically and keeps everything focused on clarity.",
 
-faqQ2: "What does Plainspeak do?",
-faqA2: "Plainspeak turns complex writing into clear, plain language. Paste text, upload a document, and get an easier-to-understand version.",
+faqQ2: "What does Plainspeak Now™ do?",
+faqA2: "Plainspeak Now™ turns complex writing into clear, plain language. Paste text, upload a document, and get an easier-to-understand version.",
 
 faqQ3: "What are Keys?",
-faqA3: "Keys are how you use Plainspeak. Each document uses a small number of Keys.",
+faqA3: "Keys are how you use Plainspeak Now™. Each document uses a small number of Keys.",
 faqA3Bullet1: "Most documents use just 1 Key",
 faqA3Bullet2: "Longer documents may use 2 Keys",
 faqA3Bullet3: "Includes understanding, organizing, and important action items",
@@ -92,7 +92,7 @@ pricingBackHome: "Back to Home",
 privacyTitle: "Privacy Policy",
 privacyLastUpdated: "Last updated: February 2026",
 
-privacyPlainTitle: "PlainSpeak version (human-friendly)",
+privacyPlainTitle: "PlainSpeak Now™ version (human-friendly)",
 
 privacyPlainP1: "We collect only what we need to run the app: your account information, usage counts, and the text you submit.",
 
@@ -104,7 +104,7 @@ privacyPlainP4: "You can delete your account at any time.",
 
 privacyLegalTitle: "Legal version",
 
-privacyLegalP1: "PlainSpeak Now collects account identifiers, authentication data, usage metrics, and user-submitted content solely for service operation and security.",
+privacyLegalP1: "PlainSpeak Now™ collects account identifiers, authentication data, usage metrics, and user-submitted content solely for service operation and security.",
 
 privacyLegalP2: "User-submitted content may be transmitted to third-party AI providers strictly for processing purposes.",
 
@@ -114,9 +114,9 @@ privacyLegalP4: "Reasonable administrative and technical safeguards are used to 
 termsTitle: "Terms of Service",
 termsLastUpdated: "Last updated: February 2026",
 
-termsPlainTitle: "PlainSpeak version (human-friendly)",
+termsPlainTitle: "PlainSpeak Now™ version (human-friendly)",
 
-termsPlainP1: "PlainSpeak helps turn complicated text into clearer language. It does not give legal, medical, or professional advice.",
+termsPlainP1: "PlainSpeak Now™ helps turn complicated text into clearer language. It does not give legal, medical, or professional advice.",
 
 termsPlainP2: "You are responsible for how you use the results. Always rely on the original document if something matters legally or medically.",
 
@@ -126,13 +126,13 @@ termsPlainP4: "Abuse, automated scraping, or attempts to bypass limits are not a
 
 termsLegalTitle: "Legal version",
 
-termsLegalP1: "PlainSpeak Now provides an AI-powered text transformation service. The service does not provide legal, medical, or professional advice. All outputs are informational only.",
+termsLegalP1: "PlainSpeak Now™ provides an AI-powered text transformation service. The service does not provide legal, medical, or professional advice. All outputs are informational only.",
 
 termsLegalP2: "Users remain solely responsible for verifying the accuracy, appropriateness, and applicability of any output.",
 
 termsLegalP3: "Usage limits are enforced per account and per billing period. Attempts to circumvent limits may result in suspension or termination.",
 
-termsLegalP4: "PlainSpeak Now is provided 'as is' without warranties of any kind. To the maximum extent permitted by law, liability is disclaimed.",
+termsLegalP4: "PlainSpeak Now™ is provided 'as is' without warranties of any kind. To the maximum extent permitted by law, liability is disclaimed.",
 contactTitle: "Contact Plainspeak Now™",
 
 contactSubtitle:
@@ -169,17 +169,17 @@ contactBack:
 
   es: {
     faqTitle: "Preguntas Frecuentes",
-faqSubtitle: "Respuestas sencillas sobre cómo funciona Plainspeak.",
+faqSubtitle: "Respuestas sencillas sobre cómo funciona Plainspeak Now™.",
 
 faqQ1: "¿Por qué no usar simplemente ChatGPT?",
-faqA1: "Puedes hacerlo, y muchas personas lo hacen. Pero Plainspeak está diseñado específicamente para comprender documentos del mundo real como IEPs, cartas y documentación oficial.",
-faqA1b: "Plainspeak maneja el proceso automáticamente y mantiene todo enfocado en la claridad.",
+faqA1: "Puedes hacerlo, y muchas personas lo hacen. Pero Plainspeak Now™ está diseñado específicamente para comprender documentos del mundo real como IEPs, cartas y documentación oficial.",
+faqA1b: "Plainspeak Now™ maneja el proceso automáticamente y mantiene todo enfocado en la claridad.",
 
-faqQ2: "¿Qué hace Plainspeak?",
-faqA2: "Plainspeak convierte textos complejos en lenguaje claro y sencillo. Pega texto, carga un documento y obtén una versión más fácil de entender.",
+faqQ2: "¿Qué hace Plainspeak Now™?",
+faqA2: "Plainspeak Now™ convierte textos complejos en lenguaje claro y sencillo. Pega texto, carga un documento y obtén una versión más fácil de entender.",
 
 faqQ3: "¿Qué son las Keys?",
-faqA3: "Las Keys son la forma de usar Plainspeak. Cada documento utiliza una pequeña cantidad de Keys.",
+faqA3: "Las Keys son la forma de usar Plainspeak Now™. Cada documento utiliza una pequeña cantidad de Keys.",
 faqA3Bullet1: "La mayoría de los documentos usan solo 1 Key",
 faqA3Bullet2: "Los documentos más largos pueden usar 2 Keys",
 faqA3Bullet3: "Incluye comprensión, organización y elementos de acción importantes",
@@ -198,7 +198,7 @@ faqQ7: "¿Quién puede ver mi documento?",
 faqA7: "Solo tú. Tu contenido es privado para tu cuenta.",
 
 faqQ8: "¿Esto es asesoramiento legal, médico o financiero?",
-faqA8: "No. Plainspeak ayuda a explicar documentos, pero no sustituye el asesoramiento profesional.",
+faqA8: "No. Plainspeak Now™ ayuda a explicar documentos, pero no sustituye el asesoramiento profesional.",
 
 faqQ9: "¿Puedo obtener un reembolso?",
 faqA9: "Si algo no funcionó como esperabas, contáctanos. Revisamos cada situación de manera justa.",
@@ -213,7 +213,7 @@ faqLastUpdated: "Última actualización: junio de 2026",
     pasteText: "Pegar texto",
     uploadDocument: "Subir documento",
     disclaimer:
-      "Plainspeak ayuda a explicar documentos confusos con un lenguaje más claro. No proporciona asesoramiento legal, médico, financiero ni profesional. Para decisiones sobre sus derechos, salud, beneficios u obligaciones, consulte a un profesional calificado.",
+      "Plainspeak Now™ ayuda a explicar documentos confusos con un lenguaje más claro. No proporciona asesoramiento legal, médico, financiero ni profesional. Para decisiones sobre sus derechos, salud, beneficios u obligaciones, consulte a un profesional calificado.",
     documentText: "Texto del documento",
     placeholder: "Pega, escribe o sube un documento basado en texto...",
     readingDocument: "Leyendo documento...",
@@ -222,7 +222,7 @@ faqLastUpdated: "Última actualización: junio de 2026",
     supportedFiles:
       "Compatible con PDF, TXT, DOCX, CSV y XLSX. No se admiten fotos ni capturas de pantalla.",
     fileLoaded: "Archivo cargado:",
-    resultTitle: "Resultado de Plainspeak",
+    resultTitle: "Resultado de Plainspeak Now™",
     copyResult: "Copiar resultado",
     copied: "¡Copiado!",
     sendFeedback: "Enviar comentarios",
@@ -259,7 +259,7 @@ pricingBackHome: "Volver al inicio",
 privacyTitle: "Política de Privacidad",
 privacyLastUpdated: "Última actualización: febrero de 2026",
 
-privacyPlainTitle: "Versión PlainSpeak (fácil de entender)",
+privacyPlainTitle: "Versión PlainSpeak Now™ (fácil de entender)",
 
 privacyPlainP1: "Recopilamos únicamente lo necesario para operar la aplicación: la información de su cuenta, los conteos de uso y el texto que envía.",
 
@@ -271,7 +271,7 @@ privacyPlainP4: "Puede eliminar su cuenta en cualquier momento.",
 
 privacyLegalTitle: "Versión legal",
 
-privacyLegalP1: "PlainSpeak Now recopila identificadores de cuenta, datos de autenticación, métricas de uso y contenido enviado por los usuarios únicamente para la operación y seguridad del servicio.",
+privacyLegalP1: "PlainSpeak Now™ recopila identificadores de cuenta, datos de autenticación, métricas de uso y contenido enviado por los usuarios únicamente para la operación y seguridad del servicio.",
 
 privacyLegalP2: "El contenido enviado por los usuarios puede transmitirse a proveedores externos de inteligencia artificial estrictamente con fines de procesamiento.",
 
@@ -281,9 +281,9 @@ privacyLegalP4: "Se utilizan medidas administrativas y técnicas razonables para
 termsTitle: "Términos de Servicio",
 termsLastUpdated: "Última actualización: febrero de 2026",
 
-termsPlainTitle: "Versión PlainSpeak (fácil de entender)",
+termsPlainTitle: "Versión PlainSpeak Now™ (fácil de entender)",
 
-termsPlainP1: "PlainSpeak ayuda a convertir textos complicados en un lenguaje más claro. No proporciona asesoramiento legal, médico ni profesional.",
+termsPlainP1: "PlainSpeak Now™ ayuda a convertir textos complicados en un lenguaje más claro. No proporciona asesoramiento legal, médico ni profesional.",
 
 termsPlainP2: "Usted es responsable de cómo utiliza los resultados. Siempre consulte el documento original si algo tiene importancia legal o médica.",
 
@@ -293,7 +293,7 @@ termsPlainP4: "No se permite el abuso, la recopilación automatizada de datos ni
 
 termsLegalTitle: "Versión legal",
 
-termsLegalP1: "PlainSpeak Now proporciona un servicio de transformación de texto impulsado por inteligencia artificial. El servicio no proporciona asesoramiento legal, médico ni profesional. Todos los resultados son únicamente informativos.",
+termsLegalP1: "PlainSpeak Now™ proporciona un servicio de transformación de texto impulsado por inteligencia artificial. El servicio no proporciona asesoramiento legal, médico ni profesional. Todos los resultados son únicamente informativos.",
 
 termsLegalP2: "Los usuarios son los únicos responsables de verificar la exactitud, adecuación y aplicabilidad de cualquier resultado.",
 
@@ -341,11 +341,11 @@ faqQ1: "Tại sao không chỉ sử dụng ChatGPT?",
 faqA1: "Bạn có thể, và nhiều người vẫn làm vậy. Nhưng Plainspeak được thiết kế đặc biệt để giúp hiểu các tài liệu thực tế như IEP, thư từ và giấy tờ chính thức.",
 faqA1b: "Plainspeak tự động xử lý quy trình và luôn tập trung vào sự rõ ràng.",
 
-faqQ2: "Plainspeak làm gì?",
-faqA2: "Plainspeak chuyển đổi văn bản phức tạp thành ngôn ngữ rõ ràng, dễ hiểu. Dán văn bản, tải tài liệu lên và nhận phiên bản dễ hiểu hơn.",
+faqQ2: "Plainspeak Now™  làm gì?",
+faqA2: "Plainspeak Now™ chuyển đổi văn bản phức tạp thành ngôn ngữ rõ ràng, dễ hiểu. Dán văn bản, tải tài liệu lên và nhận phiên bản dễ hiểu hơn.",
 
 faqQ3: "Keys là gì?",
-faqA3: "Keys là cách bạn sử dụng Plainspeak. Mỗi tài liệu sử dụng một số lượng Keys nhỏ.",
+faqA3: "Keys là cách bạn sử dụng Plainspeak Now™. Mỗi tài liệu sử dụng một số lượng Keys nhỏ.",
 faqA3Bullet1: "Hầu hết tài liệu chỉ sử dụng 1 Key",
 faqA3Bullet2: "Tài liệu dài hơn có thể sử dụng 2 Keys",
 faqA3Bullet3: "Bao gồm khả năng hiểu nội dung, sắp xếp và các mục hành động quan trọng",
@@ -364,7 +364,7 @@ faqQ7: "Ai có thể xem tài liệu của tôi?",
 faqA7: "Chỉ có bạn. Nội dung của bạn là riêng tư trong tài khoản của bạn.",
 
 faqQ8: "Đây có phải là lời khuyên pháp lý, y tế hoặc tài chính không?",
-faqA8: "Không. Plainspeak giúp giải thích tài liệu nhưng không thay thế lời khuyên chuyên môn.",
+faqA8: "Không. Plainspeak Now™ giúp giải thích tài liệu nhưng không thay thế lời khuyên chuyên môn.",
 
 faqQ9: "Tôi có thể được hoàn tiền không?",
 faqA9: "Nếu có điều gì đó không hoạt động như mong đợi, hãy liên hệ với chúng tôi. Chúng tôi sẽ xem xét từng trường hợp một cách công bằng.",
@@ -379,7 +379,7 @@ faqLastUpdated: "Cập nhật lần cuối: Tháng 6 năm 2026",
     pasteText: "Dán văn bản",
     uploadDocument: "Tải tài liệu",
     disclaimer:
-      "Plainspeak giúp giải thích các tài liệu khó hiểu bằng ngôn ngữ dễ hiểu hơn. Dịch vụ này không cung cấp lời khuyên pháp lý, y tế, tài chính hoặc chuyên môn. Đối với các quyết định liên quan đến quyền lợi, sức khỏe, phúc lợi hoặc nghĩa vụ của bạn, vui lòng tham khảo ý kiến của chuyên gia có đủ trình độ.",
+      "Plainspeak Now™ giúp giải thích các tài liệu khó hiểu bằng ngôn ngữ dễ hiểu hơn. Dịch vụ này không cung cấp lời khuyên pháp lý, y tế, tài chính hoặc chuyên môn. Đối với các quyết định liên quan đến quyền lợi, sức khỏe, phúc lợi hoặc nghĩa vụ của bạn, vui lòng tham khảo ý kiến của chuyên gia có đủ trình độ.",
     documentText: "Nội dung tài liệu",
     placeholder: "Dán, nhập hoặc tải lên tài liệu dạng văn bản...",
     readingDocument: "Đang đọc tài liệu...",
@@ -388,7 +388,7 @@ faqLastUpdated: "Cập nhật lần cuối: Tháng 6 năm 2026",
     supportedFiles:
       "Hỗ trợ PDF, TXT, DOCX, CSV và XLSX. Không hỗ trợ ảnh hoặc ảnh chụp màn hình.",
     fileLoaded: "Đã tải tệp:",
-    resultTitle: "Kết quả Plainspeak",
+    resultTitle: "Kết quả Plainspeak Now™",
     copyResult: "Sao chép kết quả",
     copied: "Đã sao chép!",
     sendFeedback: "Gửi phản hồi",
@@ -419,13 +419,13 @@ pricingBuy2Keys: "Mua 2 Key",
 
 pricingFreeKey: "Tài khoản mới nhận 1 Key miễn phí.",
 
-pricingBonusKey: "Nhận thêm 1 Key sau khi sử dụng Plainspeak Now và gửi phản hồi.",
+pricingBonusKey: "Nhận thêm 1 Key sau khi sử dụng Plainspeak Now™ và gửi phản hồi.",
 
 pricingBackHome: "Quay lại Trang Chủ",
 privacyTitle: "Chính Sách Quyền Riêng Tư",
 privacyLastUpdated: "Cập nhật lần cuối: Tháng 2 năm 2026",
 
-privacyPlainTitle: "Phiên bản PlainSpeak (dễ hiểu)",
+privacyPlainTitle: "Phiên bản PlainSpeak Now™ (dễ hiểu)",
 
 privacyPlainP1: "Chúng tôi chỉ thu thập những gì cần thiết để vận hành ứng dụng: thông tin tài khoản, số liệu sử dụng và văn bản bạn gửi.",
 
@@ -437,7 +437,7 @@ privacyPlainP4: "Bạn có thể xóa tài khoản của mình bất kỳ lúc n
 
 privacyLegalTitle: "Phiên bản pháp lý",
 
-privacyLegalP1: "PlainSpeak Now thu thập thông tin định danh tài khoản, dữ liệu xác thực, số liệu sử dụng và nội dung do người dùng gửi chỉ nhằm mục đích vận hành và bảo mật dịch vụ.",
+privacyLegalP1: "PlainSpeak Now™ thu thập thông tin định danh tài khoản, dữ liệu xác thực, số liệu sử dụng và nội dung do người dùng gửi chỉ nhằm mục đích vận hành và bảo mật dịch vụ.",
 
 privacyLegalP2: "Nội dung do người dùng gửi có thể được chuyển đến các nhà cung cấp AI bên thứ ba chỉ cho mục đích xử lý.",
 
@@ -447,9 +447,9 @@ privacyLegalP4: "Các biện pháp bảo vệ hành chính và kỹ thuật hợ
 termsTitle: "Điều Khoản Dịch Vụ",
 termsLastUpdated: "Cập nhật lần cuối: Tháng 2 năm 2026",
 
-termsPlainTitle: "Phiên bản PlainSpeak (dễ hiểu)",
+termsPlainTitle: "Phiên bản PlainSpeak Now™ (dễ hiểu)",
 
-termsPlainP1: "PlainSpeak giúp chuyển đổi văn bản phức tạp thành ngôn ngữ rõ ràng hơn. Dịch vụ không cung cấp lời khuyên pháp lý, y tế hoặc chuyên môn.",
+termsPlainP1: "PlainSpeak Now™ giúp chuyển đổi văn bản phức tạp thành ngôn ngữ rõ ràng hơn. Dịch vụ không cung cấp lời khuyên pháp lý, y tế hoặc chuyên môn.",
 
 termsPlainP2: "Bạn chịu trách nhiệm về cách sử dụng kết quả. Luôn tham khảo tài liệu gốc nếu vấn đề liên quan đến pháp lý hoặc y tế.",
 
@@ -459,13 +459,13 @@ termsPlainP4: "Không được phép lạm dụng, thu thập dữ liệu tự �
 
 termsLegalTitle: "Phiên bản pháp lý",
 
-termsLegalP1: "PlainSpeak Now cung cấp dịch vụ chuyển đổi văn bản bằng trí tuệ nhân tạo. Dịch vụ không cung cấp lời khuyên pháp lý, y tế hoặc chuyên môn. Mọi kết quả chỉ mang tính thông tin.",
+termsLegalP1: "PlainSpeak Now™ cung cấp dịch vụ chuyển đổi văn bản bằng trí tuệ nhân tạo. Dịch vụ không cung cấp lời khuyên pháp lý, y tế hoặc chuyên môn. Mọi kết quả chỉ mang tính thông tin.",
 
 termsLegalP2: "Người dùng hoàn toàn chịu trách nhiệm xác minh tính chính xác, phù hợp và khả năng áp dụng của bất kỳ kết quả nào.",
 
 termsLegalP3: "Giới hạn sử dụng được áp dụng theo tài khoản và chu kỳ thanh toán. Các nỗ lực vượt qua giới hạn có thể dẫn đến đình chỉ hoặc chấm dứt dịch vụ.",
 
-termsLegalP4: "PlainSpeak Now được cung cấp 'nguyên trạng' mà không có bất kỳ bảo đảm nào. Trong phạm vi tối đa được pháp luật cho phép, mọi trách nhiệm pháp lý đều được từ chối.",
+termsLegalP4: "PlainSpeak Now™ được cung cấp 'nguyên trạng' mà không có bất kỳ bảo đảm nào. Trong phạm vi tối đa được pháp luật cho phép, mọi trách nhiệm pháp lý đều được từ chối.",
 contactTitle: "Liên hệ Plainspeak Now™",
 
 contactSubtitle:
@@ -504,14 +504,14 @@ contactBack:
 faqSubtitle: "Mga simpleng sagot tungkol sa kung paano gumagana ang Plainspeak.",
 
 faqQ1: "Bakit hindi na lang gumamit ng ChatGPT?",
-faqA1: "Maaari mo naman, at marami ang gumagawa nito. Ngunit ang Plainspeak ay partikular na ginawa upang tulungan kang maunawaan ang mga totoong dokumento tulad ng mga IEP, liham, at opisyal na papeles.",
-faqA1b: "Awtomatikong pinangangasiwaan ng Plainspeak ang proseso at nakatuon sa malinaw na paliwanag.",
+faqA1: "Maaari mo naman, at marami ang gumagawa nito. Ngunit ang Plainspeak Now™ ay partikular na ginawa upang tulungan kang maunawaan ang mga totoong dokumento tulad ng mga IEP, liham, at opisyal na papeles.",
+faqA1b: "Awtomatikong pinangangasiwaan ng Plainspeak Now™ ang proseso at nakatuon sa malinaw na paliwanag.",
 
-faqQ2: "Ano ang ginagawa ng Plainspeak?",
-faqA2: "Ginagawang malinaw at madaling maintindihan ng Plainspeak ang mahihirap na teksto. Mag-paste ng teksto, mag-upload ng dokumento, at makatanggap ng mas madaling maunawaang bersyon.",
+faqQ2: "Ano ang ginagawa ng Plainspeak Now™?",
+faqA2: "Ginagawang malinaw at madaling maintindihan ng Plainspeak Now™ ang mahihirap na teksto. Mag-paste ng teksto, mag-upload ng dokumento, at makatanggap ng mas madaling maunawaang bersyon.",
 
 faqQ3: "Ano ang mga Keys?",
-faqA3: "Ang Keys ang ginagamit upang magamit ang Plainspeak. Bawat dokumento ay gumagamit ng maliit na bilang ng Keys.",
+faqA3: "Ang Keys ang ginagamit upang magamit ang Plainspeak Now™. Bawat dokumento ay gumagamit ng maliit na bilang ng Keys.",
 faqA3Bullet1: "Karamihan sa mga dokumento ay gumagamit lamang ng 1 Key",
 faqA3Bullet2: "Maaaring gumamit ng 2 Keys ang mas mahahabang dokumento",
 faqA3Bullet3: "Kasama ang pag-unawa, pag-oorganisa, at mahahalagang aksyon na dapat gawin",
@@ -530,7 +530,7 @@ faqQ7: "Sino ang makakakita ng aking dokumento?",
 faqA7: "Ikaw lamang. Ang iyong nilalaman ay pribado sa iyong account.",
 
 faqQ8: "Ito ba ay legal, medikal, o pinansyal na payo?",
-faqA8: "Hindi. Tumutulong ang Plainspeak na ipaliwanag ang mga dokumento ngunit hindi nito pinapalitan ang propesyonal na payo.",
+faqA8: "Hindi. Tumutulong ang Plainspeak Now™ na ipaliwanag ang mga dokumento ngunit hindi nito pinapalitan ang propesyonal na payo.",
 
 faqQ9: "Maaari ba akong makakuha ng refund?",
 faqA9: "Kung may hindi gumana ayon sa inaasahan, makipag-ugnayan sa amin. Sinusuri namin ang bawat sitwasyon nang patas.",
@@ -590,7 +590,7 @@ pricingBackHome: "Bumalik sa Home",
 privacyTitle: "Patakaran sa Privacy",
 privacyLastUpdated: "Huling Na-update: Pebrero 2026",
 
-privacyPlainTitle: "Bersyon ng PlainSpeak (madaling maintindihan)",
+privacyPlainTitle: "Bersyon ng PlainSpeak Now™ (madaling maintindihan)",
 
 privacyPlainP1: "Kinokolekta lamang namin ang kinakailangan upang mapatakbo ang app: impormasyon ng iyong account, bilang ng paggamit, at tekstong iyong isinusumite.",
 
@@ -602,7 +602,7 @@ privacyPlainP4: "Maaari mong tanggalin ang iyong account anumang oras.",
 
 privacyLegalTitle: "Legal na Bersyon",
 
-privacyLegalP1: "Kinokolekta ng PlainSpeak Now ang mga identifier ng account, data ng pagpapatunay, mga sukatan ng paggamit, at nilalamang isinumite ng gumagamit para lamang sa operasyon at seguridad ng serbisyo.",
+privacyLegalP1: "Kinokolekta ng PlainSpeak Now™ ang mga identifier ng account, data ng pagpapatunay, mga sukatan ng paggamit, at nilalamang isinumite ng gumagamit para lamang sa operasyon at seguridad ng serbisyo.",
 
 privacyLegalP2: "Ang nilalamang isinumite ng gumagamit ay maaaring ipadala sa mga third-party AI provider para lamang sa layunin ng pagproseso.",
 
@@ -624,13 +624,13 @@ termsPlainP4: "Hindi pinapayagan ang pang-aabuso, awtomatikong pagkuha ng data, 
 
 termsLegalTitle: "Legal na Bersyon",
 
-termsLegalP1: "Ang PlainSpeak Now ay nagbibigay ng AI-powered na serbisyo para sa pagbabago ng teksto. Ang serbisyo ay hindi nagbibigay ng legal, medikal, o propesyonal na payo. Ang lahat ng output ay para sa impormasyong layunin lamang.",
+termsLegalP1: "Ang PlainSpeak Now™ ay nagbibigay ng AI-powered na serbisyo para sa pagbabago ng teksto. Ang serbisyo ay hindi nagbibigay ng legal, medikal, o propesyonal na payo. Ang lahat ng output ay para sa impormasyong layunin lamang.",
 
 termsLegalP2: "Ang mga gumagamit ay nananatiling ganap na responsable sa pagpapatunay ng katumpakan, pagiging angkop, at pagiging naaangkop ng anumang output.",
 
 termsLegalP3: "Ang mga limitasyon sa paggamit ay ipinapatupad bawat account at bawat panahon ng pagsingil. Ang mga pagtatangkang lampasan ang mga limitasyon ay maaaring magresulta sa suspensyon o pagwawakas ng serbisyo.",
 
-termsLegalP4: "Ang PlainSpeak Now ay ibinibigay 'kung ano ito' nang walang anumang uri ng garantiya. Sa pinakamalawak na saklaw na pinapahintulutan ng batas, ang pananagutan ay itinatanggi.",
+termsLegalP4: "Ang PlainSpeak Now™ ay ibinibigay 'kung ano ito' nang walang anumang uri ng garantiya. Sa pinakamalawak na saklaw na pinapahintulutan ng batas, ang pananagutan ay itinatanggi.",
 contactTitle: "Makipag-ugnayan sa Plainspeak Now™",
 
 contactSubtitle:
@@ -663,244 +663,284 @@ contactPreferEmail:
 contactBack:
   "← Bumalik sa pagpepresyo",
   },
-  fr: {
-    hero: "Transformez un texte complexe en mots simples",
+  
+fr: {
+  hero: "Transformez un texte complexe en mots simples",
 
-description:
-  "Téléversez un document texte, collez du texte ou saisissez-le directement. Plainspeak le transformera en une aide claire et facile à comprendre.",
+  description:
+    "Téléversez un document texte, collez du texte ou saisissez-le directement. Plainspeak le transformera en une aide claire et facile à comprendre.",
 
-processButton: "Aidez-moi à comprendre",
+  processButton: "Aidez-moi à comprendre",
 
-pasteText: "Coller du texte",
+  pasteText: "Coller du texte",
 
-uploadDocument: "Téléverser un document",
+  uploadDocument: "Téléverser un document",
 
-disclaimer:
-  "Plainspeak Now™ aide à expliquer les documents complexes dans un langage plus clair. Il ne fournit aucun conseil juridique, médical, financier ou professionnel. Pour toute décision concernant vos droits, votre santé, vos prestations ou vos obligations, veuillez consulter un professionnel qualifié.",
+  disclaimer:
+    "Plainspeak Now™ aide à expliquer les documents complexes dans un langage plus clair. Il ne fournit aucun conseil juridique, médical, financier ou professionnel. Pour toute décision concernant vos droits, votre santé, vos prestations ou vos obligations, veuillez consulter un professionnel qualifié.",
 
-documentText: "Texte du document",
+  documentText: "Texte du document",
 
-placeholder:
-  "Collez, saisissez ou téléversez un document texte...",
+  placeholder:
+    "Collez, saisissez ou téléversez un document texte...",
 
-readingDocument: "Lecture du document...",
+  readingDocument: "Lecture du document...",
 
-extractingText: "Extraction du texte...",
+  extractingText: "Extraction du texte...",
 
-readingYourText: "Lecture de votre texte...",
+  readingYourText: "Lecture de votre texte...",
 
-supportedFiles:
-  "Prend en charge les fichiers PDF, TXT, DOCX, CSV et XLSX. Les photos et captures d'écran ne sont pas prises en charge.",
+  supportedFiles:
+    "Prend en charge les fichiers PDF, TXT, DOCX, CSV et XLSX. Les photos et captures d'écran ne sont pas prises en charge.",
 
-fileLoaded: "Fichier chargé :",
+  fileLoaded: "Fichier chargé :",
 
-resultTitle: "Résultat Plainspeak",
+  resultTitle: "Résultat Plainspeak",
 
-copyResult: "Copier le résultat",
+  copyResult: "Copier le résultat",
 
-copied: "Copié !",
+  copied: "Copié !",
 
-sendFeedback: "Envoyer un commentaire",
+  sendFeedback: "Envoyer un commentaire",
 
-faq: "FAQ",
+  faq: "FAQ",
 
-faqTitle: "Questions fréquemment posées",
+  faqTitle: "Questions fréquemment posées",
 
-faqSubtitle:
-  "Réponses simples sur le fonctionnement de Plainspeak.",
+  faqSubtitle:
+    "Réponses simples sur le fonctionnement de Plainspeak Now™.",
 
-faqQ1: "Pourquoi ne pas simplement utiliser ChatGPT ?",
+  faqQ1: "Pourquoi ne pas simplement utiliser ChatGPT ?",
 
-faqA1:
-  "Vous le pouvez, et beaucoup de personnes le font. Mais Plainspeak est spécialement conçu pour aider à comprendre des documents réels comme les IEP, les lettres et les documents officiels.",
+  faqA1:
+    "Vous le pouvez, et beaucoup de personnes le font. Mais Plainspeak est spécialement conçu pour aider à comprendre des documents réels comme les IEP, les lettres et les documents officiels.",
 
-faqA1b:
-  "Plainspeak gère automatiquement le processus et reste concentré sur la clarté.",
+  faqA1b:
+    "Plainspeak Now™ gère automatiquement le processus et reste concentré sur la clarté.",
 
-faqQ2: "Que fait Plainspeak ?",
+  faqQ2: "Que fait Plainspeak ?",
 
-faqA2:
-  "Plainspeak transforme les textes complexes en langage clair et simple. Collez du texte, téléversez un document et obtenez une version plus facile à comprendre.",
+  faqA2:
+    "Plainspeak Now™ transforme les textes complexes en langage clair et simple. Collez du texte, téléversez un document et obtenez une version plus facile à comprendre.",
 
-faqQ3: "Que sont les Keys ?",
+  faqQ3: "Que sont les Keys ?",
 
-faqA3:
-  "Les Keys sont la façon d'utiliser Plainspeak. Chaque document utilise un petit nombre de Keys.",
+  faqA3:
+    "Les Keys sont la façon d'utiliser Plainspeak Now™. Chaque document utilise un petit nombre de Keys.",
 
-faqA3Bullet1:
-  "La plupart des documents utilisent seulement 1 Key",
+  faqA3Bullet1:
+    "La plupart des documents utilisent seulement 1 Key",
 
-faqA3Bullet2:
-  "Les documents plus longs peuvent utiliser 2 Keys",
+  faqA3Bullet2:
+    "Les documents plus longs peuvent utiliser 2 Keys",
 
-faqA3Bullet3:
-  "Comprend la compréhension, l'organisation et les actions importantes à entreprendre",
+  faqA3Bullet3:
+    "Comprend la compréhension, l'organisation et les actions importantes à entreprendre",
 
-faqA3b:
-  "Les Keys ne sont utilisées que lorsque vous traitez un document. Elles n'expirent jamais.",
+  faqA3b:
+    "Les Keys ne sont utilisées que lorsque vous traitez un document. Elles n'expirent jamais.",
 
-faqQ4: "Les Keys expirent-elles ?",
+  faqQ4: "Les Keys expirent-elles ?",
 
-faqA4:
-  "Non. Vos Keys restent dans votre compte jusqu'à ce que vous les utilisiez.",
+  faqA4:
+    "Non. Vos Keys restent dans votre compte jusqu'à ce que vous les utilisiez.",
 
-faqQ5:
-  "Que se passe-t-il si je n'ai plus de Keys ?",
+  faqQ5:
+    "Que se passe-t-il si je n'ai plus de Keys ?",
 
-faqA5:
-  "Vous serez invité à en acheter davantage. Aucun abonnement ni frais surprises.",
+  faqA5:
+    "Vous serez invité à en acheter davantage. Aucun abonnement ni frais surprises.",
 
-faqQ6:
-  "Mon document est-il stocké ou partagé ?",
+  faqQ6:
+    "Mon document est-il stocké ou partagé ?",
 
-faqA6:
-  "Votre contenu est traité de manière sécurisée et n'est ni vendu ni partagé.",
+  faqA6:
+    "Votre contenu est traité de manière sécurisée et n'est ni vendu ni partagé.",
 
-faqQ7:
-  "Qui peut voir mon document ?",
+  faqQ7:
+    "Qui peut voir mon document ?",
 
-faqA7:
-  "Vous seul. Votre contenu reste privé dans votre compte.",
+  faqA7:
+    "Vous seul. Votre contenu reste privé dans votre compte.",
 
-faqQ8:
-  "S'agit-il de conseils juridiques, médicaux ou financiers ?",
+  faqQ8:
+    "S'agit-il de conseils juridiques, médicaux ou financiers ?",
 
-faqA8:
-  "Non. Plainspeak aide à expliquer les documents mais ne remplace pas les conseils professionnels.",
+  faqA8:
+    "Non. Plainspeak Now™ aide à expliquer les documents mais ne remplace pas les conseils professionnels.",
 
-faqQ9:
-  "Puis-je obtenir un remboursement ?",
+  faqQ9:
+    "Puis-je obtenir un remboursement ?",
 
-faqA9:
-  "Si quelque chose ne fonctionne pas comme prévu, contactez-nous. Nous examinons chaque situation équitablement.",
+  faqA9:
+    "Si quelque chose ne fonctionne pas comme prévu, contactez-nous. Nous examinons chaque situation équitablement.",
 
-faqLastUpdated:
-  "Dernière mise à jour : juin 2026",
+  faqLastUpdated:
+    "Dernière mise à jour : juin 2026",
 
-pricing: "Tarification",
+  pricing: "Tarification",
 
-signIn: "Se connecter",
+  signIn: "Se connecter",
 
-keyBalance: "Solde de Keys",
+  keyBalance: "Solde de Keys",
 
-signOut: "Se déconnecter",
+  signOut: "Se déconnecter",
 
-pricingTitle: "Tarification",
+  pricingTitle: "Tarification",
 
-pricingKeys: "Keys",
+  pricingKeys: "Keys",
 
-pricingSubtitle:
-  "Une tarification simple. Achetez des Keys uniquement lorsque vous en avez besoin.",
+  pricingSubtitle:
+    "Une tarification simple. Achetez des Keys uniquement lorsque vous en avez besoin.",
 
-pricingBuyWhatYouNeed:
-  "Aucun abonnement. Aucun frais mensuel. Achetez simplement des Keys lorsque vous avez besoin d'aide.",
+  pricingBuyWhatYouNeed:
+    "Aucun abonnement. Aucun frais mensuel. Achetez simplement des Keys lorsque vous avez besoin d'aide.",
 
-pricingHowKeysWork:
-  "Fonctionnement des Keys",
+  pricingHowKeysWork:
+    "Fonctionnement des Keys",
 
-pricingMostDocs:
-  "La plupart des documents utilisent 1 Key.",
+  pricingMostDocs:
+    "La plupart des documents utilisent 1 Key.",
 
-pricingLongDocs:
-  "Les documents de plus de 35 pages environ peuvent utiliser 2 Keys.",
+  pricingLongDocs:
+    "Les documents de plus de 35 pages environ peuvent utiliser 2 Keys.",
 
-pricingIncludes:
-  "Chaque Key comprend la simplification de documents, l'organisation, la rédaction de réponses, la traduction et la génération audio.",
+  pricingIncludes:
+    "Chaque Key comprend la simplification de documents, l'organisation, la rédaction de réponses, la traduction et la génération audio.",
 
-pricingSeeUsage:
-  "Vous verrez toujours l'utilisation des Keys avant le traitement.",
+  pricingSeeUsage:
+    "Vous verrez toujours l'utilisation des Keys avant le traitement.",
 
-pricingDisclaimer:
-  "L'utilisation réelle dépend de la longueur et de la complexité du document.",
+  pricingDisclaimer:
+    "L'utilisation réelle dépend de la longueur et de la complexité du document.",
 
-pricingCardMostDocs:
-  "La plupart des documents utilisent 1 Key",
+  pricingCardMostDocs:
+    "La plupart des documents utilisent 1 Key",
 
-pricingCardLongDocs:
-  "Les documents plus longs peuvent utiliser 2 Keys",
+  pricingCardLongDocs:
+    "Les documents plus longs peuvent utiliser 2 Keys",
 
-pricingCardNeverExpire:
-  "Les Keys n'expirent jamais",
+  pricingCardNeverExpire:
+    "Les Keys n'expirent jamais",
 
-pricingBuy2Keys:
-  "Acheter 2 Keys",
+  pricingBuy2Keys:
+    "Acheter 2 Keys",
 
-pricingFreeKey:
-  "Les nouveaux comptes reçoivent 1 Key gratuite.",
+  pricingFreeKey:
+    "Les nouveaux comptes reçoivent 1 Key gratuite.",
 
-pricingBonusKey:
-  "Recevez 1 Key bonus après avoir utilisé Plainspeak Now avec succès et soumis un commentaire.",
+  pricingBonusKey:
+    "Recevez 1 Key bonus après avoir utilisé Plainspeak Now avec succès et soumis un commentaire.",
 
-pricingBackHome: "Retour à l'accueil",
+  pricingBackHome:
+    "Retour à l'accueil",
 
-termsTitle: "Conditions d'utilisation",
+  privacyTitle: "Politique de confidentialité",
 
-termsLastUpdated: "Dernière mise à jour : février 2026",
+  privacyLastUpdated:
+    "Dernière mise à jour : février 2026",
 
-termsPlainTitle: "Version PlainSpeak (facile à comprendre)",
+  privacyPlainTitle:
+    "Version PlainSpeak Now™ (facile à comprendre)",
 
-termsPlainP1:
-  "PlainSpeak aide à transformer des textes complexes en langage plus clair. Il ne fournit pas de conseils juridiques, médicaux ou professionnels.",
+  privacyPlainP1:
+    "Nous recueillons uniquement ce qui est nécessaire pour faire fonctionner l'application : les informations de votre compte, les données d'utilisation et le texte que vous soumettez.",
 
-termsPlainP2:
-  "Vous êtes responsable de la façon dont vous utilisez les résultats. Référez-vous toujours au document original lorsqu'une question juridique ou médicale est importante.",
+  privacyPlainP2:
+    "Votre texte est traité afin de générer des résultats. Nous ne le vendons pas. Nous ne l'utilisons pas pour vous adresser de la publicité.",
 
-termsPlainP3:
-  "Votre compte est soumis à des limites d'utilisation selon votre formule. Si vous atteignez votre limite, vous devrez peut-être attendre ou effectuer une mise à niveau.",
+  privacyPlainP3:
+    "Nous suivons les limites d'utilisation afin de maintenir des coûts équitables et prévisibles.",
 
-termsPlainP4:
-  "Les abus, la collecte automatisée de données et les tentatives de contournement des limites ne sont pas autorisés.",
+  privacyPlainP4:
+    "Vous pouvez supprimer votre compte à tout moment.",
 
-termsLegalTitle: "Version juridique",
+  privacyLegalTitle:
+    "Version juridique",
 
-termsLegalP1:
-  "PlainSpeak Now fournit un service de transformation de texte alimenté par l'intelligence artificielle. Le service ne fournit pas de conseils juridiques, médicaux ou professionnels. Tous les résultats sont fournis à titre informatif uniquement.",
+  privacyLegalP1:
+    "PlainSpeak Now™ collecte les identifiants de compte, les données d'authentification, les statistiques d'utilisation et le contenu soumis par les utilisateurs uniquement pour le fonctionnement et la sécurité du service.",
 
-termsLegalP2:
-  "Les utilisateurs demeurent seuls responsables de vérifier l'exactitude, la pertinence et l'applicabilité de tout résultat.",
+  privacyLegalP2:
+    "Le contenu soumis par les utilisateurs peut être transmis à des fournisseurs tiers d'intelligence artificielle uniquement à des fins de traitement.",
 
-termsLegalP3:
-  "Les limites d'utilisation sont appliquées par compte et par période de facturation. Les tentatives de contournement des limites peuvent entraîner une suspension ou une résiliation.",
+  privacyLegalP3:
+    "Les données sont conservées uniquement aussi longtemps que nécessaire pour répondre aux exigences opérationnelles, juridiques ou de sécurité.",
 
-termsLegalP4:
-  "PlainSpeak Now est fourni « tel quel », sans garantie d'aucune sorte. Dans toute la mesure permise par la loi, toute responsabilité est exclue.",
+  privacyLegalP4:
+    "Des mesures administratives et techniques raisonnables sont mises en œuvre afin de protéger les données des utilisateurs.",
 
+  termsTitle:
+    "Conditions d'utilisation",
 
-contactTitle:
-  "Contacter Plainspeak Now™",
+  termsLastUpdated:
+    "Dernière mise à jour : février 2026",
 
-contactSubtitle:
-  "Si vous représentez un organisme à but non lucratif, une clinique, une école ou une organisation intéressée par l'achat de lots de Keys de Plainspeak Now™, veuillez partager quelques renseignements ci-dessous.",
+  termsPlainTitle:
+    "Version PlainSpeak Now™ (facile à comprendre)",
 
-contactName: "Nom",
+  termsPlainP1:
+    "PlainSpeak Now™ aide à transformer des textes complexes en langage plus clair. Il ne fournit pas de conseils juridiques, médicaux ou professionnels.",
 
-contactOrganization: "Organisation",
+  termsPlainP2:
+    "Vous êtes responsable de la façon dont vous utilisez les résultats. Référez-vous toujours au document original lorsqu'une question juridique ou médicale est importante.",
 
-contactEmail: "E-mail",
+  termsPlainP3:
+    "Votre compte est soumis à des limites d'utilisation selon votre formule. Si vous atteignez votre limite, vous devrez peut-être attendre ou effectuer une mise à niveau.",
 
-contactSend:
-  "Envoyer la demande",
+  termsPlainP4:
+    "Les abus, la collecte automatisée de données et les tentatives de contournement des limites ne sont pas autorisés.",
 
-contactSuccess:
-  "Merci. Votre message a été envoyé.",
+  termsLegalTitle:
+    "Version juridique",
 
-contactNextStepsTitle:
-  "Que se passe-t-il ensuite ?",
+  termsLegalP1:
+    "PlainSpeak Now™ fournit un service de transformation de texte alimenté par l'intelligence artificielle. Le service ne fournit pas de conseils juridiques, médicaux ou professionnels. Tous les résultats sont fournis à titre informatif uniquement.",
 
-contactNextSteps:
-  "Nous examinerons votre demande et vous contacterons par e-mail afin de mieux comprendre vos besoins. Il n'y a aucune obligation, simplement une conversation pour déterminer si Plainspeak Now™ convient à votre organisation.",
+  termsLegalP2:
+    "Les utilisateurs demeurent seuls responsables de vérifier l'exactitude, la pertinence et l'applicabilité de tout résultat.",
 
-contactResponseTime:
-  "Nous répondons généralement sous 1 à 2 jours ouvrables.",
+  termsLegalP3:
+    "Les limites d'utilisation sont appliquées par compte et par période de facturation. Les tentatives de contournement des limites peuvent entraîner une suspension ou une résiliation.",
 
-contactPrivacy:
-  "Nous respectons votre vie privée. Vos informations sont utilisées uniquement pour répondre à votre demande et ne sont jamais partagées ni vendues.",
+  termsLegalP4:
+    "PlainSpeak Now est fourni « tel quel », sans garantie d'aucune sorte. Dans toute la mesure permise par la loi, toute responsabilité est exclue.",
 
-contactPreferEmail:
-  "Vous préférez le courrier électronique ? Contactez-nous directement à",
+  contactTitle:
+    "Contacter Plainspeak Now™",
 
-contactBack:
-  "← Retour aux tarifs",
+  contactSubtitle:
+    "Si vous représentez un organisme à but non lucratif, une clinique, une école ou une organisation intéressée par l'achat de lots de Keys de Plainspeak Now™, veuillez partager quelques renseignements ci-dessous.",
 
-  },
+  contactName: "Nom",
+
+  contactOrganization:
+    "Organisation",
+
+  contactEmail: "E-mail",
+
+  contactSend:
+    "Envoyer la demande",
+
+  contactSuccess:
+    "Merci. Votre message a été envoyé.",
+
+  contactNextStepsTitle:
+    "Que se passe-t-il ensuite ?",
+
+  contactNextSteps:
+    "Nous examinerons votre demande et vous contacterons par e-mail afin de mieux comprendre vos besoins. Il n'y a aucune obligation, simplement une conversation pour déterminer si Plainspeak Now™ convient à votre organisation.",
+
+  contactResponseTime:
+    "Nous répondons généralement sous 1 à 2 jours ouvrables.",
+
+  contactPrivacy:
+    "Nous respectons votre vie privée. Vos informations sont utilisées uniquement pour répondre à votre demande et ne sont jamais partagées ni vendues.",
+
+  contactPreferEmail:
+    "Vous préférez le courrier électronique ? Contactez-nous directement à",
+
+  contactBack:
+    "← Retour aux tarifs",
+},
 };

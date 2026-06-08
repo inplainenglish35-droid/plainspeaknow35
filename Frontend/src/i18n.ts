@@ -676,7 +676,7 @@ pasteText: "Coller du texte",
 uploadDocument: "Téléverser un document",
 
 disclaimer:
-  "Plainspeak aide à expliquer les documents complexes dans un langage plus clair. Il ne fournit aucun conseil juridique, médical, financier ou professionnel. Pour toute décision concernant vos droits, votre santé, vos prestations ou vos obligations, veuillez consulter un professionnel qualifié.",
+  "Plainspeak Now™ aide à expliquer les documents complexes dans un langage plus clair. Il ne fournit aucun conseil juridique, médical, financier ou professionnel. Pour toute décision concernant vos droits, votre santé, vos prestations ou vos obligations, veuillez consulter un professionnel qualifié.",
 
 documentText: "Texte du document",
 
@@ -831,8 +831,40 @@ pricingFreeKey:
 pricingBonusKey:
   "Recevez 1 Key bonus après avoir utilisé Plainspeak Now avec succès et soumis un commentaire.",
 
-pricingBackHome:
-  "Retour à l'accueil",
+pricingBackHome: "Retour à l'accueil",
+
+termsTitle: "Conditions d'utilisation",
+
+termsLastUpdated: "Dernière mise à jour : février 2026",
+
+termsPlainTitle: "Version PlainSpeak (facile à comprendre)",
+
+termsPlainP1:
+  "PlainSpeak aide à transformer des textes complexes en langage plus clair. Il ne fournit pas de conseils juridiques, médicaux ou professionnels.",
+
+termsPlainP2:
+  "Vous êtes responsable de la façon dont vous utilisez les résultats. Référez-vous toujours au document original lorsqu'une question juridique ou médicale est importante.",
+
+termsPlainP3:
+  "Votre compte est soumis à des limites d'utilisation selon votre formule. Si vous atteignez votre limite, vous devrez peut-être attendre ou effectuer une mise à niveau.",
+
+termsPlainP4:
+  "Les abus, la collecte automatisée de données et les tentatives de contournement des limites ne sont pas autorisés.",
+
+termsLegalTitle: "Version juridique",
+
+termsLegalP1:
+  "PlainSpeak Now fournit un service de transformation de texte alimenté par l'intelligence artificielle. Le service ne fournit pas de conseils juridiques, médicaux ou professionnels. Tous les résultats sont fournis à titre informatif uniquement.",
+
+termsLegalP2:
+  "Les utilisateurs demeurent seuls responsables de vérifier l'exactitude, la pertinence et l'applicabilité de tout résultat.",
+
+termsLegalP3:
+  "Les limites d'utilisation sont appliquées par compte et par période de facturation. Les tentatives de contournement des limites peuvent entraîner une suspension ou une résiliation.",
+
+termsLegalP4:
+  "PlainSpeak Now est fourni « tel quel », sans garantie d'aucune sorte. Dans toute la mesure permise par la loi, toute responsabilité est exclue.",
+
 
 contactTitle:
   "Contacter Plainspeak Now™",

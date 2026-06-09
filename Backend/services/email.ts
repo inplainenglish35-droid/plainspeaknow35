@@ -15,7 +15,7 @@ interface SupportEmailData {
 export async function sendWelcomeEmail(toEmail: string) {
   try {
     await resend.emails.send({
-      from: "Plainspeak <hello@plainspeaknow.net>",
+      from: "Plainspeak Now™ <hello@plainspeaknow.net>",
       to: toEmail,
       subject: "Welcome to Plainspeak Now™",
       html: `
@@ -62,7 +62,7 @@ export async function sendWelcomeEmail(toEmail: string) {
 export async function sendKeysAddedEmail(toEmail: string) {
   try {
     await resend.emails.send({
-      from: "Plainspeak <hello@plainspeaknow.net>",
+      from: "Plainspeak Now™ <hello@plainspeaknow.net>",
       to: toEmail,
       subject: "Your Keys Are Ready",
       html: `
@@ -100,8 +100,9 @@ export async function sendSupportEmail(
   data: SupportEmailData
 ) {
   try {
-    await resend.emails.send({
-      from: "Plainspeak <hello@plainspeaknow.net>",
+    console.log("SUPPORT EMAIL FUNCTION CALLED");
+    const result = await resend.emails.send({
+      from: "Plainspeak Now™ <hello@plainspeaknow.net>",
       to: "support@plainspeaknow.net",
       replyTo: data.email,
       ...(data.email
@@ -158,7 +159,7 @@ export async function sendSupportEmail(
         </div>
       `,
     });
-
+    console.log("RESEND RESULT:", result);
     console.log("Support email sent!");
   } catch (error) {
     console.error("Failed to send support email:", error);

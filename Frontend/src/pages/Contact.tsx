@@ -10,8 +10,13 @@ export default function Contact() {
   const [name, setName] = useState("");
   const [organization, setOrganization] = useState("");
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
   const [success, setSuccess] = useState(false);
-  const isValid = name.trim() && organization.trim() && email.trim();
+  const isValid =
+  name.trim() &&
+  organization.trim() &&
+  email.trim() &&
+  message.trim();
   const { language } = useOutletContext<{ language: Language }>();
 
   const t = translations[language];
@@ -27,11 +32,12 @@ export default function Contact() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        type: "organization",
-        name,
-        organization,
-        email,
-      }),
+  type: "organization",
+  name,
+  organization,
+  email,
+  message,
+}),
     });
 
     if (!response.ok) {
@@ -41,8 +47,9 @@ export default function Contact() {
     setSuccess(true);
 
     setName("");
-    setOrganization("");
-    setEmail("");
+setOrganization("");
+setEmail("");
+setMessage("");
   } catch (error) {
     console.error(error);
     alert("Something went wrong. Please try again.");
@@ -107,6 +114,20 @@ export default function Contact() {
             />
           </div>
 
+<div className="space-y-1">
+  <label className="block text-sm font-medium">
+    Message
+  </label>
+
+  <textarea
+    value={message}
+    onChange={(e) => setMessage(e.target.value)}
+    rows={6}
+    required
+    placeholder="Tell us about your organization, your document needs, expected number of users, or any questions you have."
+    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+  />
+</div>
           <button
             type="submit"
             disabled={!isValid}

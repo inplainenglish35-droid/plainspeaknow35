@@ -703,46 +703,43 @@ app.post(
   }
 );
 app.post(
-"/api/support",
-async (req: Request, res: Response) => {
-  app.post("/api/support", async (req, res) => {
-  console.log("SUPPORT REQUEST RECEIVED");
+  "/api/support",
+  async (req: Request, res: Response) => {
+    console.log("SUPPORT REQUEST RECEIVED");
 
- });
-try {
-const {
-type,
-name,
-organization,
-email,
-subject,
-message,
-} = req.body;
+    try {
+      const {
+        type,
+        name,
+        organization,
+        email,
+        subject,
+        message,
+      } = req.body;
 
-console.log("CALLING sendSupportEmail()");
-  await sendSupportEmail({
-    type,
-    name,
-    organization,
-    email,
-    subject,
-    message,
-  });
+      console.log("CALLING sendSupportEmail()");
 
-  return res.json({
-    success: true,
-  });
+      await sendSupportEmail({
+        type,
+        name,
+        organization,
+        email,
+        subject,
+        message,
+      });
 
-} catch (error) {
-  console.error("Support request failed:", error);
+      return res.json({
+        success: true,
+      });
 
-  return res.status(500).json({
-    error: "Failed to send support request",
-  });
-}
+    } catch (error) {
+      console.error("Support request failed:", error);
 
-
-}
+      return res.status(500).json({
+        error: "Failed to send support request",
+      });
+    }
+  }
 );
 
 /* =========================

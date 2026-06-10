@@ -106,12 +106,7 @@ export async function sendSupportEmail(
     const result = await resend.emails.send({
       from: "Plainspeak Now™ <hello@plainspeaknow.net>",
       to: "support@plainspeaknow.net",
-      replyTo: data.email,
-      ...(data.email
-        ? {
-            replyTo: data.email,
-          }
-        : {}),
+      ...(data.email ? { replyTo: data.email } : {}),
 
       subject: `[${data.type || "Support"}] ${
         data.subject || "New Message"

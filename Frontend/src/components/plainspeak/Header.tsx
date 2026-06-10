@@ -284,6 +284,32 @@ setFeedbackDeclines(
 
           </div>
         </div>
+        <div className="sm:hidden border-t border-teal-100 dark:border-slate-700">
+  <div className="flex justify-center gap-6 py-2 text-sm">
+
+    <a
+      href="mailto:inplainenglish35@gmail.com?subject=Plainspeak Beta Feedback"
+      className="text-slate-600 dark:text-slate-300"
+    >
+      {t.sendFeedback}
+    </a>
+
+    <Link
+      to="/faq"
+      className="text-slate-600 dark:text-slate-300"
+    >
+      {t.faq}
+    </Link>
+
+    <Link
+      to="/pricing"
+      className="text-slate-600 dark:text-slate-300"
+    >
+      {t.pricing}
+    </Link>
+
+  </div>
+</div>
       </header>
 
       {authModalOpen && (

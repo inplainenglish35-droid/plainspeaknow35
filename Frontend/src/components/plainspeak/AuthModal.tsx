@@ -15,7 +15,15 @@ import {
 } from "firebase/firestore";
 
 import { auth } from "../../lib/firebase";
-
+const isValidPassword = (password: string) => {
+  return (
+    password.length >= 6 &&
+    /[A-Z]/.test(password) &&
+    /[a-z]/.test(password) &&
+    /[0-9]/.test(password) &&
+    /[^A-Za-z0-9]/.test(password)
+  );
+};
 const db = getFirestore();
 const API_URL = import.meta.env.VITE_API_URL ?? "";
 type Mode = "login" | "signup";
@@ -29,9 +37,6 @@ export default function AuthModal({
   isOpen,
   onClose,
 }: Props) {
-  // 🔒 CONTROL RENDER HERE (not outside)
-  if (!isOpen) return null;
-
   const [mode, setMode] =
     useState<Mode>("login");
 
@@ -49,6 +54,8 @@ export default function AuthModal({
 
   const [loading, setLoading] =
     useState(false);
+
+  if (!isOpen) return null;
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -68,8 +75,14 @@ export default function AuthModal({
         onClose();
       } else {
         // Create Firebase account
+        if (!isValidPassword(password)) {
+  setError(
+    "Password must be at least 6 characters and include uppercase, lowercase, a number, and a special character."
+  );
+  return;
+}
         const userCredential =
-          await createUserWithEmailAndPassword(
+        await createUserWithEmailAndPassword(
             auth,
             email,
             password
@@ -200,7 +213,16 @@ onClose();
             autoComplete="current-password"
             className="w-full rounded-md border border-slate-300 dark:border-slate-700 px-3 py-2 text-sm bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-400"
           />
-
+          {mode === "signup" && (
+  <div className="text-xs text-slate-500 dark:text-slate-400 space-y-1">
+    <p>Password must contain:</p>
+    <p>• At least 6 characters</p>
+    <p>• One uppercase letter</p>
+    <p>• One lowercase letter</p>
+    <p>• One number</p>
+    <p>• One special character ( ! @ # $ % )</p>
+  </div>
+)}
           {error && (
             <p className="text-sm text-red-600">
               {error}

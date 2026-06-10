@@ -705,6 +705,10 @@ app.post(
 app.post(
 "/api/support",
 async (req: Request, res: Response) => {
+  app.post("/api/support", async (req, res) => {
+  console.log("SUPPORT REQUEST RECEIVED");
+
+ });
 try {
 const {
 type,
@@ -715,7 +719,7 @@ subject,
 message,
 } = req.body;
 
-
+console.log("CALLING sendSupportEmail()");
   await sendSupportEmail({
     type,
     name,

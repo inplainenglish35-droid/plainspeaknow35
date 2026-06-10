@@ -61,7 +61,8 @@ export async function sendWelcomeEmail(toEmail: string) {
 
 export async function sendKeysAddedEmail(toEmail: string) {
   try {
-    await resend.emails.send({
+    const result = await resend.emails.send({
+      
       from: "Plainspeak Now™ <hello@plainspeaknow.net>",
       to: toEmail,
       subject: "Your Keys Are Ready",
@@ -89,7 +90,7 @@ export async function sendKeysAddedEmail(toEmail: string) {
         </div>
       `,
     });
-
+console.log("RESEND RESULT:", result);
     console.log("Keys email sent!");
   } catch (error) {
     console.error("Failed to send keys email:", error);
@@ -97,8 +98,9 @@ export async function sendKeysAddedEmail(toEmail: string) {
 }
 
 export async function sendSupportEmail(
+  
   data: SupportEmailData
-) {
+) {console.log("SUPPORT EMAIL FUNCTION CALLED");
   try {
     console.log("SUPPORT EMAIL FUNCTION CALLED");
     const result = await resend.emails.send({

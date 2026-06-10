@@ -290,8 +290,8 @@ const handleFeedbackSubmit = async () => {
     const token = await auth.currentUser?.getIdToken();
 
     const response = await fetch(
-      `${API_URL}/api/feedback`,
-      {
+  `${API_URL}/api/feedback-submit`,
+  {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -283,18 +283,53 @@ if (
       setErrorMessage("Could not copy the result.");
     }
   };
-  const handleFeedbackSubmit = async () => {
-    try {
-      alert(
-        "Thank you! Your bonus Key has been added to your account."
+const handleFeedbackSubmit = async () => {
+  try {
+    setSubmittingFeedback(true);
+
+    const token = await auth.currentUser?.getIdToken();
+
+    const response = await fetch(
+      `${API_URL}/api/feedback`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          feedback: feedbackText,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.error || "Failed to submit feedback."
       );
-    } catch (err: any) {
-      console.error("FEEDBACK ERROR:", err);
-      alert(err.message || "Failed to submit feedback.");
-    } finally {
-      setSubmittingFeedback(false);
     }
-  };
+
+    setShowFeedbackModal(false);
+    setShowFeedbackBanner(false);
+    setFeedbackText("");
+
+    alert(
+      "Thank you! Your bonus Key has been added to your account."
+    );
+
+    window.location.reload();
+  } catch (err: any) {
+    console.error("FEEDBACK ERROR:", err);
+
+    alert(
+      err.message || "Failed to submit feedback."
+    );
+  } finally {
+    setSubmittingFeedback(false);
+  }
+};
 
  return (
   <main className="mx-auto max-w-4xl space-y-6 px-4 py-8 text-slate-900 dark:text-white">

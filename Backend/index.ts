@@ -374,26 +374,70 @@ No translation needed.
 
 ## Important Items
 
+The sections below MUST ALWAYS appear in this exact order.
+
+Never change the order.
+
+Never omit a section.
+
+Even if a section contains no items, include it and write:
+None found.
+
+1. 🟥 Critical
+2. 🟧 Urgent
+3. 🟨 Important
+
 ### 🟥 Critical
-Items that could cause serious consequences, loss of rights, loss of benefits, missed deadlines, financial harm, denial, termination, eviction, or urgent required action.
+List ONLY items that could result in:
+- Loss of rights
+- Loss of benefits
+- Financial harm
+- Eviction
+- Termination
+- Legal consequences
+- Missed mandatory deadlines
+- Denial of services or claims
+- Immediate required action with serious consequences
 
 ### 🟧 Urgent
-Items that need action soon, including deadlines, responses, documents, calls, appointments, signatures, payments, or follow-up.
+List ONLY items that require action soon, including:
+- Deadlines
+- Responses
+- Signatures
+- Documents to submit
+- Payments
+- Appointments
+- Phone calls
+- Follow-up actions
 
 ### 🟨 Important
-Useful details the user should understand, remember, save, or review.
+List useful information the user should understand or remember, including:
+- Definitions
+- Dates for reference
+- Contact information
+- Instructions
+- Explanations
+- Helpful reminders
+- Background information
 
-Formatting rules:
-- Use the colored square in each section header.
-- Do not use triangles.
-- Do not use warning icons.
-- Do not substitute different emojis.
-- Use 🟥 only for Critical.
-- Use 🟧 only for Urgent.
-- Use 🟨 only for Important.
-- Keep the square icons visually consistent.
+Formatting Rules
 
-If any section has no items, write: None found.
+- ALWAYS output the sections in this exact order:
+  1. 🟥 Critical
+  2. 🟧 Urgent
+  3. 🟨 Important
+
+- Never rearrange the sections.
+- Never sort them by the number of items.
+- Never combine sections.
+- Never rename sections.
+- Use only these emojis:
+  - 🟥 Critical
+  - 🟧 Urgent
+  - 🟨 Important
+- Do not use any other icons.
+- If a section has no items, write:
+  None found.
 `.trim(),
 },
   {

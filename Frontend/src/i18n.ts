@@ -1957,7 +1957,13 @@ termsContactTitle: "13. Liên hệ với chúng tôi",
 
 termsContactP1:
   "Nếu bạn có câu hỏi về các Điều Khoản Dịch Vụ này, hãy liên hệ với chúng tôi tại hello@plainspeaknow.net.",
-contactTitle: "Liên hệ Plainspeak Now™",
+
+footerNavigation: "Điều hướng",
+footerTerms: "Điều khoản",
+footerPrivacy: "Chính sách quyền riêng tư",
+footerContact: "Liên hệ",
+
+  contactTitle: "Liên hệ Plainspeak Now™",
 
 contactSubtitle:
   "Nếu bạn đại diện cho một tổ chức phi lợi nhuận, phòng khám, trường học hoặc tổ chức quan tâm đến việc mua gói Keys từ Plainspeak Now™, vui lòng chia sẻ một vài thông tin dưới đây.",
@@ -2620,7 +2626,14 @@ termsContactTitle: "13. Makipag-ugnayan sa Amin",
 
 termsContactP1:
   "Kung mayroon kang mga tanong tungkol sa Mga Tuntunin ng Serbisyo na ito, makipag-ugnayan sa amin sa hello@plainspeaknow.net.",
-contactTitle: "Makipag-ugnayan sa Plainspeak Now™",
+
+
+footerNavigation: "Nabigasyon",
+footerTerms: "Mga Tuntunin",
+footerPrivacy: "Patakaran sa Privacy",
+footerContact: "Makipag-ugnayan",
+
+  contactTitle: "Makipag-ugnayan sa Plainspeak Now™",
 
 contactSubtitle:
   "Kung ikaw ay kumakatawan sa isang nonprofit, klinika, paaralan, o organisasyon na interesado sa pagbili ng Key bundles mula sa Plainspeak Now™, mangyaring magbigay ng ilang detalye sa ibaba.",

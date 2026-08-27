@@ -14,7 +14,17 @@ const util_1 = require("util");
 const pdfParse = require("pdf-parse");
 const execAsync = (0, util_1.promisify)(child_process_1.exec);
 /* ---------------- GOOGLE VISION ---------------- */
-const client = new vision_1.default.ImageAnnotatorClient();
+const serviceAccount = JSON.parse(
+    process.env.FIREBASE_SERVICE_ACCOUNT
+);
+
+const client = new vision_1.default.ImageAnnotatorClient({
+    projectId: serviceAccount.project_id,
+    credentials: {
+        client_email: serviceAccount.client_email,
+        private_key: serviceAccount.private_key.replace(/\\n/g, "\n"),
+    },
+});
 /* ---------------- IMAGE OCR ---------------- */
 async function extractTextFromImage(buffer) {
     const [result] = await client.textDetection({

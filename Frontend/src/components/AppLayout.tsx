@@ -1,39 +1,39 @@
 import { Header } from "./plainspeak/Header";
 import { Footer } from "./plainspeak/Footer";
 import { Outlet } from "react-router-dom";
-import { useState } from "react";
-import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 import type { Language } from "./plainspeak/types/language";
-import { useEffect } from "react";
 
 export default function AppLayout() {
   const [language, setLanguage] = useState<Language>(() => {
-  const saved = localStorage.getItem("language");
-  return (saved as Language) || "en";
-});
+    const saved = localStorage.getItem("language");
+    return (saved as Language) || "en";
+  });
 
-useEffect(() => {
-  localStorage.setItem("language", language);
-}, [language]);
+  const isRTL = language === "ar";
 
-  // keeps component reactive to theme changes (no destructure needed)
-  useTheme();
+  useEffect(() => {
+    localStorage.setItem("language", language);
+  }, [language]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white transition-colors">
-      
+    <div
+  dir={isRTL ? "rtl" : "ltr"}
+  className="flex min-h-screen flex-col bg-white text-slate-900"
+>
       {/* Header */}
-      <Header language={language} setLanguage={setLanguage} />
+      <Header
+        language={language}
+        setLanguage={setLanguage}
+      />
 
       {/* Main Content */}
       <main className="flex-1">
-        <div className="max-w-3xl mx-auto px-4 py-8 space-y-8">
-          <Outlet context={{ language }} />
-        </div>
+        <Outlet context={{ language }} />
       </main>
 
       {/* Footer */}
-      <Footer />
+      <Footer language={language} />
     </div>
   );
 }

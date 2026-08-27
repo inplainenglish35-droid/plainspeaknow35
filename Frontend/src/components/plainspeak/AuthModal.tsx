@@ -15,6 +15,8 @@ import {
 } from "firebase/firestore";
 
 import { auth } from "../../lib/firebase";
+import type { Language } from "./types/language";
+import { translations } from "../../i18n";
 const isValidPassword = (password: string) => {
   return (
     password.length >= 6 &&
@@ -29,14 +31,18 @@ const API_URL = import.meta.env.VITE_API_URL ?? "";
 type Mode = "login" | "signup";
 
 type Props = {
+  language: Language;
   isOpen: boolean;
   onClose: () => void;
 };
 
 export default function AuthModal({
+  language,
   isOpen,
   onClose,
 }: Props) {
+  const t = translations[language];
+
   const [mode, setMode] =
     useState<Mode>("login");
 
@@ -64,96 +70,64 @@ export default function AuthModal({
 
     try {
       if (mode === "login") {
-        await signInWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
-
-        setInfo("Signed in successfully");
-
+        await signInWithEmailAndPassword(auth, email, password);
+        setInfo(t.authSignedInSuccess);
         onClose();
-      } else {
-        // Create Firebase account
-        if (!isValidPassword(password)) {
-  setError(
-    "Password must be at least 6 characters and include uppercase, lowercase, a number, and a special character."
-  );
-  return;
-}
-        const userCredential =
-        await createUserWithEmailAndPassword(
-            auth,
-            email,
-            password
-          );
-
-        const user = userCredential.user;
-
-await setDoc(
-  doc(db, "users", user.uid),
-  {
-    email: user.email,
-    displayName: user.displayName || "",
-    keyBalance: 1,
-    role: "user",
-    feedbackAccepted: false,
-    feedbackDeclines: 0,
-    createdAt: serverTimestamp(),
-  }
-);
-
-// Trigger welcome email
-try {
-  await fetch(
-    `${API_URL}/api/send-welcome-email`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-      }),
-    }
-  );
-} catch (error) {
-  console.error("Welcome email failed:", error);
-}
-
-setInfo("Account created successfully");
-
-onClose();
+        return;
       }
+
+      if (!isValidPassword(password)) {
+        setError(t.authPasswordRequirements);
+        return;
+      }
+
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      const user = userCredential.user;
+
+      await setDoc(doc(db, "users", user.uid), {
+        email: user.email,
+        displayName: user.displayName || "",
+        keyBalance: 1,
+        role: "user",
+        feedbackAccepted: false,
+        feedbackDeclines: 0,
+        createdAt: serverTimestamp(),
+      });
+
+      try {
+        await fetch(`${API_URL}/api/send-welcome-email`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        });
+      } catch (error) {
+        console.error("Welcome email failed:", error);
+      }
+
+      setInfo(t.authAccountCreated);
+      onClose();
     } catch (err: any) {
       console.error("FULL SIGNUP ERROR:", err);
       console.error("ERROR CODE:", err?.code);
       console.error("ERROR MESSAGE:", err?.message);
-      
 
       if (err.code === "auth/user-not-found") {
-        setError(
-          "No account found with this email."
-        );
-      } else if (
-        err.code === "auth/wrong-password"
-      ) {
-        setError("Incorrect password.");
-      } else if (
-        err.code ===
-        "auth/email-already-in-use"
-      ) {
-        setError("Email already in use.");
-      } else if (
-        err.code === "auth/weak-password"
-      ) {
-        setError(
-          "Password should be at least 6 characters."
-        );
+        setError(t.authNoAccount);
+      } else if (err.code === "auth/wrong-password") {
+        setError(t.authIncorrectPassword);
+      } else if (err.code === "auth/email-already-in-use") {
+        setError(t.authEmailInUse);
+      } else if (err.code === "auth/weak-password") {
+        setError(t.authWeakPassword);
       } else {
-        setError(
-          "Something went wrong. Please try again."
-        );
+        setError(t.authGenericError);
       }
     } finally {
       setLoading(false);
@@ -168,8 +142,8 @@ onClose();
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">
             {mode === "login"
-              ? "Sign in"
-              : "Create account"}
+  ? t.authSignIn
+  : t.authCreateAccount}
           </h2>
 
           <button
@@ -192,7 +166,7 @@ onClose();
             id="email"
             name="email"
             type="email"
-            placeholder="Email"
+            placeholder={t.authEmail}
             value={email}
             onChange={(e) =>
               setEmail(e.target.value)
@@ -205,7 +179,7 @@ onClose();
             id="password"
             name="password"
             type="password"
-            placeholder="Password"
+            placeholder={t.authPassword}
             value={password}
             onChange={(e) =>
               setPassword(e.target.value)
@@ -215,12 +189,12 @@ onClose();
           />
           {mode === "signup" && (
   <div className="text-xs text-slate-500 dark:text-slate-400 space-y-1">
-    <p>Password must contain:</p>
-    <p>• At least 6 characters</p>
-    <p>• One uppercase letter</p>
-    <p>• One lowercase letter</p>
-    <p>• One number</p>
-    <p>• One special character ( ! @ # $ % )</p>
+    <p>{t.authPasswordMustContain}</p>
+    <p>• {t.authPasswordSixCharacters}</p>
+    <p>• {t.authPasswordUppercase}</p>
+    <p>• {t.authPasswordLowercase}</p>
+    <p>• {t.authPasswordNumber}</p>
+    <p>• {t.authPasswordSpecial}</p>
   </div>
 )}
           {error && (
@@ -241,40 +215,40 @@ onClose();
             className="w-full rounded-md bg-slate-900 text-white py-2 text-sm font-medium hover:bg-slate-800 disabled:opacity-50"
           >
             {loading
-              ? "Working…"
-              : mode === "login"
-              ? "Sign in"
-              : "Create account"}
+  ? t.authWorking
+  : mode === "login"
+  ? t.authSignIn
+  : t.authCreateAccount}
           </button>
         </form>
 
         {/* Toggle */}
         <div className="text-sm text-center text-slate-500">
           {mode === "login" ? (
-            <>
-              Don’t have an account?{" "}
-              <button
-                onClick={() =>
-                  setMode("signup")
-                }
-                className="text-slate-900 dark:text-white font-medium"
-              >
-                Create one
-              </button>
-            </>
-          ) : (
-            <>
-              Already have an account?{" "}
-              <button
-                onClick={() =>
-                  setMode("login")
-                }
-                className="text-slate-900 dark:text-white font-medium"
-              >
-                Sign in
-              </button>
-            </>
-          )}
+  <>
+    {t.authNoAccountPrompt}{" "}
+    <button
+      onClick={() =>
+        setMode("signup")
+      }
+      className="text-slate-900 dark:text-white font-medium"
+    >
+      {t.authCreateOne}
+    </button>
+  </>
+) : (
+  <>
+    {t.authAlreadyAccount}{" "}
+    <button
+      onClick={() =>
+        setMode("login")
+      }
+      className="text-slate-900 dark:text-white font-medium"
+    >
+      {t.authSignIn}
+    </button>
+  </>
+)}
         </div>
       </div>
     </div>

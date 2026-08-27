@@ -22,17 +22,19 @@ import { enforceRateLimits } from "./rateLimiter";
 const mammoth = require("mammoth");
 const XLSX = require("xlsx");
 const { parse } = require("csv-parse/sync");
+const { extractTextFromImage } = require("./utils/ocr");
 
 const app = express();
 
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",
-      "http://localhost:8080",
-      "https://plainspeaknow.net",
-      "https://www.plainspeaknow.net",
-    ],
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:8080",
+  "https://plainspeaknow.net",
+  "https://www.plainspeaknow.net",
+],
     methods: ["GET", "POST", "OPTIONS"],
     credentials: true,
   })
@@ -93,6 +95,73 @@ function calculateKeyCost(text: string) {
 
   return { keys: 2, requiresSplit: true };
 }
+function splitDocumentIntoChunks(
+  text: string,
+  maxChars = 4000
+): string[] {
+  const normalizedText = text.trim();
+
+  if (!normalizedText) {
+    return [];
+  }
+
+  if (normalizedText.length <= maxChars) {
+    return [normalizedText];
+  }
+
+  const paragraphs = normalizedText.split(/\n\s*\n/);
+  const chunks: string[] = [];
+
+  let currentChunk = "";
+
+  for (const paragraph of paragraphs) {
+    const cleanParagraph = paragraph.trim();
+
+    if (!cleanParagraph) {
+      continue;
+    }
+
+    /*
+     * If one unusually large paragraph is itself bigger
+     * than maxChars, split it into smaller pieces.
+     */
+    if (cleanParagraph.length > maxChars) {
+      if (currentChunk) {
+        chunks.push(currentChunk.trim());
+        currentChunk = "";
+      }
+
+      for (
+        let start = 0;
+        start < cleanParagraph.length;
+        start += maxChars
+      ) {
+        chunks.push(
+          cleanParagraph.slice(start, start + maxChars)
+        );
+      }
+
+      continue;
+    }
+
+    const candidate = currentChunk
+      ? `${currentChunk}\n\n${cleanParagraph}`
+      : cleanParagraph;
+
+    if (candidate.length > maxChars) {
+      chunks.push(currentChunk.trim());
+      currentChunk = cleanParagraph;
+    } else {
+      currentChunk = candidate;
+    }
+  }
+
+  if (currentChunk) {
+    chunks.push(currentChunk.trim());
+  }
+
+  return chunks;
+}
 
 function isPdfFile(file: Express.Multer.File) {
   return (
@@ -130,17 +199,15 @@ app.post(
 
       const name = file.originalname.toLowerCase();
 
-      // ❌ BLOCK IMAGES
-      if (file.mimetype.startsWith("image/")) {
-        throw new ApiError(
-          "UNSUPPORTED_IMAGE",
-          "Photos and screenshots are not supported. Please upload a text-based document.",
-          400
-        );
-      }
+      // ✅ IMAGE OCR
+if (file.mimetype.startsWith("image/")) {
+  text = await extractTextFromImage(file.buffer);
+
+  console.log("📷 Image OCR characters:", text.length);
+}
 
       // ✅ TXT
-      if (name.endsWith(".txt")) {
+      else if (name.endsWith(".txt")) {
         text = file.buffer.toString("utf8");
       }
 
@@ -201,7 +268,7 @@ app.post(
       else {
         throw new ApiError(
           "UNSUPPORTED_FILE",
-          "Unsupported file type. Please upload PDF, TXT, DOCX, CSV, or XLSX.",
+          `Unsupported file type. Please upload PDF, TXT, DOCX, CSV, XLSX, or an image.`,
           400
         );
       }
@@ -241,12 +308,19 @@ app.post(
 console.log("LANGUAGE RECEIVED:", language);
 
       const languageNames = {
-        en: "English",
-        es: "Spanish",
-        vi: "Vietnamese",
-        tl: "Tagalog",
-        fr: "French",
-    };
+  en: "English",
+  es: "Spanish",
+  vi: "Vietnamese",
+  tl: "Tagalog",
+  fr: "French",
+  zh: "Simplified Chinese",
+  ko: "Korean",
+  ar: "Arabic",
+  pt: "Portuguese",
+  ru: "Russian",
+  ht: "Haitian Creole",
+  hi: "Hindi",
+};
 
 const selectedLanguage =
   languageNames[language as keyof typeof languageNames] ||
@@ -274,191 +348,495 @@ const selectedLanguage =
           400
         );
       }
+      const documentChunks = splitDocumentIntoChunks(text);
 
-      const completion = await openai.chat.completions.create({
+    console.log("DOCUMENT LENGTH:", text.length);
+    console.log("DOCUMENT CHUNKS:", documentChunks.length);
+
+    documentChunks.forEach((chunk, index) => {
+      console.log(
+        `CHUNK ${index + 1}/${documentChunks.length} LENGTH:`,
+        chunk.length
+      );
+    });
+
+      const rewrittenChunks: string[] = [];
+      let remainingKeys = 0;
+
+      for (let i = 0; i < documentChunks.length; i++) {
+        const chunk = documentChunks[i];
+
+        console.log(
+          `REWRITING CHUNK ${i + 1}/${documentChunks.length}`
+        );
+
+        const completion = await openai.chat.completions.create({
+          model: "gpt-4o-mini",
+          messages: [
+            {
+              role: "system",
+              content: `
+You are Plainspeak Now™, a professional plain-language editor.
+
+Rewrite the provided portion of the document in clear, everyday ${selectedLanguage}.
+
+READING LEVEL:
+
+• Aim for approximately a 6th-grade reading level.
+• Prefer short, direct sentences and common everyday words.
+• Break complicated sentences into shorter sentences when this does not change the meaning.
+• Accuracy is more important than reading level.
+• Never remove, weaken, or change important information just to make the text easier to read.
+• Keep necessary legal, medical, financial, or technical terms, but explain them immediately in plain language.
+
+IMPORTANT:
+
+• Rewrite EVERY sentence.
+• Preserve the original meaning, intent, and legal effect.
+• Preserve every paragraph.
+• Preserve headings.
+• Preserve lists.
+• Keep everything in the same order.
+• Do NOT summarize.
+• Do NOT shorten.
+• Do NOT omit information.
+• Do NOT combine paragraphs.
+• Do NOT add commentary.
+• Do NOT add a summary.
+• Do NOT create a professional response.
+• Do NOT create Critical, Urgent, or Important sections.
+
+Replace difficult words with everyday language whenever possible.
+
+If a legal, medical, or technical term must remain,
+immediately explain it in simpler words.
+
+Always preserve:
+
+• Names
+• Dates
+• Dollar amounts
+• Percentages
+• Deadlines
+• Definitions
+• Conditions
+• Exceptions
+• Obligations
+• Warnings
+• Instructions
+
+Return ONLY the rewritten portion of the document.
+`.trim(),
+            },
+            {
+              role: "user",
+              content: chunk,
+            },
+          ],
+          temperature: 0.2,
+          max_tokens: 4000,
+        });
+
+        const choice = completion.choices?.[0];
+        const output = choice?.message?.content?.trim() || "";
+        const finishReason = choice?.finish_reason;
+
+        console.log("OPENAI FINISH REASON:", finishReason);
+        console.log("OPENAI OUTPUT LENGTH:", output.length);
+
+        if (!output) {
+          throw new ApiError("AI_FAILURE", "No response from AI", 502);
+        }
+
+        if (finishReason === "length") {
+          console.error(
+            "AI OUTPUT TRUNCATED: Model reached the maximum output token limit."
+          );
+
+          throw new ApiError(
+            "AI_OUTPUT_TRUNCATED",
+            "The document explanation was too long to complete. No Keys were used. Please try again.",
+            502
+          );
+        }
+
+        rewrittenChunks.push(output);
+      }
+
+    const plainLanguageRewrite = rewrittenChunks.join("\n\n");
+    const analysisSourceChunks = splitDocumentIntoChunks(text);
+    const analysisNotes: string[] = [];
+
+    for (let i = 0; i < analysisSourceChunks.length; i++) {
+      const chunk = analysisSourceChunks[i];
+
+      console.log(
+        `ANALYZING SOURCE CHUNK ${i + 1}/${analysisSourceChunks.length}`
+      );
+
+    const notesCompletion =
+      await openai.chat.completions.create({
         model: "gpt-4o-mini",
         temperature: 0.2,
         max_tokens: 1200,
         messages: [
-  {
-  role: "system",
-  content: `
-You are Plainspeak Now™, a professional plain-language editor.
+          {
+            role: "system",
+            content: `
+You are reviewing one portion of a larger document for Plainspeak Now™.
 
-Your job:
+Extract ONLY information needed for later document analysis.
 
-1. Rewrite the ENTIRE document in plain language.
-2. Rewrite EVERY sentence.
-3. Preserve the meaning, intent, and legal effect of every sentence.
-4. Do NOT summarize.
-5. Do NOT omit information.
-6. Do NOT shorten the document.
-7. Keep headings, paragraphs, and lists in the same order as the original.
-8. Replace difficult words with everyday language whenever possible.
-9. If a legal, medical, or technical term must remain, immediately explain it in simpler words.
-10. Identify important items and categorize them.
-11. Build the complete final response.
-12. If the selected language is not English, translate the COMPLETE final response into the selected language.
+Identify:
 
-Translation must occur LAST.
+• Whether this portion suggests the document reasonably calls for a response.
+• Facts that would be useful in drafting that response.
+• Critical items involving serious consequences, loss of rights, loss of benefits, financial harm, eviction, termination, legal consequences, denial of services, or mandatory deadlines.
+• Urgent items such as deadlines, required responses, signatures, payments, submissions, appointments, phone calls, or follow-up actions.
+• Important information such as definitions, instructions, contact information, reference dates, explanations, or useful background.
 
-Everything visible to the user must be translated, including:
-- Section titles
-- Category titles
-- Bullet items
-- Important Items
-- Explanations
+IMPORTANT:
 
-No mixed-language output is allowed.
+• Do NOT rewrite the document.
+• Do NOT summarize unrelated content.
+• Do NOT draft the Professional Response yet.
+• Do NOT invent facts.
+• Preserve names, dates, amounts, deadlines, account or reference numbers, and other specific details exactly.
+• If nothing relevant appears in this portion, return exactly: None found.
 
-Do not provide legal, medical, financial, or professional advice.
-Do not draft a professional response.
-Do not tell the user what decision to make.
+Return concise analysis notes only.
+`.trim(),
+        },
+        {
+          role: "user",
+          content: chunk,
+        },
+      ],
+    });
 
-Output format:
+  const notesChoice = notesCompletion.choices?.[0];
 
-## Plain Language Rewrite
+  const notes =
+    notesChoice?.message?.content?.trim() || "";
 
-Rewrite the ENTIRE document in plain language.
+  console.log(
+    `ANALYSIS SOURCE CHUNK ${i + 1} FINISH REASON:`,
+    notesChoice?.finish_reason
+  );
 
-Requirements:
-- Rewrite every sentence.
-- Preserve every fact.
-- Preserve every obligation.
-- Preserve every warning.
-- Preserve every exception.
-- Preserve every deadline.
-- Preserve every dollar amount.
-- Preserve every date.
-- Preserve every percentage.
-- Preserve every condition.
-- Do not summarize.
-- Do not omit repetitive clauses.
-- Do not combine paragraphs.
+  if (!notes) {
+    throw new ApiError(
+      "AI_FAILURE",
+      "Document analysis could not be completed. No Keys were used.",
+      502
+    );
+  }
 
-NEVER:
+  if (notesChoice?.finish_reason === "length") {
+    throw new ApiError(
+      "AI_OUTPUT_TRUNCATED",
+      "Document analysis could not be completed. No Keys were used.",
+      502
+    );
+  }
 
-- Summarize the document.
-- Replace multiple paragraphs with one paragraph.
-- Skip legal boilerplate.
-- Remove definitions.
-- Remove conditions.
-- Remove exceptions.
-- Remove deadlines.
-- Remove names.
-- Remove dates.
-- Remove numbers.
-- Change the author's intent.
-- Add advice.
-- Add opinions.
+  analysisNotes.push(notes);
+}
 
-## Translation
+const combinedAnalysisNotes =
+  analysisNotes.join("\n\n---\n\n");
+      const analysisCompletion = await openai.chat.completions.create({
+  model: "gpt-4o-mini",
+  temperature: 0.2,
+  max_tokens: 2000,
+  messages: [
+    {
+      role: "system",
+      content: `
+You are Plainspeak Now™, a professional document assistant.
 
-Build a complete response in the selected language.
+Analyze the provided document.
 
-If English:
-- Output in English.
+Do NOT rewrite the document.
+Do NOT summarize the document.
+Do NOT repeat the document.
 
-If not English:
-- Output entirely in the selected language.
-- Do not include any English text.
-- Do not include a separate Translation section.
+Your job is ONLY to produce:
 
-- Translate the ENTIRE simplified explanation into the selected language.
-- Translate ALL section headers.
-- Translate ALL Important Items categories.
-- Output EVERYTHING after simplification in the selected language.
+1. A Professional Response, when appropriate.
+2. Critical items.
+3. Urgent items.
+4. Important items.
 
-If the selected language IS English, write:
-No translation needed.
+Do not provide legal, medical, financial, or other professional advice.
+Never tell the user what decision to make.
 
-## Important Items
+## Professional Response
 
-The sections below MUST ALWAYS appear in this exact order.
+Determine whether the document reasonably calls for a response.
 
-Never change the order.
+A response may be appropriate for documents such as:
 
-Never omit a section.
+• Letters
+• Emails
+• Bills
+• Collection notices
+• Government correspondence
+• School or IEP documents
+• Insurance documents
+• Healthcare correspondence
+• Landlord or tenant notices
+• Employment documents
+• Customer service issues
+• Business communications
 
-Even if a section contains no items, include it and write:
+If a response is appropriate, create a concise draft that:
+
+• Is professional and respectful.
+• Uses clear, everyday language.
+• Matches the tone and purpose of the document.
+• Is ready for the user to copy, edit, and send.
+• Uses ONLY information contained in the document.
+• Never invents facts.
+• Never assumes missing information.
+• Never admits fault, liability, or guilt.
+• Never promises actions or outcomes.
+• Never provides professional advice.
+• Never tells the user what decision to make.
+
+If information is needed from the user, use placeholders such as:
+
+[Name]
+[Date]
+[Claim Number]
+[Account Number]
+
+If no response is appropriate, write:
+
+No response appears necessary for this document.
+
+## 🟥 Critical
+
+List ONLY items that could result in:
+
+• Loss of rights
+• Loss of benefits
+• Financial harm
+• Eviction
+• Termination
+• Legal consequences
+• Missed mandatory deadlines
+• Denial of services
+• Immediate required action with serious consequences
+
+If none exist, write:
+
 None found.
 
-1. 🟥 Critical
-2. 🟧 Urgent
-3. 🟨 Important
+## 🟧 Urgent
 
-### 🟥 Critical
-List ONLY items that could result in:
-- Loss of rights
-- Loss of benefits
-- Financial harm
-- Eviction
-- Termination
-- Legal consequences
-- Missed mandatory deadlines
-- Denial of services or claims
-- Immediate required action with serious consequences
+List ONLY items requiring action soon, including:
 
-### 🟧 Urgent
-List ONLY items that require action soon, including:
-- Deadlines
-- Responses
-- Signatures
-- Documents to submit
-- Payments
-- Appointments
-- Phone calls
-- Follow-up actions
+• Deadlines
+• Required responses
+• Signatures
+• Payments
+• Documents to submit
+• Appointments
+• Phone calls
+• Follow-up actions
 
-### 🟨 Important
+If none exist, write:
+
+None found.
+
+## 🟨 Important
+
 List useful information the user should understand or remember, including:
-- Definitions
-- Dates for reference
-- Contact information
-- Instructions
-- Explanations
-- Helpful reminders
-- Background information
 
-Formatting Rules
+• Definitions
+• Instructions
+• Contact information
+• Reference dates
+• Explanations
+• Helpful reminders
+• Background information
 
-- ALWAYS output the sections in this exact order:
-  1. 🟥 Critical
-  2. 🟧 Urgent
-  3. 🟨 Important
+If none exist, write:
 
-- Never rearrange the sections.
-- Never sort them by the number of items.
-- Never combine sections.
-- Never rename sections.
-- Use only these emojis:
-  - 🟥 Critical
-  - 🟧 Urgent
-  - 🟨 Important
-- Do not use any other icons.
-- If a section has no items, write:
-  None found.
+None found.
+
+Return ONLY these four sections, in this exact order:
+
+## Professional Response
+
+[response or "No response appears necessary for this document."]
+
+## 🟥 Critical
+
+[items or "None found."]
+
+## 🟧 Urgent
+
+[items or "None found."]
+
+## 🟨 Important
+
+[items or "None found."]
 `.trim(),
-},
-  {
-    role: "user",
-    content: `Selected language: ${selectedLanguage}
+    },
+    {
+      role: "user",
+      content: combinedAnalysisNotes,
+    },
+  ],
+});
 
-You MUST respond fully in the selected language when it is not English.
+const analysisChoice = analysisCompletion.choices?.[0];
 
-Text:
-${text}`,
-  },
-],
+const documentAnalysis =
+  analysisChoice?.message?.content?.trim() || "";
+
+const analysisFinishReason =
+  analysisChoice?.finish_reason;
+
+console.log(
+  "ANALYSIS FINISH REASON:",
+  analysisFinishReason
+);
+
+console.log(
+  "ANALYSIS OUTPUT LENGTH:",
+  documentAnalysis.length
+);
+
+if (!documentAnalysis) {
+  throw new ApiError(
+    "AI_FAILURE",
+    "No document analysis was returned. No Keys were used.",
+    502
+  );
+}
+
+if (analysisFinishReason === "length") {
+  throw new ApiError(
+    "AI_OUTPUT_TRUNCATED",
+    "The document analysis was too long to complete. No Keys were used. Please try again.",
+    502
+  );
+}
+let output = `## Plain Language Rewrite
+
+${plainLanguageRewrite}
+
+${documentAnalysis}`;
+
+if (language !== "en") {
+  console.log(
+    `TRANSLATING FINAL OUTPUT TO: ${selectedLanguage}`
+  );
+
+  const translationChunks = splitDocumentIntoChunks(output);
+  const translatedChunks: string[] = [];
+
+  console.log(
+    "TRANSLATION CHUNKS:",
+    translationChunks.length
+  );
+
+  for (let i = 0; i < translationChunks.length; i++) {
+    const chunk = translationChunks[i];
+
+    console.log(
+      `TRANSLATING CHUNK ${i + 1}/${translationChunks.length}`
+    );
+
+    const translationCompletion =
+      await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        temperature: 0.2,
+        max_tokens: 4000,
+        messages: [
+          {
+            role: "system",
+            content: `
+You are a professional translator for Plainspeak Now™.
+
+Translate the provided text completely into ${selectedLanguage}.
+
+IMPORTANT:
+
+• Translate EVERYTHING.
+• Do NOT summarize.
+• Do NOT shorten.
+• Do NOT omit information.
+• Do NOT add information.
+• Preserve the original meaning.
+• Preserve names.
+• Preserve dates.
+• Preserve dollar amounts.
+• Preserve percentages.
+• Preserve deadlines.
+• Preserve numbers.
+• Preserve lists.
+• Preserve paragraph structure.
+• Preserve placeholders such as [Name], [Date], [Claim Number], and [Account Number].
+• Preserve emojis such as 🟥, 🟧, and 🟨.
+• Translate headings into ${selectedLanguage}.
+• Use clear, natural, everyday ${selectedLanguage}.
+• Aim for approximately a 6th-grade reading level when reasonably possible.
+• Accuracy and completeness are more important than reading level.
+
+Return ONLY the translated text.
+`.trim(),
+          },
+          {
+            role: "user",
+            content: chunk,
+          },
+        ],
       });
 
-      const output = completion.choices?.[0]?.message?.content?.trim() || "";
+    const translationChoice =
+      translationCompletion.choices?.[0];
 
-      if (!output) {
-        throw new ApiError("AI_FAILURE", "No response from AI", 502);
-      }
+    const translatedChunk =
+      translationChoice?.message?.content?.trim() || "";
 
-      let remainingKeys = 0;
+    const translationFinishReason =
+      translationChoice?.finish_reason;
+
+    console.log(
+      `TRANSLATION CHUNK ${i + 1} FINISH REASON:`,
+      translationFinishReason
+    );
+
+    console.log(
+      `TRANSLATION CHUNK ${i + 1} OUTPUT LENGTH:`,
+      translatedChunk.length
+    );
+
+    if (!translatedChunk) {
+      throw new ApiError(
+        "AI_FAILURE",
+        "Translation could not be completed. No Keys were used.",
+        502
+      );
+    }
+
+    if (translationFinishReason === "length") {
+      throw new ApiError(
+        "AI_OUTPUT_TRUNCATED",
+        "The translation was too long to complete. No Keys were used. Please try again.",
+        502
+      );
+    }
+
+    translatedChunks.push(translatedChunk);
+  }
+
+  output = translatedChunks.join("\n\n");
+}
 
       await db.runTransaction(async (tx) => {
         const ref = db.collection("users").doc(userId);
@@ -471,7 +849,7 @@ ${text}`,
         const current = doc.data()?.keyBalance ?? 0;
         console.log("CURRENT BALANCE:", current);
         console.log("KEYS REQUIRED:", keys);
-        console.log("USER DATA:", doc.data()); 
+        
 
         if (current < keys) {
           throw new ApiError("INSUFFICIENT_KEYS", "Not enough keys", 402);
@@ -495,30 +873,124 @@ ${text}`,
 /* =========================
    AUDIO
 ========================= */
+const splitTextForAudio = (
+  text: string,
+  maxChars = 5000
+): string[] => {
+  const normalized = text.trim();
 
+  if (!normalized) return [];
+
+  if (normalized.length <= maxChars) {
+    return [normalized];
+  }
+
+  const chunks: string[] = [];
+  let remaining = normalized;
+
+  while (remaining.length > maxChars) {
+    let splitAt = remaining.lastIndexOf("\n\n", maxChars);
+
+    if (splitAt < maxChars * 0.5) {
+      splitAt = remaining.lastIndexOf(". ", maxChars);
+    }
+
+    if (splitAt < maxChars * 0.5) {
+      splitAt = remaining.lastIndexOf(" ", maxChars);
+    }
+
+    if (splitAt <= 0) {
+      splitAt = maxChars;
+    }
+
+    const chunk = remaining.slice(0, splitAt).trim();
+
+    if (chunk) {
+      chunks.push(chunk);
+    }
+
+    remaining = remaining.slice(splitAt).trim();
+  }
+
+  if (remaining) {
+    chunks.push(remaining);
+  }
+
+  return chunks;
+};
 app.post(
   "/api/generate-audio",
   requireAuth,
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
-      const { text } = req.body;
+      const { text, language } = req.body;
 
       if (!text || typeof text !== "string") {
         throw new ApiError("INVALID_PAYLOAD", "Text required", 400);
       }
+const languageNames: Record<string, string> = {
+  en: "English",
+  es: "Spanish",
+  vi: "Vietnamese",
+  tl: "Tagalog",
+  fr: "French",
+  zh: "Simplified Chinese",
+  ko: "Korean",
+  ar: "Arabic",
+  pt: "Portuguese",
+  ru: "Russian",
+  ht: "Haitian Creole",
+  hi: "Hindi",
+};
+
+const audioLanguage = languageNames[language] || "English";
+      const audioChunks = splitTextForAudio(text);
+
+console.log("AUDIO CHUNKS:", audioChunks.length);
+
+const buffers: Buffer[] = [];
+const BATCH_SIZE = 3;
+
+for (let i = 0; i < audioChunks.length; i += BATCH_SIZE) {
+  const batch = audioChunks.slice(i, i + BATCH_SIZE);
+
+  console.log(
+    `GENERATING AUDIO BATCH ${Math.floor(i / BATCH_SIZE) + 1}`,
+    `CHUNKS ${i + 1}-${Math.min(i + BATCH_SIZE, audioChunks.length)}/${audioChunks.length}`
+  );
+
+  const batchBuffers = await Promise.all(
+    batch.map(async (chunk, batchIndex) => {
+      const chunkNumber = i + batchIndex + 1;
+
+      console.log(
+        `GENERATING AUDIO CHUNK ${chunkNumber}/${audioChunks.length}`,
+        "LENGTH:",
+        chunk.length
+      );
 
       const audio = await openai.audio.speech.create({
-        model: "gpt-4o-mini-tts",
-        voice: "alloy",
-        input: text.slice(0, 12000),
-        response_format: "mp3",
+  model: "gpt-4o-mini-tts",
+  voice: "alloy",
+  input: chunk,
+  instructions: `Speak naturally and clearly in ${audioLanguage}. Use accurate pronunciation and a calm, helpful tone appropriate for explaining an important document.`,
+  response_format: "mp3",
+});
+
+      return Buffer.from(await audio.arrayBuffer());
+    })
+  );
+
+  buffers.push(...batchBuffers);
+}
+
+const combinedBuffer = Buffer.concat(buffers);
+
+      res.set({
+        "Content-Type": "audio/mpeg",
+        "Content-Length": combinedBuffer.length,
       });
-
-      const buffer = Buffer.from(await audio.arrayBuffer());
-
-      res.setHeader("Content-Type", "audio/mpeg");
-      res.setHeader("Content-Length", buffer.length.toString());
-      res.send(buffer);
+      return res.send(combinedBuffer);
     } catch (err) {
       next(err);
     }
@@ -700,8 +1172,7 @@ app.get(
 
       const doc = await db.collection("users").doc(userId).get();
 
-      console.log("FIRESTORE DATA:", doc.data());
-
+      
       if (!doc.exists) {
         return res.status(404).json({
           error: "User not found",

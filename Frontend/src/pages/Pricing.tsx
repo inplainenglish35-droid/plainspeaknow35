@@ -14,7 +14,8 @@ export default function Pricing() {
   const t = translations[language];
   const handlePurchase = async () => {
     if (!user) {
-      alert("Please sign in to continue.");
+      
+      alert(t.pricingSignInRequired);
       return;
     }
 
@@ -36,7 +37,7 @@ export default function Pricing() {
 
       if (!data.url) {
         console.error("No checkout URL returned", data);
-        alert("Something went wrong. Please try again.");
+        alert(t.pricingCheckoutError);
         return;
       }
 
@@ -44,7 +45,7 @@ export default function Pricing() {
 
     } catch (err) {
       console.error("Purchase failed:", err);
-      alert("Purchase failed. Please try again.");
+      alert(t.pricingPurchaseFailed);
     }
   };
 
@@ -117,7 +118,7 @@ export default function Pricing() {
               <div className="space-y-2">
 
                 <h3 className="text-2xl font-semibold">
-                  2 Keys
+                   2 {t.pricingKeys}
                 </h3>
 
                 <p className="text-4xl font-semibold">

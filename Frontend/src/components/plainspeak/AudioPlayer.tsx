@@ -1,8 +1,11 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { Play, Pause, Volume2, VolumeX, Loader2, RotateCcw } from "lucide-react";
 import { cn } from "../../lib/utils";
+import type { Language } from "./types/language";
+import { translations } from "../../i18n";
 
 interface AudioPlayerProps {
+  language: Language;
   audioUrl: string | null;
   text: string;
   isGenerating: boolean;
@@ -11,12 +14,14 @@ interface AudioPlayerProps {
 }
 
 export const AudioPlayer: React.FC<AudioPlayerProps> = ({
+  language,
   audioUrl,
   text,
   isGenerating,
   onGenerate,
   className,
 }) => {
+  const t = translations[language];
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
@@ -217,12 +222,12 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
             className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-gradient-to-r from-teal-500 to-blue-500 text-white disabled:opacity-50"
           >
             <Volume2 className="w-5 h-5" />
-            Listen instead
+            {t.audioListenInstead}
           </button>
         ) : isGenerating ? (
           <div className="flex items-center justify-center gap-2 py-3">
             <Loader2 className="w-5 h-5 animate-spin text-teal-500" />
-            Generating audio...
+            {t.audioGenerating}
           </div>
         ) : (
           <div className="space-y-3">

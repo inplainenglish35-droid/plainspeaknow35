@@ -1,25 +1,19 @@
-import { useState, useEffect } from "react";
-import AuthModal from "./AuthModal";
-
-import { useAuth } from "./contexts/AuthContext";
-import { signOut as firebaseSignOut } from "firebase/auth";
-import { auth } from "../../lib/firebase";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  ChevronDown,
+  LogOut,
+  User,
+} from "lucide-react";
+import { signOut as firebaseSignOut } from "firebase/auth";
+
+import AuthModal from "./AuthModal";
+import { useAuth } from "./contexts/AuthContext";
+import { auth } from "../../lib/firebase";
 import logo from "../../assets/logo.png";
 import { translations } from "../../i18n";
-import {
-  Sun,
-  Moon,
-  User,
-  LogOut,
-  ChevronDown,
-} from "lucide-react";
+import type { Language } from "./types/language";
 
-/* =========================
-   TYPES
-========================= */
-
-type Language = "en" | "es" | "vi" | "tl" | "fr";
 
 interface HeaderProps {
   language: Language;
@@ -35,103 +29,70 @@ export const Header: React.FC<HeaderProps> = ({
   setLanguage,
 }) => {
   const {
-  user,
-  keyBalance,
-  setKeyBalance,
+    user,
+    keyBalance,
+    setKeyBalance,
+    setFeedbackAccepted,
+    setFeedbackDeclines,
+  } = useAuth();
 
-  feedbackAccepted,
-  setFeedbackAccepted,
-
-  feedbackDeclines,
-  setFeedbackDeclines,
-} = useAuth();
-
-  const [isDark, setIsDark] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const t = translations[language];
+
   /* =========================
-     DARK MODE SYSTEM
+     KEY BALANCE
   ========================= */
 
-  // Init (saved or system)
   useEffect(() => {
-    const saved = localStorage.getItem("theme");
-
-    if (saved === "dark") {
-      setIsDark(true);
-    } else if (saved === "light") {
-      setIsDark(false);
-    } else {
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      setIsDark(prefersDark);
-    }
-  }, []);
-
-  // Apply theme
-  useEffect(() => {
-    const root = document.documentElement;
-
-    if (isDark) {
-      root.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      root.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
-  }, [isDark]);
-
-  const toggleDarkMode = () => {
-    setIsDark((prev) => !prev);
-  };
-/* =========================
-   KEY BALANCE
-========================= */
-
-useEffect(() => {
-  const fetchKeyBalance = async () => {
-    try {
-      if (!user) {
-        setKeyBalance(null);
-        return;
-      }
-
-      const API_URL = import.meta.env.VITE_API_URL;
-
-      const token = await user.getIdToken();
-
-      const res = await fetch(
-        `${API_URL}/api/key-balance`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+    const fetchKeyBalance = async () => {
+      try {
+        if (!user) {
+          setKeyBalance(null);
+          return;
         }
-      );
 
-      if (!res.ok) {
-        throw new Error("Failed to fetch key balance");
+        const API_URL = import.meta.env.VITE_API_URL;
+        const token = await user.getIdToken();
+
+        const res = await fetch(
+          `${API_URL}/api/key-balance`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch key balance");
+        }
+
+        const data = await res.json();
+
+        setKeyBalance(data.keyBalance ?? 0);
+        setFeedbackAccepted(
+          data.feedbackAccepted ?? false
+        );
+        setFeedbackDeclines(
+          data.feedbackDeclines ?? 0
+        );
+      } catch (error) {
+        console.error(
+          "Key balance fetch failed:",
+          error
+        );
       }
+    };
 
-      const data = await res.json();
+    fetchKeyBalance();
+  }, [
+    user,
+    setKeyBalance,
+    setFeedbackAccepted,
+    setFeedbackDeclines,
+  ]);
 
-      setKeyBalance(data.keyBalance ?? 0);
-
-      setFeedbackAccepted(
-        data.feedbackAccepted ?? false
-    );
-
-setFeedbackDeclines(
-  data.feedbackDeclines ?? 0
-);
-
-    } catch (error) {
-      console.error("Key balance fetch failed:", error);
-    }
-  };
-
-  fetchKeyBalance();
-}, [user]);
   /* =========================
      AUTH
   ========================= */
@@ -147,42 +108,45 @@ setFeedbackDeclines(
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-white/40 dark:bg-slate-900/80 backdrop-blur-sm border-b border-teal-100 dark:border-slate-700">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-16">
-
+      <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 shadow-sm backdrop-blur-md">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-20 items-center justify-between">
             {/* LEFT */}
-            <div className="flex items-center gap-6 sm:gap-8">
-
-              <Link to="/" className="flex items-center gap-3">
+            <div className="flex min-w-0 items-center gap-6 lg:gap-10">
+              {/* LOGO */}
+              <Link
+                to="/"
+                className="flex shrink-0 items-center gap-2"
+                aria-label={t.headerHomeLabel}
+              >
                 <img
                   src={logo}
-                  alt="Plainspeak Logo"
-                  className="h-30 sm:h-32 w-auto"
+                  alt={t.headerLogoAlt}
+                  className="h-14 w-auto object-contain sm:h-16"
                 />
-                <span className="px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-800 rounded-full">
-                  Beta
-                </span>
+
+                
               </Link>
 
-              <nav className="hidden sm:flex items-center gap-6 text-sm">
+              {/* DESKTOP NAVIGATION */}
+              <nav className="hidden items-center gap-6 md:flex">
                 <a
                   href="mailto:inplainenglish35@gmail.com?subject=Plainspeak Beta Feedback"
-                  className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition"
+                  className="text-sm font-medium text-slate-600 transition hover:text-[#4F7C6B]"
                 >
                   {t.sendFeedback}
                 </a>
 
                 <Link
                   to="/faq"
-                  className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition"
+                  className="text-sm font-medium text-slate-600 transition hover:text-[#4F7C6B]"
                 >
                   {t.faq}
                 </Link>
 
                 <Link
                   to="/pricing"
-                  className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition"
+                  className="text-sm font-medium text-slate-600 transition hover:text-[#4F7C6B]"
                 >
                   {t.pricing}
                 </Link>
@@ -190,41 +154,46 @@ setFeedbackDeclines(
             </div>
 
             {/* RIGHT */}
-            <div className="flex items-center gap-2 sm:gap-3">
-
+            <div className="flex shrink-0 items-center gap-2 sm:gap-3">
               {/* LANGUAGE */}
               <select
                 value={language}
-                onChange={(e) => setLanguage(e.target.value as Language)}
-                className="px-2 py-1 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-xs sm:text-sm text-slate-700 dark:text-slate-200"
+                onChange={(e) =>
+                  setLanguage(
+                    e.target.value as Language
+                  )
+                }
+                aria-label={t.headerLanguageLabel}
+                className="rounded-xl border border-slate-200 bg-white px-2.5 py-2 text-sm font-medium text-slate-700 shadow-sm outline-none transition hover:border-[#4F7C6B]/40 focus:border-[#4F7C6B] focus:ring-2 focus:ring-[#4F7C6B]/20"
               >
-                <option value="en">EN</option>
-                <option value="es">ES</option>
-                <option value="vi">VI</option>
-                <option value="tl">TL</option>
-                <option value="fr">FR</option>
+               <option value="en">EN</option>
+<option value="es">ES</option>
+<option value="vi">VI</option>
+<option value="tl">TL</option>
+<option value="fr">FR</option>
+<option value="zh">中文</option>
+<option value="ko">한국어</option>
+<option value="ar">العربية</option>
+<option value="pt">PT</option>
+<option value="ru">RU</option>
+<option value="ht">Kreyòl</option>
+<option value="hi">हिन्दी</option>
               </select>
-
-              {/* DARK MODE */}
-              <button
-                onClick={toggleDarkMode}
-                aria-label="Toggle dark mode"
-                className="p-2 rounded-lg hover:bg-teal-50 dark:hover:bg-slate-700 transition"
-              >
-                {isDark ? (
-                  <Sun className="w-5 h-5 text-slate-300" />
-                ) : (
-                  <Moon className="w-5 h-5 text-slate-600" />
-                )}
-              </button>
 
               {/* AUTH */}
               {!user ? (
                 <button
-                  onClick={() => setAuthModalOpen(true)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#4f7c6b] text-white hover:bg-[#3e6557] transition text-sm"
+                  type="button"
+                  onClick={() =>
+                    setAuthModalOpen(true)
+                  }
+                  className="flex items-center gap-2 rounded-xl bg-[#4F7C6B] px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#426B5C] focus:outline-none focus:ring-4 focus:ring-[#4F7C6B]/20"
                 >
-                  <User className="w-4 h-4" />
+                  <User
+                    className="h-4 w-4"
+                    aria-hidden="true"
+                  />
+
                   <span className="hidden sm:inline">
                     {t.signIn}
                   </span>
@@ -232,88 +201,114 @@ setFeedbackDeclines(
               ) : (
                 <div className="relative">
                   <button
-                    onClick={() => setUserMenuOpen((v) => !v)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#4f7c6b] text-white hover:bg-[#3e6557] transition"
+                    type="button"
+                    onClick={() =>
+                      setUserMenuOpen((v) => !v)
+                    }
+                    aria-expanded={userMenuOpen}
+                    className="flex items-center gap-2 rounded-xl bg-[#4F7C6B] px-3.5 py-2.5 text-white shadow-sm transition hover:bg-[#426B5C] focus:outline-none focus:ring-4 focus:ring-[#4F7C6B]/20"
                   >
-                    <User className="w-5 h-5" />
-                    <span className="hidden sm:inline text-sm truncate max-w-[140px]">
-                      {user.displayName || user.email}
+                    <User
+                      className="h-4 w-4"
+                      aria-hidden="true"
+                    />
+
+                    <span className="hidden max-w-[150px] truncate text-sm font-medium sm:inline">
+                      {user.displayName ||
+                        user.email}
                     </span>
-                    <ChevronDown className="w-4 h-4" />
+
+                    <ChevronDown
+                      className={`h-4 w-4 transition-transform ${
+                        userMenuOpen
+                          ? "rotate-180"
+                          : ""
+                      }`}
+                      aria-hidden="true"
+                    />
                   </button>
 
+                  {/* USER MENU */}
                   {userMenuOpen && (
-  <div className="absolute right-0 mt-2 w-56 rounded-xl border border-teal-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-lg overflow-hidden">
+                    <div className="absolute right-0 mt-2 w-60 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
+                      {/* USER INFO */}
+                      <div className="border-b border-slate-100 px-4 py-3">
+                        <p className="text-xs text-slate-500">
+                         {t.headerSignedInAs}
+                        </p>
 
-    {/* USER INFO */}
-    <div className="px-4 py-3 border-b border-teal-100 dark:border-slate-700">
-      <p className="text-xs text-slate-500 dark:text-slate-400">
-        Signed in as
-      </p>
+                        <p className="mt-1 truncate text-sm font-medium text-slate-800">
+                          {user.email}
+                        </p>
+                      </div>
 
-      <p className="text-sm font-medium text-slate-800 dark:text-slate-100 truncate">
-        {user.email}
-      </p>
-    </div>
+                      {/* KEY BALANCE */}
+                      <div className="border-b border-slate-100 bg-[#F7FBF9] px-4 py-3">
+                        <p className="text-xs text-slate-500">
+                          {t.keyBalance}
+                        </p>
 
-    {/* KEY BALANCE */}
-    <div className="px-4 py-3 border-b border-teal-100 dark:border-slate-700">
-      <p className="text-xs text-slate-500 dark:text-slate-400">
-        {t.keyBalance}
-      </p>
+                        <p className="mt-1 text-lg font-semibold text-[#4F7C6B]">
+                          {keyBalance ?? "—"} {t.headerKeys}
+                        </p>
+                      </div>
 
-      <p className="text-lg font-semibold text-[#4f7c6b]">
-        {keyBalance ?? "—"} Keys
-      </p>
-    </div>
+                      {/* SIGN OUT */}
+                      <button
+                        type="button"
+                        onClick={handleSignOut}
+                        className="flex w-full items-center gap-2 px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                      >
+                        <LogOut
+                          className="h-4 w-4"
+                          aria-hidden="true"
+                        />
 
-    {/* SIGN OUT */}
-    <button
-      onClick={handleSignOut}
-      className="w-full flex items-center gap-2 px-4 py-3 text-sm hover:bg-teal-50 dark:hover:bg-slate-700 transition"
-    >
-      <LogOut className="w-4 h-4" />
-      {t.signOut}
-    </button>
-
-  </div>
-)}
+                        {t.signOut}
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
-
           </div>
         </div>
-        <div className="sm:hidden border-t border-teal-100 dark:border-slate-700">
-  <div className="flex justify-center gap-6 py-2 text-sm">
 
-    <a
-      href="mailto:inplainenglish35@gmail.com?subject=Plainspeak Beta Feedback"
-      className="text-slate-600 dark:text-slate-300"
-    >
-      {t.sendFeedback}
-    </a>
+        {/* MOBILE NAVIGATION */}
+        <div className="border-t border-slate-100 md:hidden">
+          <nav className="flex items-center justify-center gap-6 px-4 py-2.5">
+            <a
+              href="mailto:inplainenglish35@gmail.com?subject=Plainspeak Beta Feedback"
+              className="text-xs font-medium text-slate-600 transition hover:text-[#4F7C6B] sm:text-sm"
+            >
+              {t.sendFeedback}
+            </a>
 
-    <Link
-      to="/faq"
-      className="text-slate-600 dark:text-slate-300"
-    >
-      {t.faq}
-    </Link>
+            <Link
+              to="/faq"
+              className="text-xs font-medium text-slate-600 transition hover:text-[#4F7C6B] sm:text-sm"
+            >
+              {t.faq}
+            </Link>
 
-    <Link
-      to="/pricing"
-      className="text-slate-600 dark:text-slate-300"
-    >
-      {t.pricing}
-    </Link>
-
-  </div>
-</div>
+            <Link
+              to="/pricing"
+              className="text-xs font-medium text-slate-600 transition hover:text-[#4F7C6B] sm:text-sm"
+            >
+              {t.pricing}
+            </Link>
+          </nav>
+        </div>
       </header>
 
       {authModalOpen && (
-        <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
+        <AuthModal
+  isOpen={authModalOpen}
+  onClose={() =>
+    setAuthModalOpen(false)
+  }
+  language={language}
+/>
       )}
     </>
   );

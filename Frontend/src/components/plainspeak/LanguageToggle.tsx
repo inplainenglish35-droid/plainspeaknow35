@@ -1,7 +1,19 @@
 import React from "react";
 import { cn } from "../../lib/utils";
 
-type Language = "en" | "es" | "vi" | "tl" | "fr";
+type Language =
+  | "en"
+  | "es"
+  | "vi"
+  | "tl"
+  | "fr"
+  | "zh"
+  | "ko"
+  | "ar"
+  | "pt"
+  | "ru"
+  | "ht"
+  | "hi";;
 
 interface LanguageToggleProps {
   currentLanguage: Language;
@@ -20,6 +32,13 @@ export const LanguageToggle: React.FC<LanguageToggleProps> = ({
     vi: "Vietnamese",
     tl: "Tagalog",
     fr: "French",
+    zh: "Chinese",
+    ko: "Korean",
+    ar: "Arabic",
+    pt: "Portuguese",
+    ru: "Russian",
+    ht: "Haitian Creole",
+    hi: "Hindi",
   };
 
   return (

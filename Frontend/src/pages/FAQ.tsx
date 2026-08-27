@@ -130,6 +130,41 @@ export default function FAQ() {
     </p>
   </div>
 
+  <div>
+  <h2 className="font-semibold text-base mb-2">
+    {t.faqQ10}
+  </h2>
+  <p>
+    {t.faqA10}
+  </p>
+</div>
+
+<div>
+  <h2 className="font-semibold text-base mb-2">
+    {t.faqQ11}
+  </h2>
+  <p>
+    {t.faqA11}
+  </p>
+</div>
+
+<div>
+  <h2 className="font-semibold text-base mb-2">
+    {t.faqQ12}
+  </h2>
+  <p>
+    {t.faqA12}
+  </p>
+</div>
+
+<div>
+  <h2 className="font-semibold text-base mb-2">
+    {t.faqQ13}
+  </h2>
+  <p>
+    {t.faqA13}
+  </p>
+</div>
 </section>
 
 {/* FOOTER */}

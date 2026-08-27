@@ -13,16 +13,17 @@ export const MODES: Record<ModeId, ModeType> = {
     label: "Understand",
     keys: 1,
     description: [
-      "Turn your document into clear, plain language.",
-      "You will receive:",
-      "• A simplified explanation",
-      "• Important items clearly labeled",
-      "• Translation if needed",
-      "",
-      "Includes:",
-      "🔺 Critical items",
-      "🟧 Urgent items",
-      "🟨 Important details"
-    ]
+  "Understand your document before you make a decision.",
+  "",
+  "You'll receive:",
+  "• A complete plain-language rewrite",
+  "• A professional response (when appropriate)",
+  "• Translation if needed",
+  "",
+  "Clearly organized:",
+  "🟥 Critical items",
+  "🟧 Urgent items",
+  "🟨 Important details"
+]
   }
 };

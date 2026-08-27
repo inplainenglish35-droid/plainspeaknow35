@@ -52,7 +52,7 @@ setEmail("");
 setMessage("");
   } catch (error) {
     console.error(error);
-    alert("Something went wrong. Please try again.");
+    alert(t.contactError);
   }
 };
 
@@ -83,7 +83,7 @@ setMessage("");
             />
             {success && (
   <div className="rounded-md border border-green-200 bg-green-50 p-4 text-green-800">
-    Thank you. Your message has been sent.
+    {t.contactSuccess}
   </div>
 )}
           </div>
@@ -116,15 +116,15 @@ setMessage("");
 
 <div className="space-y-1">
   <label className="block text-sm font-medium">
-    Message
-  </label>
+  {t.contactMessage}
+</label>
 
   <textarea
     value={message}
     onChange={(e) => setMessage(e.target.value)}
     rows={6}
     required
-    placeholder="Tell us about your organization, your document needs, expected number of users, or any questions you have."
+    placeholder={t.contactMessagePlaceholder}
     className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
   />
 </div>
@@ -154,7 +154,7 @@ setMessage("");
 
         {/* Fallback email */}
         <p className="text-sm text-gray-600">
-          Prefer email? Reach us directly at{" "}
+          {t.contactPreferEmail}{" "}
           <a
             href="mailto:support@plainspeaknow.net"
             className="font-medium text-teal-600 underline hover:text-teal-700"

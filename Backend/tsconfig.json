@@ -7,13 +7,14 @@
     "outDir": "dist",
     "rootDir": ".",
 
-    "strict": false,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
+   "strict": false,
+"esModuleInterop": true,
+"allowJs": true,
+"skipLibCheck": true,
 
     "forceConsistentCasingInFileNames": true
   },
 
-  "include": ["**/*.ts"],
+  "include": ["**/*.ts", "**/*.js"],
   "exclude": ["node_modules", "dist"]
 }

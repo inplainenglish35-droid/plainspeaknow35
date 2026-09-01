@@ -136,7 +136,7 @@ export default function AuthModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-xl bg-white dark:bg-slate-800 shadow-lg p-6 space-y-5">
+      <div className="w-full max-w-md rounded-3xl border border-slate-200/80 bg-[#FFFFFF] shadow-[0_24px_70px_-30px_rgba(15,23,42,0.30)] p-6 space-y-5">
 
         {/* Header */}
         <div className="flex items-center justify-between">

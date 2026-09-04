@@ -6,6 +6,7 @@ import Pricing from "./pages/Pricing";
 import FAQ from "./pages/FAQ";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import HowItWorksPage from "./components/hero/HowItWorksPage";
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="faq" element={<FAQ />} />
         <Route path="privacy" element={<Privacy />} />
         <Route path="terms" element={<Terms />} />
+        <Route path="how-it-works" element={<HowItWorksPage />} />
       </Route>
     </Routes>
   );

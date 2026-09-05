@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   signInWithEmailAndPassword,
@@ -34,17 +34,24 @@ type Props = {
   language: Language;
   isOpen: boolean;
   onClose: () => void;
+  initialMode?: Mode;
 };
 
 export default function AuthModal({
   language,
   isOpen,
   onClose,
+  initialMode = "login",
 }: Props) {
   const t = translations[language];
 
-  const [mode, setMode] =
-    useState<Mode>("login");
+  const [mode, setMode] = useState<Mode>(initialMode);
+
+  useEffect(() => {
+    if (isOpen) {
+      setMode(initialMode);
+    }
+  }, [isOpen, initialMode]);
 
   const [email, setEmail] =
     useState("");

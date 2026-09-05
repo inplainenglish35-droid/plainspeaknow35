@@ -37,13 +37,28 @@ export const Header: React.FC<HeaderProps> = ({
   } = useAuth();
 
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authStartMode, setAuthStartMode] = useState<"login" | "signup">("login");
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const t = translations[language];
 
   /* =========================
      KEY BALANCE
   ========================= */
+useEffect(() => {
+  const handleSignupRequest = () => {
+    setAuthStartMode("signup");
+    setAuthModalOpen(true);
+  };
 
+  window.addEventListener("plainspeak:request-signup", handleSignupRequest);
+
+  return () => {
+    window.removeEventListener(
+      "plainspeak:request-signup",
+      handleSignupRequest
+    );
+  };
+}, []);
   useEffect(() => {
     const fetchKeyBalance = async () => {
       try {
@@ -184,9 +199,10 @@ export const Header: React.FC<HeaderProps> = ({
               {!user ? (
                 <button
                   type="button"
-                  onClick={() =>
-                    setAuthModalOpen(true)
-                  }
+                  onClick={() => {
+  setAuthStartMode("login");
+  setAuthModalOpen(true);
+}}
                   className="flex items-center gap-2 rounded-xl bg-[#4F7C6B] px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#426B5C] focus:outline-none focus:ring-4 focus:ring-[#4F7C6B]/20"
                 >
                   <User
@@ -302,12 +318,13 @@ export const Header: React.FC<HeaderProps> = ({
       </header>
 
       {authModalOpen && (
-        <AuthModal
+   <AuthModal
   isOpen={authModalOpen}
   onClose={() =>
     setAuthModalOpen(false)
   }
   language={language}
+  initialMode={authStartMode}
 />
       )}
     </>

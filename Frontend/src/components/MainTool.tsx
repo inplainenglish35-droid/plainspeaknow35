@@ -41,8 +41,9 @@ export default function MainTool() {
   feedbackDeclines,
 } = useAuth();
 
-const { language } = useOutletContext<{
+const { language, requestSignup } = useOutletContext<{
   language: Language;
+  requestSignup: () => void;
 }>();
 const t = translations[language];
   const MAX_AUDIO_GENERATIONS = 3;
@@ -297,12 +298,17 @@ t.errorFileRead
   }
 };
 const handleSimplify = async () => {
-    const trimmedInput = inputText.trim();
+  const trimmedInput = inputText.trim();
 
-    if (!trimmedInput) {
-      setErrorMessage(t.errorNoInput);
-      return;
-    }
+  if (!trimmedInput) {
+    setErrorMessage(t.errorNoInput);
+    return;
+  }
+
+  if (!user) {
+    requestSignup();
+    return;
+  }
 
     try {
       setLoading(true);

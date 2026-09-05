@@ -29,7 +29,14 @@ export default function AppLayout() {
 
       {/* Main Content */}
       <main className="flex-1">
-        <Outlet context={{ language }} />
+       <Outlet
+  context={{
+    language,
+    requestSignup: () => {
+      window.dispatchEvent(new CustomEvent("plainspeak:request-signup"));
+    },
+  }}
+/>
       </main>
 
       {/* Footer */}

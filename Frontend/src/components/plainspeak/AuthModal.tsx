@@ -243,7 +243,7 @@ export default function AuthModal({
       onClick={() =>
         setMode("login")
       }
-      clclassName="text-[#4F7C6B] font-semibold underline underline-offset-2"assName="text-slate-900 dark:text-white font-medium"
+      className="text-[#4F7C6B] font-semibold underline underline-offset-2"
     >
       {t.authSignIn}
     </button>

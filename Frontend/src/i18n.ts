@@ -211,6 +211,13 @@ socialTitle:
 socialDescription:
   "We're gathering feedback from early Plainspeak Now™ users. Real user reviews will appear here as testing continues.",
 
+review1Quote:
+  "Beautifully designed and very intuitive. Plainspeak Now™ does exactly what it promises without unnecessary clutter. It's easily the best app for helping one to understand complicated documents! I can rest easy knowing my autistic children will have a tool to help them understand different documents when I'm no longer here to help them.",
+
+review1Name: "Jen H.",
+
+review1Description: "Family tester",
+
 reviewPlaceholderQuote:
   "Real tester feedback will appear here.",
 

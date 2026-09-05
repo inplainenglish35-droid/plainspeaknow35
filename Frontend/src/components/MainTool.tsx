@@ -728,25 +728,14 @@ return (
 </p>
     </div>
 
-    <div className="mt-8 grid gap-5 md:grid-cols-3">
-      <ReviewCard
-  quote={t.reviewPlaceholderQuote}
-  name={t.reviewPlaceholderName}
-  description={t.reviewPlaceholderDescription}
-/>
-
-<ReviewCard
-  quote={t.reviewPlaceholderQuote}
-  name={t.reviewPlaceholderName}
-  description={t.reviewPlaceholderDescription}
-/>
-
-<ReviewCard
-  quote={t.reviewPlaceholderQuote}
-  name={t.reviewPlaceholderName}
-  description={t.reviewPlaceholderDescription}
-/>
-    </div>
+<div className="mx-auto mt-8 max-w-xl">
+  <ReviewCard
+    quote={translations.en.review1Quote}
+    name={translations.en.review1Name}
+    description={translations.en.review1Description}
+    ratingLabel={t.reviewRatingLabel}
+  />
+</div>
   </div>
 </section>
    

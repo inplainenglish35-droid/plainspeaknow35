@@ -146,7 +146,23 @@ const handleClearForm = () => {
     photoInputRef.current.value = "";
   }
 };
+useEffect(() => {
+  const handleClearWorkspace = () => {
+    handleClearForm();
+  };
 
+  window.addEventListener(
+    "plainspeak:clear-workspace",
+    handleClearWorkspace
+  );
+
+  return () => {
+    window.removeEventListener(
+      "plainspeak:clear-workspace",
+      handleClearWorkspace
+    );
+  };
+});
   const handlePasteText = async () => {
     try {
       const pasted = await navigator.clipboard.readText();
@@ -185,7 +201,10 @@ const handleClearForm = () => {
       name.endsWith(".txt") ||
       name.endsWith(".docx") ||
       name.endsWith(".csv") ||
-      name.endsWith(".xlsx");
+      name.endsWith(".xlsx") ||
+      name.endsWith(".jpg") ||
+      name.endsWith(".jpeg") ||
+      name.endsWith(".png");
 
     if (!allowed) {
       setSelectedFileName("");

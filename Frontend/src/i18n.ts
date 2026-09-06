@@ -236,7 +236,7 @@ trustDeleted:
 uploadCardSubtitle: "Add the document you want help understanding.",
 uploadFile: "Upload File",
 clearForm: "Clear Form",
-supportedFilesShort: "Supported files: PDF, DOCX, TXT, CSV, XLSX",
+supportedFilesShort: "Supported files: PDF, DOCX, TXT, CSV, XLSX, and photos",
 working: "Working...",
 goodToKnow: "Good to know:",
 goodToKnowText:

@@ -113,9 +113,14 @@ useEffect(() => {
   ========================= */
 
   const handleSignOut = async () => {
-    await firebaseSignOut(auth);
-    setUserMenuOpen(false);
-  };
+  await firebaseSignOut(auth);
+
+  window.dispatchEvent(
+    new CustomEvent("plainspeak:clear-workspace")
+  );
+
+  setUserMenuOpen(false);
+};
 
   /* =========================
      UI

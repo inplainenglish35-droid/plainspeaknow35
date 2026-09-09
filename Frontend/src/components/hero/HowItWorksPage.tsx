@@ -158,7 +158,42 @@ export function HowItWorksPage({ onStart }: HowItWorksPageProps) {
             </div>
           </div>
         </section>
+                 {/* =========================================================
+            HOW IT WORKS VIDEO
+        ========================================================== */}
+        <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
+          <div className="mx-auto max-w-5xl">
+            <div className="text-center">
+              <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#4F7C6B]">
+                See it in action
+              </p>
 
+              <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                See how Plainspeak Now™ works.
+              </h2>
+
+              <p className="mx-auto mt-4 max-w-3xl text-base leading-7 text-slate-600 sm:text-lg">
+                From uploading your document to finding the information that
+                matters.
+              </p>
+            </div>
+
+            <div className="mt-9 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl">
+              <video
+                className="block w-full"
+                controls
+                playsInline
+                preload="metadata"
+              >
+                <source
+                  src="/plainspeak-how-it-works.mp4"
+                  type="video/mp4"
+                />
+                Your browser does not support video playback.
+              </video>
+            </div>
+          </div>
+        </section> 
         {/* =========================================================
             BEFORE / AFTER
         ========================================================== */}

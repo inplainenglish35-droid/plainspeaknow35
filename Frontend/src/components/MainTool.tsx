@@ -28,7 +28,6 @@ import {
   Landmark,
   BriefcaseBusiness,
   Mail,
-  Play,
 } from "lucide-react";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "";
@@ -855,31 +854,19 @@ return (
           />
         </svg>
 
-        {/* Placeholder content */}
-        <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center">
-
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#4F7C6B] text-white shadow-lg">
-            <Play
-              size={32}
-              fill="currentColor"
-              className="ml-1"
-              aria-hidden="true"
-            />
-          </div>
-
-          <h3 className="mt-5 text-xl font-bold text-slate-900">
-  {t.videoWalkthroughTitle}
-</h3>
-
-<p className="mt-2 max-w-md text-sm leading-6 text-slate-600">
-  {t.videoWalkthroughDescription}
-</p>
-
-<span className="mt-4 rounded-full border border-[#4F7C6B]/20 bg-white/80 px-4 py-2 text-xs font-semibold text-[#4F7C6B] shadow-sm">
-  {t.videoComingSoon}
-</span>
-
-        </div>
+        {/* Actual walkthrough video */}
+<video
+  className="relative z-10 block h-full w-full object-contain"
+  controls
+  playsInline
+  preload="metadata"
+>
+  <source
+    src="/plainspeak-how-it-works.mp4"
+    type="video/mp4"
+  />
+  Your browser does not support video playback.
+</video>
       </div>
     </div>
 

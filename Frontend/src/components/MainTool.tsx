@@ -856,15 +856,20 @@ return (
 
         {/* Actual walkthrough video */}
 <video
+  key={language}
   className="relative z-10 block h-full w-full object-contain"
   controls
   playsInline
   preload="metadata"
 >
   <source
-    src="/plainspeak-how-it-works.mp4"
-    type="video/mp4"
-  />
+  src={
+    language === "es"
+      ? "/plainspeak-how-it-works-es.mp4"
+      : "/plainspeak-how-it-works.mp4"
+  }
+  type="video/mp4"
+/>
   Your browser does not support video playback.
 </video>
       </div>

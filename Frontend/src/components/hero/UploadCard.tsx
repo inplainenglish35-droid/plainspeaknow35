@@ -142,8 +142,20 @@ export function UploadCard({
           ) : (
             <span>{t.processButton}</span>
           )}
-        </button>
+             </button>
       </div>
+
+      {isProcessing && (
+        <div
+          className="mt-4 rounded-xl border border-[#4F7C6B]/20 bg-[#F3F8F6] px-4 py-3 text-center"
+          role="status"
+          aria-live="polite"
+        >
+          <p className="text-sm font-medium leading-6 text-[#365F51]">
+            {t.processingPatience}
+          </p>
+        </div>
+      )}
 
       {/* Good to Know */}
       <div className="mt-5 rounded-2xl border border-[#4F7C6B]/15 bg-[#F5FAF8] px-4 py-3 sm:px-5">

@@ -113,13 +113,19 @@ useEffect(() => {
   ========================= */
 
   const handleSignOut = async () => {
-  await firebaseSignOut(auth);
-
   window.dispatchEvent(
     new CustomEvent("plainspeak:clear-workspace")
   );
 
+  await firebaseSignOut(auth);
+
   setUserMenuOpen(false);
+
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: "smooth",
+  });
 };
 
   /* =========================
@@ -196,7 +202,6 @@ useEffect(() => {
 <option value="ar">العربية</option>
 <option value="pt">PT</option>
 <option value="ru">RU</option>
-<option value="ht">Kreyòl</option>
 <option value="hi">हिन्दी</option>
               </select>
 

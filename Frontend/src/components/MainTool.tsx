@@ -145,23 +145,15 @@ const handleClearForm = () => {
     photoInputRef.current.value = "";
   }
 };
-useEffect(() => {
   const handleClearWorkspace = () => {
-    handleClearForm();
-  };
+  handleClearForm();
 
-  window.addEventListener(
-    "plainspeak:clear-workspace",
-    handleClearWorkspace
-  );
-
-  return () => {
-    window.removeEventListener(
-      "plainspeak:clear-workspace",
-      handleClearWorkspace
-    );
-  };
-});
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: "smooth",
+  });
+};
   const handlePasteText = async () => {
     try {
       const pasted = await navigator.clipboard.readText();

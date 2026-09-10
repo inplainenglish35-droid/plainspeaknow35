@@ -725,6 +725,19 @@ if (analysisFinishReason === "length") {
     502
   );
 }
+const haitianCreoleInstruction =
+  language === "ht"
+    ? `
+HAITIAN CREOLE REQUIREMENTS:
+• Use standard, natural Haitian Creole throughout.
+• Do not mix French into the Haitian Creole translation.
+• Use Haitian Creole vocabulary, spelling, grammar, and expressions rather than French equivalents.
+• For example, use "kenz" rather than the French "quinze" for fifteen.
+• Do not use French closings such as "Sincèrement"; use a natural Haitian Creole closing such as "Sensèman".
+• Do not use French accents or French-inflected spellings when standard Haitian Creole equivalents exist.
+• Before returning the translation, review it for accidental French words or forms and replace them with natural Haitian Creole.
+`
+    : "";
 let output = `## Plain Language Rewrite
 
 ${plainLanguageRewrite}
@@ -753,7 +766,7 @@ if (language !== "en") {
 
     const translationCompletion =
       await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+      model: "gpt-4o-mini",
         temperature: 0.2,
         max_tokens: 4000,
         messages: [
@@ -786,6 +799,8 @@ IMPORTANT:
 • Use clear, natural, everyday ${selectedLanguage}.
 • Aim for approximately a 6th-grade reading level when reasonably possible.
 • Accuracy and completeness are more important than reading level.
+
+${haitianCreoleInstruction}
 
 Return ONLY the translated text.
 `.trim(),

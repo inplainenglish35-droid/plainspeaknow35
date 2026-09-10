@@ -238,6 +238,8 @@ uploadFile: "Upload File",
 clearForm: "Clear Form",
 supportedFilesShort: "Supported files: PDF, DOCX, TXT, CSV, XLSX, and photos",
 working: "Working...",
+processingPatience:
+  "Longer documents may take a little more time to process. Please keep this page open while Plainspeak Now™ finishes your result.",
 goodToKnow: "Good to know:",
 goodToKnowText:
   "Your document is used only to create your result and is deleted from our server after processing. Plainspeak Now™ explains complicated information in clearer language, but it does not provide legal or medical advice.",
@@ -1051,6 +1053,8 @@ supportedFilesShort:
  "Compatible con PDF, TXT, DOCX, CSV, XLSX y fotos.",
 
 working: "Procesando...",
+processingPatience:
+  "Los documentos más largos pueden tardar un poco más en procesarse. Mantén esta página abierta mientras Plainspeak Now™ termina de preparar tu resultado.",
 
 goodToKnow: "Es bueno saberlo:",
 
@@ -1719,6 +1723,8 @@ supportedFilesShort:
   "Tệp được hỗ trợ: PDF, DOCX, TXT, CSV, XLSX",
 
 working: "Đang xử lý...",
+processingPatience:
+  "Tài liệu dài hơn có thể mất thêm một chút thời gian để xử lý. Vui lòng giữ trang này mở trong khi Plainspeak Now™ hoàn tất kết quả của bạn.",
 
 goodToKnow: "Thông tin cần biết:",
 
@@ -2389,6 +2395,8 @@ supportedFilesShort:
   "Mga suportadong file: PDF, DOCX, TXT, CSV, XLSX",
 
 working: "Pinoproseso...",
+processingPatience:
+  "Maaaring mas matagal nang kaunti ang pagproseso ng mahahabang dokumento. Mangyaring panatilihing bukas ang pahinang ito habang tinatapos ng Plainspeak Now™ ang iyong resulta.",
 
 goodToKnow: "Mahalagang malaman:",
 
@@ -2901,6 +2909,8 @@ supportedFilesShort:
   "Fichiers pris en charge : PDF, DOCX, TXT, CSV, XLSX",
 
 working: "Traitement en cours...",
+processingPatience:
+  "Les documents plus longs peuvent prendre un peu plus de temps à traiter. Veuillez garder cette page ouverte pendant que Plainspeak Now™ prépare votre résultat.",
 
 goodToKnow: "Bon à savoir :",
 
@@ -3663,7 +3673,8 @@ supportedFilesShort:
 
 working:
   "处理中...",
-
+processingPatience:
+  "较长的文档可能需要更多时间处理。请保持此页面打开，Plainspeak Now™ 正在完成您的结果。",
 goodToKnow:
   "温馨提示：",
 
@@ -4496,6 +4507,8 @@ supportedFilesShort:
 
 working:
   "처리 중...",
+processingPatience:
+  "문서가 길수록 처리하는 데 시간이 조금 더 걸릴 수 있습니다. Plainspeak Now™가 결과를 완료하는 동안 이 페이지를 열어 두세요.",
 
 goodToKnow:
   "알아두세요:",
@@ -5330,6 +5343,8 @@ supportedFilesShort:
 
 working:
   "جارٍ العمل...",
+processingPatience:
+  "قد تستغرق المستندات الأطول وقتًا إضافيًا للمعالجة. يُرجى إبقاء هذه الصفحة مفتوحة بينما ينتهي Plainspeak Now™ من إعداد نتيجتك.",
 
 goodToKnow:
   "من المفيد أن تعرف:",
@@ -6162,6 +6177,8 @@ supportedFilesShort:
 
 working:
   "Processando...",
+processingPatience:
+  "Documentos mais longos podem levar um pouco mais de tempo para serem processados. Mantenha esta página aberta enquanto o Plainspeak Now™ prepara seu resultado.",
 
 goodToKnow:
   "É bom saber:",
@@ -6997,6 +7014,8 @@ supportedFilesShort:
 
 working:
   "Обработка...",
+processingPatience:
+  "Обработка более длинных документов может занять немного больше времени. Пожалуйста, не закрывайте эту страницу, пока Plainspeak Now™ готовит ваш результат.",
 
 goodToKnow:
   "Полезно знать:",
@@ -7829,7 +7848,8 @@ supportedFilesShort:
 
 working:
   "Ap travay...",
-
+processingPatience:
+  "Dokiman ki pi long yo ka pran yon ti kras plis tan pou trete. Tanpri kite paj sa a ouvè pandan Plainspeak Now™ ap prepare rezilta ou.",
 goodToKnow:
   "Li bon pou konnen:",
 
@@ -8661,7 +8681,8 @@ supportedFilesShort:
 
 working:
   "प्रोसेस हो रहा है...",
-
+processingPatience:
+  "लंबे दस्तावेज़ों को प्रोसेस होने में थोड़ा अधिक समय लग सकता है। कृपया इस पेज को खुला रखें, जब तक Plainspeak Now™ आपका परिणाम तैयार कर रहा है।",
 goodToKnow:
   "जानना उपयोगी है:",
 

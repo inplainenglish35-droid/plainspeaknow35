@@ -7,6 +7,7 @@ import { useOutletContext } from "react-router-dom";
 import type { Language } from "./plainspeak/types/language";
 import { translations } from "../i18n";
 import ReviewCard from "./hero/ReviewCard";
+import PurchaseModal from "./PurchaseModal";
 import {
   Check,
   Copy,
@@ -64,7 +65,7 @@ const t = translations[language];
 
   const [feedbackText, setFeedbackText] = useState("");
   const [submittingFeedback, setSubmittingFeedback] = useState(false);
-
+  const [needsKeys, setNeedsKeys] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
@@ -130,6 +131,7 @@ const handleClearForm = () => {
   setInputText("");
   setSelectedFileName("");
   setErrorMessage(null);
+  setNeedsKeys(false);
 
   clearPreviousResult();
 
@@ -147,12 +149,7 @@ const handleClearForm = () => {
 };
   const handleClearWorkspace = () => {
   handleClearForm();
-
-  window.scrollTo({
-    top: 0,
-    left: 0,
-    behavior: "smooth",
-  });
+  
 };
   const handlePasteText = async () => {
     try {
@@ -339,10 +336,21 @@ const handleSimplify = async () => {
      const data = await res.json().catch(() => null);
 
 if (!res.ok) {
+  if (
+    res.status === 402 ||
+    data?.code === "INSUFFICIENT_KEYS" ||
+    data?.error === "INSUFFICIENT_KEYS" ||
+    data?.error === "Not enough keys"
+  ) {
+    setNeedsKeys(true);
+    setErrorMessage(null);
+    return;
+  }
+
   throw new Error(
+    data?.message ||
     data?.error ||
-  data?.message ||
-  t.errorProcessFailed
+    t.errorProcessFailed
   );
 }
 
@@ -522,6 +530,11 @@ return (
   onChange={handlePhotoSelected}
   className="hidden"
 />
+{needsKeys && (
+  <PurchaseModal
+    onClose={() => setNeedsKeys(false)}
+  />
+)}
 <section className="mx-auto mt-6 max-w-4xl px-6">
   {errorMessage && (
     <div

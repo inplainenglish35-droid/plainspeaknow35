@@ -1059,8 +1059,8 @@ const selected = {
           userId,
           keys: selected.keys.toString(),
         },
-        success_url: "https://plainspeaknow.net/success",
-        cancel_url: "https://plainspeaknow.net/pricing",
+        success_url: "https://plainspeaknow.net/?purchase=success",
+        cancel_url: "https://plainspeaknow.net/?purchase=cancelled",
       });
 
       res.json({ url: session.url });

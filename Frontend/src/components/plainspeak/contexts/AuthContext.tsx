@@ -16,6 +16,8 @@ interface AuthContextValue {
     React.SetStateAction<number | null>
   >;
 
+  refreshKeyBalance: () => Promise<void>;
+
   feedbackAccepted: boolean;
   setFeedbackAccepted: React.Dispatch<
     React.SetStateAction<boolean>
@@ -27,9 +29,7 @@ interface AuthContextValue {
   >;
 }
 
-/* =========================
-   CONTEXT
-========================= */
+
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
@@ -49,7 +49,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const [feedbackDeclines, setFeedbackDeclines] =
     useState(0);
+  const refreshKeyBalance = async () => {
+  if (!user) {
+    setKeyBalance(null);
+    return;
+  }
 
+  try {
+    const API_URL = import.meta.env.VITE_API_URL;
+    const token = await user.getIdToken();
+
+    const res = await fetch(`${API_URL}/api/key-balance`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch key balance");
+    }
+
+    const data = await res.json();
+
+    setKeyBalance(data.keyBalance ?? 0);
+    setFeedbackAccepted(data.feedbackAccepted ?? false);
+    setFeedbackDeclines(data.feedbackDeclines ?? 0);
+  } catch (error) {
+    console.error("Key balance refresh failed:", error);
+  }
+};
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
@@ -67,6 +95,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     keyBalance,
     setKeyBalance,
+    refreshKeyBalance,
 
     feedbackAccepted,
     setFeedbackAccepted,

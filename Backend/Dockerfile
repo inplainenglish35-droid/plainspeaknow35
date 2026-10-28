@@ -8,6 +8,7 @@ RUN npm install
 COPY . .
 
 RUN npm run build
+RUN cp pdfFormattingExtractor.cjs dist/pdfFormattingExtractor.cjs
 
 ENV PORT=8080
 EXPOSE 8080

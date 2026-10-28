@@ -29,12 +29,10 @@ export const Header: React.FC<HeaderProps> = ({
   setLanguage,
 }) => {
   const {
-    user,
-    keyBalance,
-    setKeyBalance,
-    setFeedbackAccepted,
-    setFeedbackDeclines,
-  } = useAuth();
+  user,
+  keyBalance,
+  refreshKeyBalance,
+} = useAuth();
 
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authStartMode, setAuthStartMode] = useState<"login" | "signup">("login");
@@ -60,53 +58,8 @@ useEffect(() => {
   };
 }, []);
   useEffect(() => {
-    const fetchKeyBalance = async () => {
-      try {
-        if (!user) {
-          setKeyBalance(null);
-          return;
-        }
-
-        const API_URL = import.meta.env.VITE_API_URL;
-        const token = await user.getIdToken();
-
-        const res = await fetch(
-          `${API_URL}/api/key-balance`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch key balance");
-        }
-
-        const data = await res.json();
-
-        setKeyBalance(data.keyBalance ?? 0);
-        setFeedbackAccepted(
-          data.feedbackAccepted ?? false
-        );
-        setFeedbackDeclines(
-          data.feedbackDeclines ?? 0
-        );
-      } catch (error) {
-        console.error(
-          "Key balance fetch failed:",
-          error
-        );
-      }
-    };
-
-    fetchKeyBalance();
-  }, [
-    user,
-    setKeyBalance,
-    setFeedbackAccepted,
-    setFeedbackDeclines,
-  ]);
+  refreshKeyBalance();
+}, [user]);
 
   /* =========================
      AUTH

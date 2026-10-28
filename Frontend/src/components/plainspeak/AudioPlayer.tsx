@@ -83,7 +83,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
       audio.removeEventListener("loadedmetadata", onMeta);
       audio.removeEventListener("ended", onEnd);
     };
-  }, []);
+    }, [audioUrl]);
 
   /* ================================
      FORCE AUDIO RELOAD (IMPORTANT)
@@ -202,7 +202,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
                   "transition-all duration-150",
                   i === highlightedWordIndex &&
                     !word.match(/^\s+$/) &&
-                    "bg-teal-200 dark:bg-teal-700 px-0.5 rounded"
+                    "bg-yellow-300 text-black px-1 rounded"
                 )}
               >
                 {word}

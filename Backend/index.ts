@@ -15,6 +15,11 @@ import {
 } from "./services/email";
 import { requireAuth, AuthenticatedRequest } from "./requireAuth";
 import { db } from "./firebaseAdmin";
+import {
+  checkAvailableKeys,
+  consumePersonalKeys,
+  consumeSponsoredKeys,
+} from "./usageLimiter";
 import { errorHandler } from "./middleware/errorHandler";
 import { ApiError } from "./middleware/ApiError";
 import { enforceRateLimits } from "./rateLimiter";
@@ -95,6 +100,70 @@ function calculateKeyCost(text: string) {
 
   return { keys: 2, requiresSplit: true };
 }
+
+function findSafeChunkBreak(
+  text: string,
+  maxChars: number
+): number {
+  if (text.length <= maxChars) {
+    return text.length;
+  }
+
+  const candidate = text.slice(0, maxChars);
+  const minimumBreakPoint = Math.floor(maxChars * 0.5);
+
+  // Best option: keep whole paragraphs together.
+  const paragraphBreak = candidate.lastIndexOf("\n\n");
+
+  if (paragraphBreak >= minimumBreakPoint) {
+    return paragraphBreak + 2;
+  }
+
+  /*
+   * If the paragraph is too large, look backward for a likely
+   * sentence boundary.
+   *
+   * A sentence boundary must:
+   * - end with ., !, or ?
+   * - be followed by whitespace
+   *
+   * This avoids treating periods inside legal citations such as
+   * 2.165.060 as sentence endings.
+   */
+  for (
+    let i = candidate.length - 2;
+    i >= minimumBreakPoint;
+    i--
+  ) {
+    const char = candidate[i];
+    const nextChar = candidate[i + 1];
+
+    if (
+      (char === "." || char === "!" || char === "?") &&
+      /\s/.test(nextChar)
+    ) {
+      return i + 1;
+    }
+  }
+
+  /*
+   * If no safe sentence boundary exists in the final quarter of
+   * the chunk, fall back to whitespace so we never split a word.
+   */
+  for (
+    let i = candidate.length - 1;
+    i >= minimumBreakPoint;
+    i--
+  ) {
+    if (/\s/.test(candidate[i])) {
+      return i + 1;
+    }
+  }
+
+  // Last resort for an unusually long uninterrupted string.
+  return maxChars;
+}
+
 function splitDocumentIntoChunks(
   text: string,
   maxChars = 4000
@@ -111,8 +180,14 @@ function splitDocumentIntoChunks(
 
   const paragraphs = normalizedText.split(/\n\s*\n/);
   const chunks: string[] = [];
-
   let currentChunk = "";
+
+  const flushCurrentChunk = () => {
+    if (currentChunk.trim()) {
+      chunks.push(currentChunk.trim());
+      currentChunk = "";
+    }
+  };
 
   for (const paragraph of paragraphs) {
     const cleanParagraph = paragraph.trim();
@@ -122,46 +197,173 @@ function splitDocumentIntoChunks(
     }
 
     /*
-     * If one unusually large paragraph is itself bigger
-     * than maxChars, split it into smaller pieces.
+     * Normal paragraph:
+     * Add it to the current chunk if the whole paragraph fits.
+     * Otherwise, close the current chunk and start a new one.
      */
-    if (cleanParagraph.length > maxChars) {
-      if (currentChunk) {
-        chunks.push(currentChunk.trim());
-        currentChunk = "";
-      }
+    if (cleanParagraph.length <= maxChars) {
+      const candidate = currentChunk
+        ? `${currentChunk}\n\n${cleanParagraph}`
+        : cleanParagraph;
 
-      for (
-        let start = 0;
-        start < cleanParagraph.length;
-        start += maxChars
-      ) {
-        chunks.push(
-          cleanParagraph.slice(start, start + maxChars)
-        );
+      if (candidate.length <= maxChars) {
+        currentChunk = candidate;
+      } else {
+        flushCurrentChunk();
+        currentChunk = cleanParagraph;
       }
 
       continue;
     }
 
-    const candidate = currentChunk
-      ? `${currentChunk}\n\n${cleanParagraph}`
-      : cleanParagraph;
+    /*
+     * Oversized paragraph:
+     * Never use leftover space in currentChunk to hold only
+     * part of this paragraph. Close the existing chunk first.
+     */
+    flushCurrentChunk();
 
-    if (candidate.length > maxChars) {
-      chunks.push(currentChunk.trim());
-      currentChunk = cleanParagraph;
-    } else {
-      currentChunk = candidate;
+    let remaining = cleanParagraph;
+
+    while (remaining.length > maxChars) {
+      const breakPoint = findSafeChunkBreak(
+        remaining,
+        maxChars
+      );
+
+      const piece = remaining
+        .slice(0, breakPoint)
+        .trim();
+
+      if (piece) {
+        chunks.push(piece);
+      }
+
+      remaining = remaining
+        .slice(breakPoint)
+        .trimStart();
     }
+
+    /*
+     * Keep the final remainder available so the next normal
+     * paragraph may be packed with it if both fit.
+     */
+    currentChunk = remaining.trim();
   }
 
-  if (currentChunk) {
-    chunks.push(currentChunk.trim());
-  }
+  flushCurrentChunk();
 
   return chunks;
 }
+
+
+
+
+function buildFormattingAwareChunks(
+  pdfFormatting: any,
+  maxChars = 4000
+): string[] {
+  const chunks: string[] = [];
+  let currentChunk = "";
+  let pageLabel = "";
+
+  const flush = () => {
+    if (currentChunk) {
+      chunks.push(currentChunk);
+      currentChunk = "";
+    }
+  };
+
+  for (const page of pdfFormatting.pages) {
+    flush();
+    pageLabel = `[PDF PAGE ${page.pageNumber}]`;
+
+    for (const item of page.textItems) {
+      if (!item.text) continue;
+
+      const label =
+        item.status === "struck"
+          ? "CROSSED-OUT WORDING"
+          : item.status === "uncertain"
+          ? "FORMATTING UNCERTAIN, REVIEW ORIGINAL"
+          : null;
+
+      const start = label ? `[${label}: ` : "";
+      const end = label ? "]" : "";
+      const fullItem = start + item.text + end;
+
+      const append = (value: string) => {
+        const prefix = currentChunk ? " " : pageLabel + "\n";
+        currentChunk += prefix + value;
+      };
+
+      const prefixLength = currentChunk
+        ? 1
+        : pageLabel.length + 1;
+
+      if (
+        currentChunk.length + prefixLength + fullItem.length <=
+        maxChars
+      ) {
+        append(fullItem);
+        continue;
+      }
+
+      // Move the whole item to a fresh chunk if it fits there.
+      if (pageLabel.length + 1 + fullItem.length <= maxChars) {
+        flush();
+        append(fullItem);
+        continue;
+      }
+
+      // Only split items too large to fit in a fresh chunk.
+      flush();
+
+      let remaining = item.text;
+
+      while (remaining.length > 0) {
+        const available =
+          maxChars -
+          pageLabel.length -
+          1 -
+          start.length -
+          end.length;
+
+        if (available <= 0) {
+          throw new Error("PDF chunk size too small for labels");
+        }
+
+                if (remaining.length <= available) {
+          if (currentChunk) {
+            flush();
+          }
+
+          append(start + remaining + end);
+          break;
+        }
+
+        let splitAt = remaining.lastIndexOf(" ", available - 1);
+
+if (splitAt > 0) {
+  splitAt += 1;
+} else {
+  splitAt = available;
+}
+
+        const part = remaining.slice(0, splitAt);
+
+        append(start + part + end);
+        remaining = remaining.slice(splitAt);
+
+        flush();
+      }
+    }
+  }
+
+  flush();
+  return chunks;
+}
+
 
 function isPdfFile(file: Express.Multer.File) {
   return (
@@ -189,7 +391,8 @@ app.post(
       }
 
       const file = req.file;
-      let text = "";
+let text = "";
+let pdfFormatting: any = null;
 
       console.log("📄 File received:", {
         name: file.originalname,
@@ -211,19 +414,35 @@ if (file.mimetype.startsWith("image/")) {
         text = file.buffer.toString("utf8");
       }
 
-      // ✅ PDF
+           // ✅ PDF: Formatting-aware extraction
       else if (name.endsWith(".pdf")) {
-        const { PDFParse }: any = require("pdf-parse");
+        const { extractFormattedPdf } = require("./pdfFormattingExtractor.cjs");
 
-        const parser = new PDFParse({
-          data: file.buffer,
-        });
+        const parsed = await extractFormattedPdf(file.buffer);
 
-        const parsed = await parser.getText();
+// Keep PDF formatting information for the API response.
+pdfFormatting = {
+  pages: parsed.pages.map((page: any) => ({
+    pageNumber: page.pageNumber,
+    textItems: page.textItems,
+    wording: page.wording,
+    formatting: page.formatting,
+  })),
+};
 
-        text = parsed?.text || "";
+// Preserve the original document text.
+        text = parsed.pages
+          .map((page: any) => page.text)
+          .join("\n\n");
 
         console.log("📄 PDF parsed characters:", text.length);
+        console.log("📄 PDF pages:", parsed.pageCount);
+        console.log(
+          "📄 PDF pages requiring formatting review:",
+          parsed.pages.filter(
+            (page: any) => page.wording.requiresReview
+          ).length
+        );
       }
 
       // ✅ DOCX
@@ -283,10 +502,11 @@ if (file.mimetype.startsWith("image/")) {
         );
       }
 
-      return res.json({
-        success: true,
-        text,
-      });
+     return res.json({
+  success: true,
+  text,
+  ...(pdfFormatting ? { pdfFormatting } : {}),
+});
     } catch (error) {
       next(error);
     }
@@ -301,10 +521,12 @@ app.post(
   "/api/simplify",
   requireAuth,
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    try {
-      const userId = req.uid;
-      const ip = req.ip;
-      const { text, language = "en" } = req.body;
+   try {
+  const requestStartTime = Date.now();
+
+  const userId = req.uid;
+  const ip = req.ip;
+  const { text, language = "en", pdfFormatting = null } = req.body;
 console.log("LANGUAGE RECEIVED:", language);
 
       const languageNames = {
@@ -333,14 +555,79 @@ const selectedLanguage =
       if (!text || typeof text !== "string") {
         throw new ApiError("INVALID_PAYLOAD", "Text required", 400);
       }
+      if (pdfFormatting !== null) {
+  if (
+    typeof pdfFormatting !== "object" ||
+    Array.isArray(pdfFormatting) ||
+    !Array.isArray(pdfFormatting.pages) ||
+    !pdfFormatting.pages.every(
+      (page: any) =>
+        Number.isInteger(page?.pageNumber) &&
+        Array.isArray(page?.textItems) &&
+        page.textItems.every(
+          (item: any) =>
+            Number.isInteger(item?.itemIndex) &&
+            typeof item?.text === "string" &&
+            ["retained", "struck", "uncertain"].includes(item?.status)
+        )
+    )
+  ) {
+    throw new ApiError(
+      "INVALID_PAYLOAD",
+      "Invalid PDF formatting information",
+      400
+    );
+  }
+}
+if (pdfFormatting !== null) {
+  const reconstructedText = pdfFormatting.pages
+    .map((page: any) =>
+      page.textItems
+        .map((item: any) => item.text)
+        .join(" ")
+    )
+    .join("\n\n");
 
+  if (reconstructedText.trim() !== text.trim()) {
+    throw new ApiError(
+      "INVALID_PAYLOAD",
+      "PDF formatting does not match the document text",
+      400
+    );
+  }
+}
       const rate = enforceRateLimits(userId, ip);
       if (!rate.ok) {
         throw new ApiError(rate.code, "Too many requests", 429);
       }
 
       const { keys, requiresSplit } = calculateKeyCost(text);
+      const keyCheck = await checkAvailableKeys(userId, keys);
+      if (keyCheck.ok === false) {
+  if (keyCheck.code === "USER_NOT_FOUND") {
+    throw new ApiError(
+      "USER_NOT_FOUND",
+      "User missing",
+      404
+    );
+  }
 
+  if (keyCheck.code === "ORGANIZATION_OUT_OF_KEYS") {
+    throw new ApiError(
+      "ORGANIZATION_OUT_OF_KEYS",
+      "Your organization is temporarily out of Keys. Please contact your organization for assistance.",
+      402
+    );
+  }
+
+  throw new ApiError(
+    "INSUFFICIENT_KEYS",
+    "Not enough keys",
+    402
+  );
+}
+
+console.log("PAYMENT SOURCE:", keyCheck.source);
       if (requiresSplit) {
         throw new ApiError(
           "DOCUMENT_TOO_LARGE",
@@ -348,34 +635,76 @@ const selectedLanguage =
           400
         );
       }
+      console.log(
+  "RAW TEXT AROUND COMPLAINT PROCEDURES:",
+  JSON.stringify(
+    text.slice(
+      Math.max(0, text.indexOf("Complaint Procedures") - 300),
+      text.indexOf("Complaint Procedures") + 700
+    )
+  )
+);
+
       const documentChunks = splitDocumentIntoChunks(text);
 
     console.log("DOCUMENT LENGTH:", text.length);
     console.log("DOCUMENT CHUNKS:", documentChunks.length);
 
     documentChunks.forEach((chunk, index) => {
+  console.log(
+    `CHUNK ${index + 1}/${documentChunks.length} LENGTH:`,
+    chunk.length
+  );
+
+  console.log(
+    `CHUNK ${index + 1} START:`,
+    JSON.stringify(chunk.slice(0, 100))
+  );
+
+  console.log(
+    `CHUNK ${index + 1} END:`,
+    JSON.stringify(chunk.slice(-100))
+  );
+
+  if (chunk.length < 100) {
+    console.log(
+      `SHORT CHUNK ${index + 1} CONTENT:`,
+      JSON.stringify(chunk)
+    );
+  }
+});
+
+const rewrittenChunks: string[] = [];
+const rewriteStartTime = Date.now();
+
+let remainingKeys = 0;
+
+const rewriteBatchSize = 3;
+
+for (
+  let batchStart = 0;
+  batchStart < documentChunks.length;
+  batchStart += rewriteBatchSize
+) {
+  const batch = documentChunks.slice(
+    batchStart,
+    batchStart + rewriteBatchSize
+  );
+
+  const batchResults = await Promise.all(
+    batch.map(async (chunk, batchIndex) => {
+      const chunkIndex = batchStart + batchIndex;
+
       console.log(
-        `CHUNK ${index + 1}/${documentChunks.length} LENGTH:`,
-        chunk.length
+        `REWRITING CHUNK ${chunkIndex + 1}/${documentChunks.length}`
       );
-    });
 
-      const rewrittenChunks: string[] = [];
-      let remainingKeys = 0;
-
-      for (let i = 0; i < documentChunks.length; i++) {
-        const chunk = documentChunks[i];
-
-        console.log(
-          `REWRITING CHUNK ${i + 1}/${documentChunks.length}`
-        );
-
-        const completion = await openai.chat.completions.create({
-          model: "gpt-4o-mini",
-          messages: [
-            {
-              role: "system",
-              content: `
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content: `
 You are Plainspeak Now™, a professional plain-language editor.
 
 Rewrite the provided portion of the document in clear, everyday ${selectedLanguage}.
@@ -427,46 +756,68 @@ Always preserve:
 
 Return ONLY the rewritten portion of the document.
 `.trim(),
-            },
-            {
-              role: "user",
-              content: chunk,
-            },
-          ],
-          temperature: 0.2,
-          max_tokens: 4000,
-        });
+          },
+          {
+            role: "user",
+            content: chunk,
+          },
+        ],
+        temperature: 0.2,
+        max_tokens: 4000,
+      });
 
-        const choice = completion.choices?.[0];
-        const output = choice?.message?.content?.trim() || "";
-        const finishReason = choice?.finish_reason;
+      const choice = completion.choices?.[0];
 
-        console.log("OPENAI FINISH REASON:", finishReason);
-        console.log("OPENAI OUTPUT LENGTH:", output.length);
+      const output =
+        choice?.message?.content?.trim() || "";
 
-        if (!output) {
-          throw new ApiError("AI_FAILURE", "No response from AI", 502);
-        }
+      const finishReason = choice?.finish_reason;
 
-        if (finishReason === "length") {
-          console.error(
-            "AI OUTPUT TRUNCATED: Model reached the maximum output token limit."
-          );
+      console.log(
+        `CHUNK ${chunkIndex + 1} FINISH REASON:`,
+        finishReason
+      );
 
-          throw new ApiError(
-            "AI_OUTPUT_TRUNCATED",
-            "The document explanation was too long to complete. No Keys were used. Please try again.",
-            502
-          );
-        }
+      console.log(
+        `CHUNK ${chunkIndex + 1} OUTPUT LENGTH:`,
+        output.length
+      );
 
-        rewrittenChunks.push(output);
+      if (!output) {
+        throw new ApiError(
+          "AI_FAILURE",
+          "No response from AI",
+          502
+        );
       }
 
+      if (finishReason === "length") {
+        console.error(
+          `AI OUTPUT TRUNCATED ON CHUNK ${chunkIndex + 1}`
+        );
+
+        throw new ApiError(
+          "AI_OUTPUT_TRUNCATED",
+          "The document explanation was too long to complete. No Keys were used. Please try again.",
+          502
+        );
+      }
+
+      return output;
+    })
+  );
+
+  rewrittenChunks.push(...batchResults);
+}
+      console.log(
+  "⏱️ TOTAL REWRITE TIME:",
+  ((Date.now() - rewriteStartTime) / 1000).toFixed(2),
+  "seconds"
+);
     const plainLanguageRewrite = rewrittenChunks.join("\n\n");
     const analysisSourceChunks = splitDocumentIntoChunks(text);
     const analysisNotes: string[] = [];
-
+    const analysisNotesStartTime = Date.now();
     for (let i = 0; i < analysisSourceChunks.length; i++) {
       const chunk = analysisSourceChunks[i];
 
@@ -542,10 +893,16 @@ Return concise analysis notes only.
 
   analysisNotes.push(notes);
 }
-
+console.log(
+  "⏱️ TOTAL ANALYSIS NOTES TIME:",
+  ((Date.now() - analysisNotesStartTime) / 1000).toFixed(2),
+  "seconds"
+);
 const combinedAnalysisNotes =
   analysisNotes.join("\n\n---\n\n");
-      const analysisCompletion = await openai.chat.completions.create({
+
+  const finalAnalysisStartTime = Date.now();
+  const analysisCompletion = await openai.chat.completions.create({
   model: "gpt-4o-mini",
   temperature: 0.2,
   max_tokens: 2000,
@@ -700,6 +1057,12 @@ const documentAnalysis =
 const analysisFinishReason =
   analysisChoice?.finish_reason;
 
+  console.log(
+  "⏱️ FINAL ANALYSIS TIME:",
+  ((Date.now() - finalAnalysisStartTime) / 1000).toFixed(2),
+  "seconds"
+);
+
 console.log(
   "ANALYSIS FINISH REASON:",
   analysisFinishReason
@@ -853,32 +1216,68 @@ Return ONLY the translated text.
   output = translatedChunks.join("\n\n");
 }
 
-      await db.runTransaction(async (tx) => {
-        const ref = db.collection("users").doc(userId);
-        const doc = await tx.get(ref);
+     let consumeResult;
 
-        if (!doc.exists) {
-          throw new ApiError("USER_NOT_FOUND", "User missing", 404);
-        }
+if (
+  keyCheck.source === "sponsored" &&
+  keyCheck.organizationId &&
+  keyCheck.sponsorshipId
+) {
+  consumeResult = await consumeSponsoredKeys(
+    userId,
+    keys,
+    keyCheck.organizationId,
+    keyCheck.sponsorshipId
+  );
+} else {
+  consumeResult = await consumePersonalKeys(
+    userId,
+    keys
+  );
+}
 
-        const current = doc.data()?.keyBalance ?? 0;
-        console.log("CURRENT BALANCE:", current);
-        console.log("KEYS REQUIRED:", keys);
-        
+if (consumeResult.ok === false) {
+  if (consumeResult.code === "USER_NOT_FOUND") {
+    throw new ApiError(
+      "USER_NOT_FOUND",
+      "User missing",
+      404
+    );
+  }
 
-        if (current < keys) {
-          throw new ApiError("INSUFFICIENT_KEYS", "Not enough keys", 402);
-        }
+  throw new ApiError(
+    "INSUFFICIENT_KEYS",
+    "Not enough keys",
+    402
+  );
+}
 
-        remainingKeys = current - keys;
-        tx.update(ref, { keyBalance: remainingKeys });
-      });
+remainingKeys = consumeResult.remaining;
 
-      res.json({
-        output,
-        keysUsed: keys,
-        remainingKeys,
-      });
+console.log("KEYS USED:", keys);
+console.log("PAYMENT SOURCE:", consumeResult.source);
+console.log("REMAINING KEYS:", remainingKeys);
+
+console.log(
+  "⏱️ TOTAL SIMPLIFY REQUEST TIME:",
+  ((Date.now() - requestStartTime) / 1000).toFixed(2),
+  "seconds"
+);
+
+res.json({
+  output,
+  keysUsed: keys,
+  paymentSource: consumeResult.source,
+  remainingKeys,
+  personalKeyBalance:
+    consumeResult.source === "personal"
+      ? consumeResult.remaining
+      : null,
+  sponsoredKeysRemaining:
+    consumeResult.source === "sponsored"
+      ? consumeResult.remaining
+      : null,
+});
     } catch (err) {
       next(err);
     }

@@ -11,6 +11,7 @@ import PurchaseModal from "./PurchaseModal";
 import {
   Check,
   Copy,
+  Download,
   FileCheck2,
   Gift,
   ShieldCheck,
@@ -53,8 +54,51 @@ const t = translations[language];
   const errorRef = useRef<HTMLDivElement | null>(null);
 
   const [inputText, setInputText] = useState("");
+  const [pdfFormatting, setPdfFormatting] = useState<any>(null);
   const [selectedFileName, setSelectedFileName] = useState("");
   const [outputText, setOutputText] = useState("");
+  const cleanOutputText = outputText.replace(/^#{1,6}\s+/gm, "");
+
+  const displaySections = (() => {
+  const headings = [
+    "Plain Language Rewrite",
+    "Professional Response",
+    "🟥 Critical",
+    "🟧 Urgent",
+    "🟨 Important",
+  ];
+
+  const sections: Record<string, string> = {};
+  const headingPattern =
+    /^## (Plain Language Rewrite|Professional Response|🟥 Critical|🟧 Urgent|🟨 Important)\s*$/gm;
+
+  const matches = Array.from(outputText.matchAll(headingPattern));
+
+  if (matches.length !== headings.length) {
+    return null;
+  }
+
+  if (new Set(matches.map((match) => match[1])).size !== headings.length) {
+    return null;
+  }
+
+  if (outputText.slice(0, matches[0].index).trim()) {
+    return null;
+  }
+
+  matches.forEach((match, index) => {
+    const start = match.index! + match[0].length;
+    const end =
+      index + 1 < matches.length
+        ? matches[index + 1].index!
+        : outputText.length;
+
+    sections[match[1]] = outputText.slice(start, end).trim();
+  });
+
+  return sections;
+})();
+
   const [loading, setLoading] = useState(false);
   const [extracting, setExtracting] = useState(false);
   const [showFeedbackBanner, setShowFeedbackBanner] = useState(false);
@@ -129,6 +173,7 @@ useEffect(() => {
 
 const handleClearForm = () => {
   setInputText("");
+  setPdfFormatting(null);
   setSelectedFileName("");
   setErrorMessage(null);
   setNeedsKeys(false);
@@ -160,21 +205,24 @@ const handleClearForm = () => {
         return;
       }
 
+    setInputText(pasted);
+    setPdfFormatting(null);
+    setSelectedFileName("");
+    setErrorMessage(null);
+    clearPreviousResult();
+  } catch {
+    const pasted = window.prompt(t.promptPasteText);
+
+    if (pasted?.trim()) {
       setInputText(pasted);
+      setPdfFormatting(null);
       setSelectedFileName("");
       setErrorMessage(null);
       clearPreviousResult();
-    } catch {
-      const pasted = window.prompt(t.promptPasteText);
-
-      if (pasted?.trim()) {
-        setInputText(pasted);
-        setSelectedFileName("");
-        setErrorMessage(null);
-        clearPreviousResult();
-      }
     }
-  };
+  }
+};
+
 
   const handleFileSelected = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -235,8 +283,15 @@ t.errorFileRead
         throw new Error(t.errorNoReadableText);
       }
 
-      setInputText(extractedText);
-      setSelectedFileName(file.name);
+    setInputText((previousText) =>
+  previousText.trim()
+    ? `${previousText.trimEnd()}\n\n${extractedText}`
+    : extractedText
+);
+setPdfFormatting(
+  name.endsWith(".pdf") ? data?.pdfFormatting ?? null : null
+);
+setSelectedFileName(file.name);
     } catch (err: any) {
       console.error("File extraction error:", err);
       setSelectedFileName("");
@@ -291,8 +346,13 @@ t.errorFileRead
       throw new Error(t.errorNoReadableText);
     }
 
-    setInputText(extractedText);
-    setSelectedFileName(file.name);
+    setInputText((previousText) =>
+  previousText.trim()
+    ? `${previousText.trimEnd()}\n\n${extractedText}`
+    : extractedText
+);
+setPdfFormatting(null);
+setSelectedFileName(file.name);
   } catch (err: any) {
     console.error("Photo extraction error:", err);
     setSelectedFileName("");
@@ -328,14 +388,28 @@ const handleSimplify = async () => {
         method: "POST",
         headers,
         body: JSON.stringify({
-          text: trimmedInput,
-          language,
-        }),
+  text: trimmedInput,
+  language,
+  pdfFormatting,
+}),
       });
 
      const data = await res.json().catch(() => null);
 
 if (!res.ok) {
+  if (
+    data?.code === "ORGANIZATION_OUT_OF_KEYS" ||
+    data?.error === "ORGANIZATION_OUT_OF_KEYS"
+  ) {
+    setNeedsKeys(false);
+
+    setErrorMessage(
+      "Your organization is temporarily out of Keys. Please contact your organization for assistance."
+    );
+
+    return;
+  }
+
   if (
     res.status === 402 ||
     data?.code === "INSUFFICIENT_KEYS" ||
@@ -367,15 +441,20 @@ if (result) {
   }, 100);
 }
 
-// Update displayed Key Balance immediately
-  setKeyBalance(data?.remainingKeys ?? 0);
-
+// Update personal Key Balance only when personal Keys paid
 if (
-  data?.remainingKeys === 0 &&
-  !feedbackAccepted &&
-  feedbackDeclines === 0
+  data?.paymentSource === "personal" &&
+  typeof data?.personalKeyBalance === "number"
 ) {
-  setShowFeedbackBanner(true);
+  setKeyBalance(data.personalKeyBalance);
+
+  if (
+    data.personalKeyBalance === 0 &&
+    !feedbackAccepted &&
+    feedbackDeclines === 0
+  ) {
+    setShowFeedbackBanner(true);
+  }
 }
     } catch (err: any) {
       console.error("Simplify error:", err);
@@ -403,7 +482,7 @@ if (
   method: "POST",
   headers,
   body: JSON.stringify({
-    text: outputText,
+    text: cleanOutputText,
     language,
   }),
 });
@@ -426,7 +505,25 @@ if (
       setIsGeneratingAudio(false);
     }
   };
+const handleDownload = () => {
+  if (!outputText.trim()) return;
 
+  const blob = new Blob([outputText], {
+    type: "text/plain;charset=utf-8",
+  });
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "Plainspeak-Now-Result.txt";
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  URL.revokeObjectURL(url);
+};
   const handleCopy = async () => {
     if (!outputText) return;
 
@@ -498,12 +595,13 @@ return (
   documentText={inputText}
   fileName={selectedFileName || null}
   isProcessing={loading || extracting}
-  onDocumentTextChange={(value) => {
-    setInputText(value);
-    setSelectedFileName("");
-    setErrorMessage(null);
-    clearPreviousResult();
-  }}
+ onDocumentTextChange={(value) => {
+  setInputText(value);
+  setPdfFormatting(null);
+  setSelectedFileName("");
+  setErrorMessage(null);
+  clearPreviousResult();
+}}
   onPasteClick={handlePasteText}
   onUploadClick={() => fileInputRef.current?.click()}
   onPhotoClick={() => photoInputRef.current?.click()}
@@ -641,14 +739,56 @@ return (
             </>
           )}
         </button>
+
+        {/* Download button */}
+        <button
+          type="button"
+          onClick={handleDownload}
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-[#4F7C6B]/30 hover:bg-[#F7FBF9] focus:outline-none focus:ring-4 focus:ring-[#4F7C6B]/10"
+        >
+          <Download size={17} aria-hidden="true" />
+          Download Result
+        </button>
       </div>
-    </div>
+      </div>
 
     {/* Result content */}
     <div className="p-5 sm:p-6">
+      {/* Audio */}
+      <div className="mt-5">
+        <AudioPlayer
+  language={language}
+  audioUrl={audioUrl}
+  text={cleanOutputText}
+  isGenerating={isGeneratingAudio}
+  onGenerate={handleGenerateAudio}
+/>
+      </div>
+
       <div className="rounded-2xl border border-slate-100 bg-[#FAFCFC] p-5 sm:p-6">
         <div className="whitespace-pre-wrap text-[15px] leading-7 text-slate-700 sm:text-base">
-          {outputText}
+
+   {displaySections ? (
+  <>
+    {[
+      "🟥 Critical",
+      "🟧 Urgent",
+      "🟨 Important",
+      "Plain Language Rewrite",
+      "Professional Response",
+    ].map((heading) => (
+      <div key={heading} className="mb-6 last:mb-0">
+        <h3 className="mb-2 font-semibold text-slate-900">
+          {heading}
+        </h3>
+        <div>{displaySections[heading]}</div>
+      </div>
+    ))}
+  </>
+) : (
+  cleanOutputText
+)}
+
         </div>
       </div>
 
@@ -668,16 +808,7 @@ return (
 </p>
       </div>
 
-      {/* Audio */}
-      <div className="mt-5">
-        <AudioPlayer
-  language={language}
-  audioUrl={audioUrl}
-  text={outputText}
-  isGenerating={isGeneratingAudio}
-  onGenerate={handleGenerateAudio}
-/>
-      </div>
+
     </div>
   </section>
 )}
@@ -731,7 +862,8 @@ return (
     )}
   </section>
 
-{/* =======================================================
+{
+/* =======================================================
     SOCIAL PROOF
 ======================================================= */}
 

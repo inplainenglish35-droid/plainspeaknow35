@@ -1400,11 +1400,33 @@ for (let i = 0; i < audioChunks.length; i += BATCH_SIZE) {
 
 const combinedBuffer = Buffer.concat(buffers);
 
-      res.set({
-        "Content-Type": "audio/mpeg",
-        "Content-Length": combinedBuffer.length,
-      });
-      return res.send(combinedBuffer);
+res.set({
+  "Content-Type": "audio/mpeg",
+  "Cache-Control": "no-store",
+});
+
+res.flushHeaders();
+
+const STREAM_CHUNK_SIZE = 64 * 1024;
+
+for (
+  let offset = 0;
+  offset < combinedBuffer.length;
+  offset += STREAM_CHUNK_SIZE
+) {
+  const chunk = combinedBuffer.subarray(
+    offset,
+    Math.min(offset + STREAM_CHUNK_SIZE, combinedBuffer.length)
+  );
+
+  if (!res.write(chunk)) {
+    await new Promise<void>((resolve) => {
+      res.once("drain", resolve);
+    });
+  }
+}
+
+return res.end();
     } catch (err) {
       next(err);
     }

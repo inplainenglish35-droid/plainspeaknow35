@@ -300,9 +300,9 @@ includesTitle: "Every document includes",
 includesDescription:
   "Plainspeak Now™ helps you understand what the document says, what needs your attention, and what you may want to do next.",
 
-includesPlainTitle: "Plain Language Rewrite",
+includesPlainTitle: "Get to the Point",
 includesPlainDescription:
-  "Complex wording made easier to understand.",
+  "A focused report showing what matters and what to do next.",
 
 includesResponseTitle: "Professional Response",
 includesResponseDescription:
@@ -1006,9 +1006,8 @@ includesTitle: "Cada documento incluye",
 includesDescription:
   "Plainspeak Now™ te ayuda a entender lo que dice el documento, qué necesita tu atención y qué podrías hacer a continuación.",
 
-includesPlainTitle: "Reescritura en lenguaje claro",
-includesPlainDescription:
-  "Redacción compleja explicada de una manera más fácil de entender.",
+includesPlainTitle: "Ve al grano",
+includesPlainDescription: "Un informe conciso que muestra lo que importa y qué hacer después.",
 
 includesResponseTitle: "Respuesta profesional",
 includesResponseDescription:
@@ -1676,9 +1675,8 @@ includesTitle: "Mỗi tài liệu đều bao gồm",
 includesDescription:
   "Plainspeak Now™ giúp bạn hiểu tài liệu nói gì, điều gì cần bạn chú ý và bạn có thể muốn làm gì tiếp theo.",
 
-includesPlainTitle: "Viết lại bằng ngôn ngữ dễ hiểu",
-includesPlainDescription:
-  "Diễn đạt nội dung phức tạp theo cách dễ hiểu hơn.",
+includesPlainTitle: "Đi thẳng vào vấn đề",
+includesPlainDescription: "Báo cáo ngắn gọn nêu rõ những điều quan trọng và việc cần làm tiếp theo.",
 
 includesResponseTitle: "Phản hồi chuyên nghiệp",
 includesResponseDescription:
@@ -2347,9 +2345,8 @@ includesTitle: "Kasama sa bawat dokumento",
 includesDescription:
   "Tinutulungan ka ng Plainspeak Now™ na maunawaan kung ano ang sinasabi ng dokumento, ano ang kailangan mong bigyang-pansin, at ano ang maaari mong gawin sa susunod.",
 
-includesPlainTitle: "Muling pagsulat sa malinaw na wika",
-includesPlainDescription:
-  "Mas madaling maintindihan ang masalimuot na pananalita.",
+includesPlainTitle: "Diretso sa punto",
+includesPlainDescription: "Isang maikling ulat na nagpapakita ng mahahalagang detalye at mga susunod na hakbang.",
 
 includesResponseTitle: "Propesyonal na tugon",
 includesResponseDescription:
@@ -2974,9 +2971,8 @@ includesTitle: "Chaque document comprend",
 includesDescription:
   "Plainspeak Now™ vous aide à comprendre ce que dit le document, ce qui nécessite votre attention et ce que vous pourriez faire ensuite.",
 
-includesPlainTitle: "Réécriture en langage clair",
-includesPlainDescription:
-  "Des formulations complexes rendues plus faciles à comprendre.",
+includesPlainTitle: "Allez à l'essentiel",
+includesPlainDescription: "Un rapport concis qui présente les points importants et les prochaines étapes.",
 
 includesResponseTitle: "Réponse professionnelle",
 includesResponseDescription:
@@ -3769,11 +3765,8 @@ includesTitle:
 includesDescription:
   "Plainspeak Now™ 帮助您理解文档内容、哪些事项需要关注，以及接下来可能需要采取什么行动。",
 
-includesPlainTitle:
-  "简明语言改写",
-
-includesPlainDescription:
-  "将复杂的措辞改写得更容易理解。",
+includesPlainTitle: "直奔重点",
+includesPlainDescription: "一份简明报告，告诉您哪些内容最重要，以及接下来该怎么做。",
 
 includesResponseTitle:
   "专业回复",
@@ -4604,11 +4597,8 @@ includesTitle:
 includesDescription:
   "Plainspeak Now™는 문서의 내용, 주의해야 할 사항, 그리고 다음에 해야 할 일을 이해할 수 있도록 도와드립니다.",
 
-includesPlainTitle:
-  "쉬운 언어로 재작성",
-
-includesPlainDescription:
-  "복잡한 표현을 더 이해하기 쉬운 언어로 바꿉니다.",
+includesPlainTitle: "핵심만 알려드립니다",
+includesPlainDescription: "중요한 내용과 다음에 해야 할 일을 알려주는 간결한 보고서입니다.",
 
 includesResponseTitle:
   "전문적인 답변",
@@ -5439,11 +5429,8 @@ includesTitle:
 includesDescription:
   "يساعدك Plainspeak Now™ على فهم ما يقوله المستند، وما يحتاج إلى انتباهك، وما قد تحتاج إلى فعله بعد ذلك.",
 
-includesPlainTitle:
-  "إعادة الصياغة بلغة مبسطة",
-
-includesPlainDescription:
-  "تحويل العبارات المعقدة إلى لغة أسهل في الفهم.",
+includesPlainTitle: "ادخل في صلب الموضوع",
+includesPlainDescription: "تقرير موجز يوضح الأمور المهمة وما يجب فعله بعد ذلك.",
 
 includesResponseTitle:
   "رد احترافي",
@@ -6273,11 +6260,8 @@ includesTitle:
 includesDescription:
   "O Plainspeak Now™ ajuda você a entender o que o documento diz, o que precisa da sua atenção e o que talvez seja necessário fazer em seguida.",
 
-includesPlainTitle:
-  "Reescrita em linguagem simples",
-
-includesPlainDescription:
-  "Transforma textos complicados em uma linguagem mais fácil de entender.",
+includesPlainTitle: "Vá direto ao ponto",
+includesPlainDescription: "Um relatório objetivo que mostra o que importa e o que fazer em seguida.",
 
 includesResponseTitle:
   "Resposta profissional",
@@ -7110,11 +7094,8 @@ includesTitle:
 includesDescription:
   "Plainspeak Now™ помогает понять, что говорится в документе, на что нужно обратить внимание и какие действия могут потребоваться дальше.",
 
-includesPlainTitle:
-  "Переписывание простым языком",
-
-includesPlainDescription:
-  "Преобразует сложные формулировки в более понятный язык.",
+includesPlainTitle: "Сразу к сути",
+includesPlainDescription: "Краткий отчёт о самом важном и о том, что делать дальше.",
 
 includesResponseTitle:
   "Профессиональный ответ",
@@ -7943,11 +7924,8 @@ includesTitle:
 includesDescription:
   "Plainspeak Now™ ede ou konprann sa dokiman an di, sa ki bezwen atansyon ou, ak sa ou ka bezwen fè apre sa.",
 
-includesPlainTitle:
-  "Re-ekri nan langaj senp",
-
-includesPlainDescription:
-  "Li chanje mo ak fraz konplike pou mete yo nan yon langaj ki pi fasil pou konprann.",
+includesPlainTitle: "Ale dwat nan pwen an",
+includesPlainDescription: "Yon rapò kout ki montre sa ki enpòtan ak sa pou w fè apre.",
 
 includesResponseTitle:
   "Repons pwofesyonèl",
@@ -8770,6 +8748,7 @@ footerContact:
 includesEyebrow:
   "सिर्फ़ दोबारा लिखने से कहीं अधिक",
 
+
 includesTitle:
   "हर दस्तावेज़ में शामिल है",
 
@@ -8777,10 +8756,11 @@ includesDescription:
   "Plainspeak Now™ आपको यह समझने में मदद करता है कि दस्तावेज़ क्या कहता है, किस बात पर आपका ध्यान जाना चाहिए और आगे आपको क्या करना पड़ सकता है।",
 
 includesPlainTitle:
-  "आसान भाषा में दोबारा लिखना",
+  "सीधे मुद्दे पर आएँ",
 
 includesPlainDescription:
-  "जटिल शब्दों और वाक्यों को ऐसी भाषा में बदलता है जिसे समझना आसान हो।",
+  "एक संक्षिप्त रिपोर्ट जो बताती है कि क्या महत्वपूर्ण है और आगे क्या करना है।",
+
 
 includesResponseTitle:
   "पेशेवर जवाब",

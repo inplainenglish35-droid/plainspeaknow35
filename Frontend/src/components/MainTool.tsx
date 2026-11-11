@@ -60,17 +60,17 @@ const t = translations[language];
   const cleanOutputText = outputText.replace(/^#{1,6}\s+/gm, "");
 
   const displaySections = (() => {
-  const headings = [
-    "Plain Language Rewrite",
-    "Professional Response",
-    "🟥 Critical",
-    "🟧 Urgent",
-    "🟨 Important",
-  ];
+const headings = [
+  "Professional Response",
+  "🟥 Critical",
+  "🟧 Urgent",
+  "🟨 Important",
+  "Who to Contact",
+];
 
   const sections: Record<string, string> = {};
-  const headingPattern =
-    /^## (Plain Language Rewrite|Professional Response|🟥 Critical|🟧 Urgent|🟨 Important)\s*$/gm;
+const headingPattern =
+  /^## (Professional Response|🟥 Critical|🟧 Urgent|🟨 Important|Who to Contact)\s*$/gm;
 
   const matches = Array.from(outputText.matchAll(headingPattern));
 
@@ -646,9 +646,10 @@ return (
 
   {outputText && (
   <section
-    ref={resultRef}
-    className="scroll-mt-28 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_20px_60px_-30px_rgba(15,23,42,0.30)]"
-  >
+  ref={resultRef}
+  className="scroll-mt-28"
+>
+  
     {/* Feedback banner */}
     {showFeedbackBanner && (
       <div className="border-b border-[#4F7C6B]/15 bg-[#F3F8F6] p-5 sm:p-6">
@@ -765,18 +766,18 @@ return (
 />
       </div>
 
-      <div className="rounded-2xl border border-slate-100 bg-[#FAFCFC] p-5 sm:p-6">
+      <div>
         <div className="whitespace-pre-wrap text-[15px] leading-7 text-slate-700 sm:text-base">
 
    {displaySections ? (
   <>
     {[
-      "🟥 Critical",
-      "🟧 Urgent",
-      "🟨 Important",
-      "Plain Language Rewrite",
-      "Professional Response",
-    ].map((heading) => (
+  "Professional Response",
+  "🟥 Critical",
+  "🟧 Urgent",
+  "🟨 Important",
+  "Who to Contact",
+].map((heading) => (
       <div key={heading} className="mb-6 last:mb-0">
         <h3 className="mb-2 font-semibold text-slate-900">
           {heading}

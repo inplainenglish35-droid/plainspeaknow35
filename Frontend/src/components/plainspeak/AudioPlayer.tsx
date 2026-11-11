@@ -112,21 +112,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   }, [playbackRate]);
 
-  /* ================================
-     WORD HIGHLIGHTING (STABLE)
-  ================================= */
 
-  useEffect(() => {
-    if (!isPlaying || !duration) return;
-
-    const index = wordTimings.findIndex(
-      (t) => !t.isSpace && currentTime >= t.start && currentTime < t.end
-    );
-
-    if (index !== highlightedWordIndex) {
-      setHighlightedWordIndex(index);
-    }
-  }, [currentTime, isPlaying, duration, wordTimings]);
 
   /* ================================
      CONTROLS
@@ -186,30 +172,6 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
           src={audioUrl}
           preload="metadata"
         />
-      )}
-
-      {/* TEXT DISPLAY */}
-      {text && (
-        <div
-          className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl max-h-48 overflow-y-auto"
-          aria-live="polite"
-        >
-          <p className="text-base leading-relaxed">
-            {words.map((word, i) => (
-              <span
-                key={i}
-                className={cn(
-                  "transition-all duration-150",
-                  i === highlightedWordIndex &&
-                    !word.match(/^\s+$/) &&
-                    "bg-yellow-300 text-black px-1 rounded"
-                )}
-              >
-                {word}
-              </span>
-            ))}
-          </p>
-        </div>
       )}
 
       {/* CONTROLS */}

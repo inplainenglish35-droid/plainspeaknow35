@@ -201,8 +201,7 @@ photoUpload: "Take / Upload Photo",
   hero: "Understand before you commit.",
   description:
     "Upload a document and instantly receive a plain-language explanation, key takeaways, important deadlines, and a professional response draft.",
-    processButton: "Help me understand",
-
+    processButton: "Get to the point!",
 socialEyebrow: "Early Feedback",
 
 socialTitle:
@@ -1086,7 +1085,7 @@ trustNeverExpire: "Las Keys nunca vencen",
 trustDeleted:
   "El documento se elimina de nuestro servidor después de procesarlo.",
 
-processButton: "Ayúdame a entender",
+processButton: "¡Ve al grano!",
     pasteText: "Pegar texto",
     uploadDocument: "Subir documento",
     disclaimer:
@@ -1756,7 +1755,7 @@ trustNeverExpire: "Keys không bao giờ hết hạn",
 trustDeleted:
   "Tài liệu được xóa khỏi máy chủ của chúng tôi sau khi xử lý.",
 
-processButton: "Giúp tôi hiểu",
+processButton: "Đi thẳng vào vấn đề!",
     pasteText: "Dán văn bản",
     uploadDocument: "Tải tài liệu",
     disclaimer:
@@ -2428,7 +2427,7 @@ trustNeverExpire: "Hindi Nag-e-expire ang Keys",
 trustDeleted:
   "Binubura ang dokumento mula sa aming server pagkatapos maproseso.",
 
-processButton: "Tulungan Akong Umunawa",
+processButton: "Diretso sa punto!",
     pasteText: "I-paste ang teksto",
     uploadDocument: "Mag-upload ng dokumento",
     disclaimer:
@@ -2942,7 +2941,7 @@ trustNeverExpire: "Les Keys n’expirent jamais",
 trustDeleted:
   "Le document est supprimé de notre serveur après traitement.",
 
-processButton: "Aidez-moi à comprendre",
+processButton: "Allez à l'essentiel !",
 
 pasteText: "Coller du texte",
 
@@ -3628,7 +3627,7 @@ description:
   "上传文档，即可获得简明语言解释、关键要点、重要截止日期以及专业回复草稿。",
 
 processButton:
-  "帮我理解",
+  "直奔重点！",
 
 socialEyebrow:
   "早期用户反馈",
@@ -4462,7 +4461,7 @@ description:
   "문서를 업로드하면 쉬운 언어로 된 설명, 핵심 내용, 중요한 마감일, 전문적인 답변 초안을 바로 받을 수 있습니다.",
 
 processButton:
-  "이해하기 쉽게 설명해 주세요",
+  "핵심만 알려줘!",
 
 socialEyebrow:
   "초기 사용자 피드백",
@@ -5298,8 +5297,7 @@ description:
   "حمّل مستندًا واحصل فورًا على شرح بلغة مبسطة، وأهم النقاط، والمواعيد النهائية المهمة، ومسودة رد احترافية.",
 
 processButton:
-  "ساعدني على الفهم",
-
+"  ادخل في صلب الموضوع!",
 socialEyebrow:
   "آراء المستخدمين الأوائل",
 
@@ -6132,7 +6130,7 @@ description:
   "Envie um documento e receba instantaneamente uma explicação em linguagem simples, os principais pontos, prazos importantes e um rascunho de resposta profissional.",
 
 processButton:
-  "Ajude-me a entender",
+  "Diretso à ponto!",
 
 socialEyebrow:
   "Feedback dos primeiros usuários",
@@ -6969,7 +6967,7 @@ description:
   "Загрузите документ и сразу получите объяснение простым языком, основные моменты, важные сроки и черновик профессионального ответа.",
 
 processButton:
-  "Помогите мне разобраться",
+  "Сразу к сути!",
 
 socialEyebrow:
   "Отзывы первых пользователей",
@@ -7803,7 +7801,7 @@ description:
   "Telechaje yon dokiman epi resevwa touswit yon eksplikasyon nan langaj senp, pwen enpòtan yo, dat limit enpòtan yo, ak yon bouyon repons pwofesyonèl.",
 
 processButton:
-  "Ede m konprann",
+  "Ale dwat nan pwen an!",
 
 socialEyebrow:
   "Fidbak premye itilizatè yo",
@@ -8636,7 +8634,7 @@ description:
   "एक दस्तावेज़ अपलोड करें और तुरंत आसान भाषा में उसका स्पष्टीकरण, मुख्य बातें, महत्वपूर्ण समय-सीमाएँ और पेशेवर जवाब का मसौदा प्राप्त करें।",
 
 processButton:
-  "मुझे समझने में मदद करें",
+  "सीधे मुद्दे पर आओ!",
 
 socialEyebrow:
   "शुरुआती उपयोगकर्ताओं की प्रतिक्रिया",

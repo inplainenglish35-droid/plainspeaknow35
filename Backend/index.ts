@@ -673,148 +673,7 @@ console.log("PAYMENT SOURCE:", keyCheck.source);
     );
   }
 });
-
-const rewrittenChunks: string[] = [];
-const rewriteStartTime = Date.now();
-
-let remainingKeys = 0;
-
-const rewriteBatchSize = 3;
-
-for (
-  let batchStart = 0;
-  batchStart < documentChunks.length;
-  batchStart += rewriteBatchSize
-) {
-  const batch = documentChunks.slice(
-    batchStart,
-    batchStart + rewriteBatchSize
-  );
-
-  const batchResults = await Promise.all(
-    batch.map(async (chunk, batchIndex) => {
-      const chunkIndex = batchStart + batchIndex;
-
-      console.log(
-        `REWRITING CHUNK ${chunkIndex + 1}/${documentChunks.length}`
-      );
-
-      const completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content: `
-You are Plainspeak Now™, a professional plain-language editor.
-
-Rewrite the provided portion of the document in clear, everyday ${selectedLanguage}.
-
-READING LEVEL:
-
-• Aim for approximately a 6th-grade reading level.
-• Prefer short, direct sentences and common everyday words.
-• Break complicated sentences into shorter sentences when this does not change the meaning.
-• Accuracy is more important than reading level.
-• Never remove, weaken, or change important information just to make the text easier to read.
-• Keep necessary legal, medical, financial, or technical terms, but explain them immediately in plain language.
-
-IMPORTANT:
-
-• Rewrite EVERY sentence.
-• Preserve the original meaning, intent, and legal effect.
-• Preserve every paragraph.
-• Preserve headings.
-• Preserve lists.
-• Keep everything in the same order.
-• Do NOT summarize.
-• Do NOT shorten.
-• Do NOT omit information.
-• Do NOT combine paragraphs.
-• Do NOT add commentary.
-• Do NOT add a summary.
-• Do NOT create a professional response.
-• Do NOT create Critical, Urgent, or Important sections.
-
-Replace difficult words with everyday language whenever possible.
-
-If a legal, medical, or technical term must remain,
-immediately explain it in simpler words.
-
-Always preserve:
-
-• Names
-• Dates
-• Dollar amounts
-• Percentages
-• Deadlines
-• Definitions
-• Conditions
-• Exceptions
-• Obligations
-• Warnings
-• Instructions
-
-Return ONLY the rewritten portion of the document.
-`.trim(),
-          },
-          {
-            role: "user",
-            content: chunk,
-          },
-        ],
-        temperature: 0.2,
-        max_tokens: 4000,
-      });
-
-      const choice = completion.choices?.[0];
-
-      const output =
-        choice?.message?.content?.trim() || "";
-
-      const finishReason = choice?.finish_reason;
-
-      console.log(
-        `CHUNK ${chunkIndex + 1} FINISH REASON:`,
-        finishReason
-      );
-
-      console.log(
-        `CHUNK ${chunkIndex + 1} OUTPUT LENGTH:`,
-        output.length
-      );
-
-      if (!output) {
-        throw new ApiError(
-          "AI_FAILURE",
-          "No response from AI",
-          502
-        );
-      }
-
-      if (finishReason === "length") {
-        console.error(
-          `AI OUTPUT TRUNCATED ON CHUNK ${chunkIndex + 1}`
-        );
-
-        throw new ApiError(
-          "AI_OUTPUT_TRUNCATED",
-          "The document explanation was too long to complete. No Keys were used. Please try again.",
-          502
-        );
-      }
-
-      return output;
-    })
-  );
-
-  rewrittenChunks.push(...batchResults);
-}
-      console.log(
-  "⏱️ TOTAL REWRITE TIME:",
-  ((Date.now() - rewriteStartTime) / 1000).toFixed(2),
-  "seconds"
-);
-    const plainLanguageRewrite = rewrittenChunks.join("\n\n");
+    let remainingKeys = 0;
     const analysisSourceChunks = splitDocumentIntoChunks(text);
     const analysisNotes: string[] = [];
     const analysisNotesStartTime = Date.now();
@@ -845,7 +704,11 @@ Identify:
 • Critical items involving serious consequences, loss of rights, loss of benefits, financial harm, eviction, termination, legal consequences, denial of services, or mandatory deadlines.
 • Urgent items such as deadlines, required responses, signatures, payments, submissions, appointments, phone calls, or follow-up actions.
 • Important information such as definitions, instructions, contact information, reference dates, explanations, or useful background.
-
+• Contact details, including names, job titles, organizations, phone numbers, email addresses, mailing addresses, and websites.
+• Explain what each contact is for when the document makes that clear.
+• Preserve contact details exactly as written.
+• Include the source page number when available.
+• Do not guess which phone number or email address belongs to a person.
 IMPORTANT:
 
 • Do NOT rewrite the document.
@@ -924,7 +787,7 @@ Your job is ONLY to produce:
 2. Critical items.
 3. Urgent items.
 4. Important items.
-
+5. Who to Contact: names, job titles, organizations, phone numbers, email addresses, mailing addresses, websites, and the purpose of each contact.
 Do not provide legal, medical, financial, or other professional advice.
 Never tell the user what decision to make.
 
@@ -1013,7 +876,6 @@ List useful information the user should understand or remember, including:
 
 • Definitions
 • Instructions
-• Contact information
 • Reference dates
 • Explanations
 • Helpful reminders
@@ -1022,8 +884,26 @@ List useful information the user should understand or remember, including:
 If none exist, write:
 
 None found.
+## Who to Contact
 
-Return ONLY these four sections, in this exact order:
+List all contact information found in the document, including:
+
+• Names and job titles
+• Organizations and departments
+• Phone numbers
+• Email addresses
+• Mailing addresses
+• Websites
+• What each contact is for, when stated
+
+Preserve names and contact details exactly as written.
+Do not invent missing information or assume contacts belong together.
+Include page references only when available in the source.
+If no contact information exists, write:
+
+None found.
+
+Return ONLY these five sections, in this exact order:
 
 ## Professional Response
 
@@ -1040,6 +920,10 @@ Return ONLY these four sections, in this exact order:
 ## 🟨 Important
 
 [items or "None found."]
+
+## Who to Contact
+
+[contact details or "None found."]
 `.trim(),
     },
     {
@@ -1101,11 +985,7 @@ HAITIAN CREOLE REQUIREMENTS:
 • Before returning the translation, review it for accidental French words or forms and replace them with natural Haitian Creole.
 `
     : "";
-let output = `## Plain Language Rewrite
-
-${plainLanguageRewrite}
-
-${documentAnalysis}`;
+let output = documentAnalysis;
 
 if (language !== "en") {
   console.log(
